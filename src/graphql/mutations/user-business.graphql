@@ -1,0 +1,15 @@
+mutation CreateCustomUserBusiness(
+  $businessDescription: String!
+  $currentBillingMethod: String!
+  $industryType: String!
+  $name: String!
+) {
+  create_custom_user_business(
+    business_description: $businessDescription
+    current_billing_method: $currentBillingMethod
+    industry_type: $industryType
+    name: $name
+  ) {
+    id
+  }
+}

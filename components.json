@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "new-york",
+  "rsc": false,
+  "tsx": true,
+  "tailwind": {
+    "config": "tailwind.config.js",
+    "css": "src/styles.css",
+    "baseColor": "neutral",
+    "cssVariables": true,
+    "prefix": ""
+  },
+  "aliases": {
+    "components": "@cash-compass/ui",
+    "utils": "@cash-compass/utils",
+    "ui": "@cash-compass/ui",
+    "lib": "@cash-compass/utils",
+    "hooks": "@cash-compass/ui"
+  },
+  "iconLibrary": "lucide"
+}

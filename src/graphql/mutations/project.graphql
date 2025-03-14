@@ -1,0 +1,20 @@
+mutation InsertProject($object: project_insert_input!) {
+  insert_project_one(object: $object) {
+    id
+  }
+}
+
+mutation UpdateProjectByPk(
+  $pkColumns: project_pk_columns_input!
+  $set: project_set_input
+) {
+  update_project_by_pk(pk_columns: $pkColumns, _set: $set) {
+    id
+  }
+}
+
+mutation DeleteProjectByPk($deleteProjectByPkId: Int!) {
+  delete_project_by_pk(id: $deleteProjectByPkId) {
+    id
+  }
+}

@@ -1,0 +1,26 @@
+query GetServices(
+  $where: service_bool_exp
+  $orderBy: [service_order_by!]
+  $offset: Int
+  $limit: Int
+) {
+  service(where: $where, order_by: $orderBy, offset: $offset, limit: $limit) {
+    auto_add
+    billable
+    description
+    id
+    income_category_id
+    name
+    category_transaction {
+      name
+      id
+      services_aggregate {
+        aggregate {
+          count
+        }
+      }
+    }
+    rate
+    created_at
+  }
+}

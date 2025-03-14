@@ -1,0 +1,26 @@
+query GetProjects($orderBy: [project_order_by!], $where: project_bool_exp) {
+  project(order_by: $orderBy, where: $where) {
+    id
+    description
+    created_at
+    name
+    type
+    person {
+      first_name
+      last_name
+    }
+    project_products_aggregate {
+      aggregate {
+        count
+      }
+    }
+  }
+}
+
+query GetProjectAggregate($where: project_bool_exp) {
+  project_aggregate(where: $where) {
+    aggregate {
+      count
+    }
+  }
+}

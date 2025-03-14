@@ -1,0 +1,60 @@
+table:
+  name: transaction
+  schema: public
+object_relationships:
+  - name: account
+    using:
+      foreign_key_constraint_on: account_id
+  - name: category_transaction
+    using:
+      foreign_key_constraint_on: category_id
+  - name: person
+    using:
+      foreign_key_constraint_on: payee_id
+insert_permissions:
+  - role: owner
+    permission:
+      check:
+        category_transaction:
+          business:
+            user_businesses:
+              user_id:
+                _eq: x-hasura-user-external-id
+      columns:
+        - type
+        - archived
+        - note
+        - account_id
+        - category_id
+        - id
+        - payee_id
+        - amount
+        - date
+        - created_at
+        - updated_at
+        - uuid
+    comment: ''
+select_permissions:
+  - role: owner
+    permission:
+      columns:
+        - type
+        - archived
+        - note
+        - account_id
+        - category_id
+        - id
+        - payee_id
+        - amount
+        - date
+        - created_at
+        - updated_at
+        - uuid
+      filter:
+        category_transaction:
+          business:
+            user_businesses:
+              user_id:
+                _eq: x-hasura-user-external-id
+      allow_aggregations: true
+    comment: ''

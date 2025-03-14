@@ -1,0 +1,56 @@
+table:
+  name: company
+  schema: public
+object_relationships:
+  - name: business
+    using:
+      foreign_key_constraint_on: business_id
+array_relationships:
+  - name: people
+    using:
+      foreign_key_constraint_on:
+        column: company_id
+        table:
+          name: person
+          schema: public
+insert_permissions:
+  - role: owner
+    permission:
+      check:
+        business:
+          user_businesses:
+            user_id:
+              _eq: x-hasura-user-external-id
+      columns:
+        - archived
+        - address
+        - business_phone
+        - country
+        - name
+        - business_id
+        - id
+        - created_at
+        - updated_at
+        - uuid
+    comment: ''
+select_permissions:
+  - role: owner
+    permission:
+      columns:
+        - archived
+        - address
+        - business_phone
+        - country
+        - name
+        - business_id
+        - id
+        - created_at
+        - updated_at
+        - uuid
+      filter:
+        business:
+          user_businesses:
+            user_id:
+              _eq: x-hasura-user-external-id
+      allow_aggregations: true
+    comment: ''

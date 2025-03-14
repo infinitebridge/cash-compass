@@ -1,0 +1,21 @@
+query GetProducts($where: product_bool_exp, $orderBy: [product_order_by!]) {
+  product(where: $where, order_by: $orderBy) {
+    id
+    description
+    current_stock
+    income_category_id
+    initial_stock
+    name
+    rate
+    category_transaction {
+      id
+      name
+    }
+    project_products_aggregate {
+      aggregate {
+        count
+      }
+    }
+    created_at
+  }
+}

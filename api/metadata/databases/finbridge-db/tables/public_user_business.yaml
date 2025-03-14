@@ -1,0 +1,44 @@
+table:
+  name: user_business
+  schema: public
+object_relationships:
+  - name: business
+    using:
+      foreign_key_constraint_on: business_id
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
+insert_permissions:
+  - role: owner
+    permission:
+      check: {}
+      set:
+        user_id: x-hasura-user-external-id
+      columns:
+        - role
+        - archived
+        - is_default
+        - business_id
+        - id
+        - user_id
+        - created_at
+        - updated_at
+        - uuid
+    comment: ''
+select_permissions:
+  - role: owner
+    permission:
+      columns:
+        - role
+        - archived
+        - business_id
+        - id
+        - user_id
+        - created_at
+        - updated_at
+        - uuid
+      filter:
+        user_id:
+          _eq: x-hasura-user-external-id
+      allow_aggregations: true
+    comment: ''

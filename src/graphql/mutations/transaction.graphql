@@ -1,0 +1,26 @@
+mutation InsertTransaction($object: transaction_insert_input!) {
+  insert_transaction_one(object: $object) {
+    id
+  }
+}
+
+mutation DeleteTransactionByPk($deleteTransactionByPkId: Int!) {
+  delete_transaction_by_pk(id: $deleteTransactionByPkId) {
+    id
+  }
+}
+
+mutation UpdateTransactionByPk(
+  $pkColumns: transaction_pk_columns_input!
+  $set: transaction_set_input
+) {
+  update_transaction_by_pk(pk_columns: $pkColumns, _set: $set) {
+    id
+  }
+}
+
+mutation DeleteTransactionsByIds($where: transaction_bool_exp!) {
+  delete_transaction(where: $where) {
+    affected_rows
+  }
+}

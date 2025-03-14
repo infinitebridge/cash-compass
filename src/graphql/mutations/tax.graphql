@@ -1,0 +1,14 @@
+mutation InsertTax($object: tax_insert_input!) {
+  insert_tax_one(object: $object) {
+    name
+    default
+    business_id
+    amount
+  }
+}
+
+mutation UdpateTaxByPk($pkColumns: tax_pk_columns_input!, $set: tax_set_input) {
+  update_tax_by_pk(pk_columns: $pkColumns, _set: $set) {
+    id
+  }
+}

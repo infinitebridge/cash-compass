@@ -1,0 +1,22 @@
+mutation InsertCategory($object: category_transaction_insert_input!) {
+  insert_category_transaction_one(object: $object) {
+    id
+    name
+    type
+  }
+}
+
+mutation DeleteCategoryByPk($deleteCategoryTransactionByPkId: Int!) {
+  delete_category_transaction_by_pk(id: $deleteCategoryTransactionByPkId) {
+    id
+  }
+}
+
+mutation UpdateCategoryTransactionByPk(
+  $pkColumns: category_transaction_pk_columns_input!
+  $set: category_transaction_set_input
+) {
+  update_category_transaction_by_pk(pk_columns: $pkColumns, _set: $set) {
+    id
+  }
+}

@@ -1,0 +1,49 @@
+table:
+  name: project_products
+  schema: public
+object_relationships:
+  - name: product
+    using:
+      foreign_key_constraint_on: product_id
+  - name: project
+    using:
+      foreign_key_constraint_on: project_id
+insert_permissions:
+  - role: owner
+    permission:
+      check:
+        _and:
+          - project:
+              business:
+                user_businesses:
+                  user_id:
+                    _eq: x-hasura-user-external-id
+          - product:
+              business:
+                user_businesses:
+                  user_id:
+                    _eq: x-hasura-user-external-id
+      columns:
+        - product_id
+        - project_id
+    comment: ''
+select_permissions:
+  - role: owner
+    permission:
+      columns:
+        - product_id
+        - project_id
+      filter:
+        _and:
+          - project:
+              business:
+                user_businesses:
+                  user_id:
+                    _eq: x-hasura-user-external-id
+          - product:
+              business:
+                user_businesses:
+                  user_id:
+                    _eq: x-hasura-user-external-id
+      allow_aggregations: true
+    comment: ''

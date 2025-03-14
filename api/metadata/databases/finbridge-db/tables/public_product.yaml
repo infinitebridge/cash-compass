@@ -1,0 +1,63 @@
+table:
+  name: product
+  schema: public
+object_relationships:
+  - name: business
+    using:
+      foreign_key_constraint_on: business_id
+  - name: category_transaction
+    using:
+      foreign_key_constraint_on: income_category_id
+array_relationships:
+  - name: project_products
+    using:
+      foreign_key_constraint_on:
+        column: product_id
+        table:
+          name: project_products
+          schema: public
+insert_permissions:
+  - role: owner
+    permission:
+      check:
+        business:
+          user_businesses:
+            user_id:
+              _eq: x-hasura-user-external-id
+      columns:
+        - archived
+        - description
+        - name
+        - business_id
+        - current_stock
+        - id
+        - income_category_id
+        - initial_stock
+        - rate
+        - created_at
+        - updated_at
+        - uuid
+    comment: ''
+select_permissions:
+  - role: owner
+    permission:
+      columns:
+        - archived
+        - description
+        - name
+        - business_id
+        - current_stock
+        - id
+        - income_category_id
+        - initial_stock
+        - rate
+        - created_at
+        - updated_at
+        - uuid
+      filter:
+        business:
+          user_businesses:
+            user_id:
+              _eq: x-hasura-user-external-id
+      allow_aggregations: true
+    comment: ''

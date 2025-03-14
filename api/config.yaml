@@ -1,0 +1,7 @@
+version: 3
+endpoint: https://finbridge-manager.hasura.app
+metadata_directory: metadata
+admin_secret: uWowTkzvOiAZg54FCtKWfyGIBP6kArEyAKVNofd5uEt5KCK0U4xq4xaI18d82dDJ
+actions:
+  kind: synchronous
+  handler_webhook_baseurl: http://localhost:3000

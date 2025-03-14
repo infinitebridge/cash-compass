@@ -1,0 +1,27 @@
+table:
+  name: tax
+  schema: public
+object_relationships:
+  - name: business
+    using:
+      foreign_key_constraint_on: business_id
+select_permissions:
+  - role: owner
+    permission:
+      columns:
+        - archived
+        - default
+        - name
+        - business_id
+        - id
+        - amount
+        - created_at
+        - updated_at
+        - uuid
+      filter:
+        business:
+          user_businesses:
+            user_id:
+              _eq: x-hasura-user-external-id
+      allow_aggregations: true
+    comment: ''

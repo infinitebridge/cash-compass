@@ -1,0 +1,5 @@
+fragment AccountFragment on account {
+  id
+  name
+  created_at
+}

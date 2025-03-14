@@ -1,0 +1,69 @@
+table:
+  name: person
+  schema: public
+object_relationships:
+  - name: company
+    using:
+      foreign_key_constraint_on: company_id
+array_relationships:
+  - name: projects
+    using:
+      foreign_key_constraint_on:
+        column: client_id
+        table:
+          name: project
+          schema: public
+  - name: transactions
+    using:
+      foreign_key_constraint_on:
+        column: payee_id
+        table:
+          name: transaction
+          schema: public
+insert_permissions:
+  - role: owner
+    permission:
+      check:
+        company:
+          business:
+            user_businesses:
+              user_id:
+                _eq: x-hasura-user-external-id
+      columns:
+        - role
+        - archived
+        - email
+        - first_name
+        - last_name
+        - phone
+        - whatsapp_phone
+        - company_id
+        - id
+        - created_at
+        - updated_at
+        - uuid
+    comment: ''
+select_permissions:
+  - role: owner
+    permission:
+      columns:
+        - role
+        - archived
+        - email
+        - first_name
+        - last_name
+        - phone
+        - whatsapp_phone
+        - company_id
+        - id
+        - created_at
+        - updated_at
+        - uuid
+      filter:
+        company:
+          business:
+            user_businesses:
+              user_id:
+                _eq: x-hasura-user-external-id
+      allow_aggregations: true
+    comment: ''

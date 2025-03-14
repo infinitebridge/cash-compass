@@ -1,0 +1,16 @@
+type Mutation {
+  create_custom_user_business(
+    name: String!
+    industry_type: String!
+    business_description: String!
+    current_billing_method: String!
+  ): custom_user_business_mutation_response
+}
+
+type custom_company_mutation_response {
+  id: Int!
+}
+
+type custom_user_business_mutation_response {
+  id: Int!
+}

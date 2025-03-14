@@ -1,0 +1,7 @@
+query GetUserBusinessAggregate {
+  user_business_aggregate {
+    aggregate {
+      count
+    }
+  }
+}

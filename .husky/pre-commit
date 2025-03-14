@@ -1,0 +1,29 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Run ESLint
+echo 'Checking if your code adheres to the linting rules...'
+pnpm lint || (
+  echo 'ESLint has detected issues in your code. Please address these issues before committing.'
+  exit 1
+)
+echo 'ESLint check passed.'
+
+# Run Prettier
+echo 'Formatting your code using Prettier...'
+pnpm prettier-write || (
+  echo 'Prettier encountered an error while formatting your code. Please fix the issues and try again.'
+  exit 1
+)
+echo 'Code formatting completed successfully.'
+
+# Stage formatting changes
+git add -A
+
+# Run build
+echo 'Attempting to build your code...'
+pnpm build || (
+  echo 'Build process failed. Please resolve the issues and try again.'
+  exit 1
+)
+echo 'Build succeeded. Proceeding with the commit.'

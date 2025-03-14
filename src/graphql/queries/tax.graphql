@@ -1,0 +1,9 @@
+query GetTaxByBusinessId($where: tax_bool_exp) {
+  tax(where: $where) {
+    amount
+    business_id
+    default
+    id
+    name
+  }
+}

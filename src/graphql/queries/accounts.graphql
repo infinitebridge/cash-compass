@@ -1,0 +1,41 @@
+query GetAccounts(
+  $limit: Int
+  $offset: Int
+  $orderBy: [account_order_by!]
+  $where: account_bool_exp
+  $transactionsAggregateIncomeWhere: transaction_bool_exp
+  $transactionsAggregateExpenseWhere: transaction_bool_exp
+  $transactionsAggregateTypeWhere: transaction_bool_exp # Added this missing variable
+) {
+  account(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
+    id
+    name
+    created_at
+    uuid
+    transaction_aggregate_income: transactions_aggregate(
+      where: $transactionsAggregateIncomeWhere
+    ) {
+      aggregate {
+        sum {
+          amount
+        }
+      }
+    }
+    transaction_aggregate_expense: transactions_aggregate(
+      where: $transactionsAggregateExpenseWhere
+    ) {
+      aggregate {
+        sum {
+          amount
+        }
+      }
+    }
+    transaction_aggregate_by_type: transactions_aggregate(
+      where: $transactionsAggregateTypeWhere
+    ) {
+      aggregate {
+        count
+      }
+    }
+  }
+}

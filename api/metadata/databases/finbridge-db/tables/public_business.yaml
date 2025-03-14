@@ -1,0 +1,93 @@
+table:
+  name: business
+  schema: public
+array_relationships:
+  - name: accounts
+    using:
+      foreign_key_constraint_on:
+        column: business_id
+        table:
+          name: account
+          schema: public
+  - name: category_transactions
+    using:
+      foreign_key_constraint_on:
+        column: business_id
+        table:
+          name: category_transaction
+          schema: public
+  - name: companies
+    using:
+      foreign_key_constraint_on:
+        column: business_id
+        table:
+          name: company
+          schema: public
+  - name: products
+    using:
+      foreign_key_constraint_on:
+        column: business_id
+        table:
+          name: product
+          schema: public
+  - name: projects
+    using:
+      foreign_key_constraint_on:
+        column: business_id
+        table:
+          name: project
+          schema: public
+  - name: services
+    using:
+      foreign_key_constraint_on:
+        column: business_id
+        table:
+          name: service
+          schema: public
+  - name: taxes
+    using:
+      foreign_key_constraint_on:
+        column: business_id
+        table:
+          name: tax
+          schema: public
+  - name: user_businesses
+    using:
+      foreign_key_constraint_on:
+        column: business_id
+        table:
+          name: user_business
+          schema: public
+insert_permissions:
+  - role: owner
+    permission:
+      check:
+        user_businesses:
+          user_id:
+            _eq: x-hasura-user-external-id
+      columns:
+        - archived
+        - description
+        - name
+        - id
+        - created_at
+        - updated_at
+        - uuid
+    comment: ''
+select_permissions:
+  - role: owner
+    permission:
+      columns:
+        - archived
+        - description
+        - name
+        - id
+        - created_at
+        - updated_at
+        - uuid
+      filter:
+        user_businesses:
+          user_id:
+            _eq: x-hasura-user-external-id
+      allow_aggregations: true
+    comment: ''

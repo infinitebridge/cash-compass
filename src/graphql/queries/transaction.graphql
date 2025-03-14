@@ -1,0 +1,65 @@
+query GetTransactions(
+  $where: transaction_bool_exp
+  $offset: Int
+  $orderBy: [transaction_order_by!]
+  $limit: Int
+) {
+  transaction(
+    where: $where
+    offset: $offset
+    order_by: $orderBy
+    limit: $limit
+  ) {
+    account {
+      id
+      name
+    }
+    amount
+    category_transaction {
+      id
+      name
+    }
+    person {
+      last_name
+      first_name
+      id
+      company {
+        id
+        name
+      }
+    }
+    date
+    created_at
+    id
+    note
+    type
+  }
+}
+
+query GetCountTransactions(
+  $where: transaction_bool_exp
+  $offset: Int
+  $orderBy: [transaction_order_by!]
+  $limit: Int
+) {
+  transaction_aggregate(
+    where: $where
+    offset: $offset
+    order_by: $orderBy
+    limit: $limit
+  ) {
+    aggregate {
+      count
+    }
+  }
+}
+
+query GetTotalAmountByType($where: transaction_bool_exp) {
+  transaction_aggregate(where: $where) {
+    aggregate {
+      sum {
+        amount
+      }
+    }
+  }
+}

@@ -1,0 +1,63 @@
+table:
+  name: service
+  schema: public
+object_relationships:
+  - name: business
+    using:
+      foreign_key_constraint_on: business_id
+  - name: category_transaction
+    using:
+      foreign_key_constraint_on: income_category_id
+array_relationships:
+  - name: project_services
+    using:
+      foreign_key_constraint_on:
+        column: service_id
+        table:
+          name: project_services
+          schema: public
+insert_permissions:
+  - role: owner
+    permission:
+      check:
+        business:
+          user_businesses:
+            user_id:
+              _eq: x-hasura-user-external-id
+      columns:
+        - archived
+        - auto_add
+        - billable
+        - description
+        - name
+        - business_id
+        - id
+        - income_category_id
+        - rate
+        - created_at
+        - updated_at
+        - uuid
+    comment: ''
+select_permissions:
+  - role: owner
+    permission:
+      columns:
+        - archived
+        - auto_add
+        - billable
+        - description
+        - name
+        - business_id
+        - id
+        - income_category_id
+        - rate
+        - created_at
+        - updated_at
+        - uuid
+      filter:
+        business:
+          user_businesses:
+            user_id:
+              _eq: x-hasura-user-external-id
+      allow_aggregations: true
+    comment: ''

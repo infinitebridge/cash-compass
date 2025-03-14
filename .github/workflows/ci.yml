@@ -1,0 +1,40 @@
+name: Deploy 🚀
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    name: Deploy Applications
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install Dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Configure Environment Variables
+        run: |
+          echo VITE_CLERK_PUBLISHABLE_KEY=${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }} >>.env &&
+          echo VITE_GRAPHQL_API=${{ secrets.VITE_GRAPHQL_API }} >>.env
+        env:
+          VITE_CLERK_PUBLISHABLE_KEY: ${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}
+          VITE_GRAPHQL_API: ${{ secrets.VITE_GRAPHQL_API }}
+
+      - name: Build Core Application
+        run: NX_BRANCH=main pnpm core:build --configuration=production
+
+      - name: Deploy Main Application
+        uses: cloudflare/pages-action@1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: finbridge # e.g. 'my-project'
+          directory: dist/apps/core # e.g. 'dist'

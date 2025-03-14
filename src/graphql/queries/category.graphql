@@ -1,0 +1,45 @@
+query GetCategoryTransaction(
+  $where: category_transaction_bool_exp
+  $limit: Int
+  $offset: Int
+  $orderBy: [category_transaction_order_by!]
+  $transactionsAggregateWhere2: transaction_bool_exp
+) {
+  category_transaction(
+    where: $where
+    limit: $limit
+    offset: $offset
+    order_by: $orderBy
+  ) {
+    name
+    id
+    type
+    created_at
+    transactions_aggregate(where: $transactionsAggregateWhere2) {
+      aggregate {
+        count
+        sum {
+          amount
+        }
+      }
+    }
+    services_aggregate {
+      aggregate {
+        count
+      }
+    }
+  }
+}
+query GetCategoryTransactionOverview($where: category_transaction_bool_exp) {
+  category_transaction(where: $where) {
+    id
+    name
+    transactions_aggregate {
+      aggregate {
+        sum {
+          amount
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,49 @@
+table:
+  name: project_services
+  schema: public
+object_relationships:
+  - name: project
+    using:
+      foreign_key_constraint_on: project_id
+  - name: service
+    using:
+      foreign_key_constraint_on: service_id
+insert_permissions:
+  - role: owner
+    permission:
+      check:
+        _and:
+          - project:
+              business:
+                user_businesses:
+                  user_id:
+                    _eq: x-hasura-user-external-id
+          - service:
+              business:
+                user_businesses:
+                  user_id:
+                    _eq: x-hasura-user-external-id
+      columns:
+        - project_id
+        - service_id
+    comment: ''
+select_permissions:
+  - role: owner
+    permission:
+      columns:
+        - project_id
+        - service_id
+      filter:
+        _and:
+          - project:
+              business:
+                user_businesses:
+                  user_id:
+                    _eq: x-hasura-user-external-id
+          - service:
+              business:
+                user_businesses:
+                  user_id:
+                    _eq: x-hasura-user-external-id
+      allow_aggregations: true
+    comment: ''

@@ -1,0 +1,17 @@
+mutation InsertBusiness($object: business_insert_input!) {
+  insert_business_one(object: $object) {
+    id
+  }
+}
+
+mutation UpdateBusinessByPk(
+  $pkColumns: business_pk_columns_input!
+  $set: business_set_input
+) {
+  update_business_by_pk(pk_columns: $pkColumns, _set: $set) {
+    id
+    companies {
+      id
+    }
+  }
+}

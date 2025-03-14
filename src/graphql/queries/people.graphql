@@ -1,0 +1,56 @@
+query GetPeople(
+  $where: person_bool_exp
+  $limit: Int
+  $offset: Int
+  $orderBy: [person_order_by!]
+) {
+  person(where: $where, limit: $limit, offset: $offset, order_by: $orderBy) {
+    email
+    first_name
+    id
+    last_name
+    phone
+    role
+    whatsapp_phone
+    company {
+      id
+      name
+    }
+    projects_aggregate {
+      aggregate {
+        count
+      }
+    }
+  }
+}
+
+query GetPeopleAggregate(
+  $limit: Int
+  $offset: Int
+  $where: person_bool_exp
+  $orderBy: [person_order_by!]
+) {
+  person_aggregate(
+    limit: $limit
+    offset: $offset
+    where: $where
+    order_by: $orderBy
+  ) {
+    aggregate {
+      count
+    }
+  }
+}
+
+query GetPersonByPk($personByPkId: Int!) {
+  person_by_pk(id: $personByPkId) {
+    email
+    first_name
+    id
+    last_name
+    phone
+    role
+    whatsapp_phone
+    company_id
+  }
+}

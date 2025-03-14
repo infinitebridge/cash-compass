@@ -1,0 +1,18 @@
+query GetBusinesses($orderBy: [business_order_by!]) {
+  business(order_by: $orderBy) {
+    name
+    id
+    description
+    created_at
+  }
+}
+query GetBusinessByPk($businessByPkId: Int!) {
+  business_by_pk(id: $businessByPkId) {
+    description
+    id
+    name
+    companies {
+      business_phone
+    }
+  }
+}

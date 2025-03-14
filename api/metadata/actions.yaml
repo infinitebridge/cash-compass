@@ -1,0 +1,18 @@
+actions:
+  - name: create_custom_user_business
+    definition:
+      kind: synchronous
+      handler: '{{ACTION_BASE}}/api/user-businesses'
+      forward_client_headers: true
+      headers:
+        - name: x-hasura-secret
+          value_from_env: HASURA_SECRET_HEADER
+    permissions:
+      - role: owner
+custom_types:
+  enums: []
+  input_objects: []
+  objects:
+    - name: custom_company_mutation_response
+    - name: custom_user_business_mutation_response
+  scalars: []
