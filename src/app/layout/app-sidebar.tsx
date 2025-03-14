@@ -14,19 +14,16 @@ import {
 import { NavMain } from './nav-main';
 import { NavProjects } from './nav-projects';
 import { NavUser } from './nav-user';
-import { TeamSwitcher } from './team-switcher';
-import { Loader2 } from 'lucide-react';
-import { useEffect } from 'react';
+import { BusinessSwitcher } from './business-switcher';
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
+  Skeleton,
 } from '@cash-compass/ui';
-import { useAuth } from '@clerk/clerk-react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useGetUserBusinessAggregateQuery } from '../../graphql';
+import { useGetBusinesses } from '../../hooks/use-get-businesses';
 
 // This is sample data.
 const data = {
@@ -156,10 +153,26 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { businesses } = useGetBusinesses();
+  const businessSwitchData = React.useMemo(() => {
+    return (
+      businesses?.map((business) => {
+        return {
+          name: business.name,
+          logo: GalleryVerticalEnd,
+        };
+      }) ?? []
+    );
+  }, [businesses]);
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        {businessSwitchData.length ? (
+          <BusinessSwitcher businesses={businessSwitchData} />
+        ) : (
+          <Skeleton className="h-12" />
+        )}
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />

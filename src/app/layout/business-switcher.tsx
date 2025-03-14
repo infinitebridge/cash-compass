@@ -15,16 +15,16 @@ import {
   useSidebar,
 } from '@cash-compass/ui';
 
-export function TeamSwitcher({
-  teams,
+export function BusinessSwitcher({
+  businesses,
 }: {
-  teams: {
+  businesses: {
     name: string;
     logo: React.ElementType;
   }[];
 }) {
   const { isMobile } = useSidebar();
-  const [activeTeam, setActiveTeam] = React.useState(teams[0]);
+  const [activeTeam, setActiveTeam] = React.useState(businesses[0]);
 
   if (!activeTeam) {
     return null;
@@ -57,9 +57,9 @@ export function TeamSwitcher({
             sideOffset={4}
           >
             <DropdownMenuLabel className="text-xs text-muted-foreground">
-              Teams
+              Businesses
             </DropdownMenuLabel>
-            {teams.map((team, index) => (
+            {businesses.map((team, index) => (
               <DropdownMenuItem
                 key={team.name}
                 onClick={() => setActiveTeam(team)}
@@ -77,7 +77,9 @@ export function TeamSwitcher({
               <div className="flex size-6 items-center justify-center rounded-md border bg-background">
                 <Plus className="size-4" />
               </div>
-              <div className="font-medium text-muted-foreground">Add team</div>
+              <div className="font-medium text-muted-foreground">
+                Add business
+              </div>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

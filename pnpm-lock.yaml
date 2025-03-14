@@ -121,6 +121,9 @@ importers:
       zod:
         specifier: ^3.24.2
         version: 3.24.2
+      zustand:
+        specifier: ^4.5.4
+        version: 4.5.6(@types/react@19.0.0)(react@19.0.0)
     devDependencies:
       '@babel/core':
         specifier: ^7.14.5
@@ -14914,6 +14917,24 @@ packages:
         integrity: sha512-lY7CDW43ECgW9u1TcT3IoXHflywfVqDYze4waEz812jR/bZ8FHDsl7pFQoSZTz5N+2NqRXs8GBwnAwo3ZNxqhQ==,
       }
 
+  zustand@4.5.6:
+    resolution:
+      {
+        integrity: sha512-ibr/n1hBzLLj5Y+yUcU7dYw8p6WnIVzdJbnX+1YpaScvZVF2ziugqHs+LAmHw4lWO9c/zRj+K1ncgWDQuthEdQ==,
+      }
+    engines: { node: '>=12.7.0' }
+    peerDependencies:
+      '@types/react': '>=16.8'
+      immer: '>=9.0.6'
+      react: '>=16.8'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      immer:
+        optional: true
+      react:
+        optional: true
+
 snapshots:
   '@adobe/css-tools@4.3.3': {}
 
@@ -25274,3 +25295,10 @@ snapshots:
   zen-observable@0.8.15: {}
 
   zod@3.24.2: {}
+
+  zustand@4.5.6(@types/react@19.0.0)(react@19.0.0):
+    dependencies:
+      use-sync-external-store: 1.4.0(react@19.0.0)
+    optionalDependencies:
+      '@types/react': 19.0.0
+      react: 19.0.0
