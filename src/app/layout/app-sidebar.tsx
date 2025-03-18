@@ -1,15 +1,18 @@
 import * as React from 'react';
 import {
   AudioWaveform,
-  BookOpen,
-  Bot,
   Command,
   Frame,
   GalleryVerticalEnd,
   Map,
   PieChart,
   Settings2,
-  SquareTerminal,
+  LayoutDashboard,
+  Receipt,
+  ArrowRightLeft,
+  ReceiptText,
+  CircleDollarSignIcon,
+  TableOfContents,
 } from 'lucide-react';
 import { NavMain } from './nav-main';
 import { NavProjects } from './nav-projects';
@@ -48,89 +51,45 @@ const data = {
   ],
   navMain: [
     {
-      title: 'Playground',
+      title: 'Dashboard',
       url: '#',
-      icon: SquareTerminal,
+      icon: LayoutDashboard,
       isActive: true,
-      items: [
-        {
-          title: 'History',
-          url: '#',
-        },
-        {
-          title: 'Starred',
-          url: '#',
-        },
-        {
-          title: 'Settings',
-          url: '#',
-        },
-      ],
     },
     {
-      title: 'Models',
+      title: 'Expenses',
       url: '#',
-      icon: Bot,
-      items: [
-        {
-          title: 'Genesis',
-          url: '#',
-        },
-        {
-          title: 'Explorer',
-          url: '#',
-        },
-        {
-          title: 'Quantum',
-          url: '#',
-        },
-      ],
+      icon: ReceiptText,
+      isActive: false,
     },
     {
-      title: 'Documentation',
+      title: 'Revenue',
       url: '#',
-      icon: BookOpen,
-      items: [
-        {
-          title: 'Introduction',
-          url: '#',
-        },
-        {
-          title: 'Get Started',
-          url: '#',
-        },
-        {
-          title: 'Tutorials',
-          url: '#',
-        },
-        {
-          title: 'Changelog',
-          url: '#',
-        },
-      ],
+      icon: CircleDollarSignIcon,
+      isActive: false,
+    },
+    {
+      title: 'Invoices',
+      url: '#',
+      icon: Receipt,
+      isActive: false,
+    },
+    {
+      title: 'Cash Flow',
+      url: '#',
+      icon: ArrowRightLeft,
+      isActive: false,
+    },
+    {
+      title: 'Repports',
+      url: '#',
+      icon: TableOfContents,
+      isActive: false,
     },
     {
       title: 'Settings',
       url: '#',
       icon: Settings2,
-      items: [
-        {
-          title: 'General',
-          url: '#',
-        },
-        {
-          title: 'Team',
-          url: '#',
-        },
-        {
-          title: 'Billing',
-          url: '#',
-        },
-        {
-          title: 'Limits',
-          url: '#',
-        },
-      ],
     },
   ],
   projects: [
