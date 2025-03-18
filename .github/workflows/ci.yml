@@ -29,7 +29,7 @@ jobs:
           VITE_GRAPHQL_API: ${{ secrets.VITE_GRAPHQL_API }}
 
       - name: Build Core Application
-        run: NX_BRANCH=main pnpm core:build --configuration=production
+        run: NX_BRANCH=main pnpm cash-compass:build --configuration=production
 
       - name: Deploy Main Application
         uses: cloudflare/pages-action@1
