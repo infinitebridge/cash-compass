@@ -36,5 +36,5 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: finbridge # e.g. 'my-project'
-          directory: dist/apps/core # e.g. 'dist'
+          projectName: cash-compass # e.g. 'my-project'
+          directory: dist/CashCompass # e.g. 'dist'
