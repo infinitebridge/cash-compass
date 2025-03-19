@@ -1,0 +1,58 @@
+# PageHeader Component
+
+The PageHeader component provides a consistent header for dashboard pages, featuring a title, time period selector, and action buttons with dropdown functionality.
+
+## Features
+
+- Customizable title with proper heading hierarchy
+- Time period selector for filtering dashboard data
+- Action button with dropdown menu for common actions
+- Fully responsive design that adapts to different screen sizes
+- Support for icons within dropdown menu items
+- Customizable styling through props
+
+## Usage
+
+The PageHeader component is designed to be placed at the top of dashboard pages, creating a consistent experience across the application while allowing for contextual actions relevant to each section.
+
+```jsx
+import { PageHeader } from '@cash-compass/blocks';
+import { Receipt, DollarSign, FileInvoice } from 'lucide-react';
+
+export default function DashboardPage() {
+  return (
+    <PageHeader
+      title="Financial Dashboard"
+      selectedPeriod="march"
+      onPeriodChange={(period) => console.log(`Period changed to ${period}`)}
+      actionButtonLabel="New Transaction"
+      dropdownItems={[
+        {
+          label: 'New Expense',
+          icon: <Receipt className="h-4 w-4 mr-2" />,
+          iconColor: 'text-blue-500',
+          onClick: () => console.log('New expense'),
+        },
+        {
+          label: 'New Revenue',
+          icon: <DollarSign className="h-4 w-4 mr-2" />,
+          iconColor: 'text-green-500',
+          onClick: () => console.log('New revenue'),
+        },
+      ]}
+    />
+  );
+}
+```
+
+## Accessibility
+
+The component maintains proper heading hierarchy with the page title and ensures dropdown menus are keyboard navigable. All interactive elements have appropriate focus states for keyboard users.
+
+## Responsive Behavior
+
+On mobile devices, the component adapts by:
+
+- Stacking elements vertically for better readability
+- Making the action button full-width
+- Preserving functionality while optimizing for touch interaction

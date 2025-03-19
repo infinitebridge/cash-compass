@@ -15,8 +15,9 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@cash-compass/ui": ["ui/src/"],
-      "@cash-compass/utils": ["utils/src/"]
+      "@cash-compass/blocks": ["blocks/src/index.ts"],
+      "@cash-compass/ui/*": ["ui/src/"],
+      "@cash-compass/utils/*": ["utils/src/"]
     }
   },
   "exclude": ["node_modules", "tmp"]

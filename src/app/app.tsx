@@ -6,6 +6,7 @@ import SignUpPage from '../views/auth/sign-up';
 
 import { ApolloProviderWrapper } from './apollo';
 import Layout from './layout';
+import Dashboard from '../views/dashboard';
 
 const router = createBrowserRouter([
   {
@@ -18,7 +19,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <div>home view</div>,
+        element: <Dashboard />,
       },
     ],
   },
