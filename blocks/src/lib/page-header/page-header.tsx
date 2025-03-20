@@ -50,7 +50,7 @@ interface PageHeaderProps {
  *
  * Includes a title, optional time period selector, and action button with dropdown
  */
-const PageHeader: React.FC<PageHeaderProps> = ({
+export const PageHeader: React.FC<PageHeaderProps> = ({
   title,
   selectedPeriod,
   onPeriodChange,
@@ -130,5 +130,3 @@ const PageHeader: React.FC<PageHeaderProps> = ({
     </div>
   );
 };
-
-export default PageHeader;

@@ -1,4 +1,4 @@
-import StatCard from './card';
+import { StatCard } from '@cash-compass/ui';
 
 export function SectionCards() {
   return (

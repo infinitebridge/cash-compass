@@ -5,7 +5,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@cash-compass/ui';
+} from './card';
 import { TrendingUpIcon, TrendingDownIcon } from 'lucide-react';
 
 interface StatCardProps {
@@ -58,7 +58,7 @@ interface StatCardProps {
  * This component can be used to display various types of statistical information
  * with support for trends, secondary values, and customizable styling.
  */
-const StatCard: React.FC<StatCardProps> = ({
+export const StatCard: React.FC<StatCardProps> = ({
   title,
   value,
   subtitle,
@@ -163,5 +163,3 @@ const StatCard: React.FC<StatCardProps> = ({
     </Card>
   );
 };
-
-export default StatCard;

@@ -15,3 +15,4 @@ export * from './label';
 export * from './card';
 export * from './badge';
 export * from './select';
+export * from './stat-card';

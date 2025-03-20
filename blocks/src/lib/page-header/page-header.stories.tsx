@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import PageHeader from './page-header';
+import { PageHeader } from './page-header';
 import { within, userEvent } from '@storybook/testing-library';
 import { expect } from '@storybook/jest';
 import { Receipt, DollarSign, ReceiptText } from 'lucide-react';

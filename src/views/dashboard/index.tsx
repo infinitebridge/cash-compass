@@ -1,5 +1,5 @@
 import { Receipt, DollarSign, ReceiptText } from 'lucide-react';
-import PageHeader from './components/header';
+import { PageHeader } from '@cash-compass/blocks';
 import { SectionCards } from './components/section-cards';
 import React from 'react';
 
