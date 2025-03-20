@@ -27,9 +27,8 @@ import {
   Skeleton,
 } from '@cash-compass/ui';
 import { useGetBusinesses } from '../../hooks/use-get-businesses';
-
-// This is sample data.
-const data = {
+import { useLocation } from 'react-router-dom';
+const navigationConfig = {
   user: {
     name: 'shadcn',
     email: 'm@example.com',
@@ -52,39 +51,33 @@ const data = {
   navMain: [
     {
       title: 'Dashboard',
-      url: '#',
+      url: '/',
       icon: LayoutDashboard,
-      isActive: true,
     },
     {
       title: 'Expenses',
-      url: '#',
+      url: '/expenses',
       icon: ReceiptText,
-      isActive: false,
     },
     {
       title: 'Revenue',
-      url: '#',
+      url: '/revenue',
       icon: CircleDollarSignIcon,
-      isActive: false,
     },
     {
       title: 'Invoices',
       url: '#',
       icon: Receipt,
-      isActive: false,
     },
     {
       title: 'Cash Flow',
       url: '#',
       icon: ArrowRightLeft,
-      isActive: false,
     },
     {
       title: 'Repports',
       url: '#',
       icon: TableOfContents,
-      isActive: false,
     },
     {
       title: 'Settings',
@@ -110,9 +103,18 @@ const data = {
     },
   ],
 };
-
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { businesses } = useGetBusinesses();
+  const pathname = useLocation().pathname;
+
+  const navigationMenu = React.useMemo(() => {
+    return navigationConfig.navMain.map((item) => {
+      return {
+        ...item,
+        isActive: pathname === item.url,
+      };
+    });
+  }, [pathname]);
   const businessSwitchData = React.useMemo(() => {
     return (
       businesses?.map((business) => {
@@ -134,11 +136,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         )}
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
+        <NavMain items={navigationMenu} />
+        <NavProjects projects={navigationConfig.projects} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={navigationConfig.user} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

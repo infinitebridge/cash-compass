@@ -1,11 +1,5 @@
 import {
-  Breadcrumb,
   Separator,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
@@ -16,7 +10,7 @@ import { useAuth } from '@clerk/clerk-react';
 import { useNavigate } from 'react-router-dom';
 import { useGetUserBusinessAggregateQuery } from '../../graphql';
 import { useEffect } from 'react';
-import { Bell, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { SearchForm } from './search-form';
 export default function Layout() {
   const { userId, isLoaded } = useAuth();
