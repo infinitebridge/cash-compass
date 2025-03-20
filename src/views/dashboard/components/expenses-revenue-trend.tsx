@@ -22,6 +22,7 @@ export default function FinancialChart() {
 
   const financialData = useMemo(
     () => [
+      { month: 'Sep', revenue: 0, expenses: 0, netIncome: 0 },
       { month: 'Oct', revenue: 68000, expenses: 42000, netIncome: 26000 },
       { month: 'Nov', revenue: 72000, expenses: 38000, netIncome: 34000 },
       { month: 'Dec', revenue: 80000, expenses: 48000, netIncome: 32000 },
@@ -60,7 +61,7 @@ export default function FinancialChart() {
     return [0, Math.ceil((maxValue * 1.1) / 5000) * 5000]; // Round up to nearest 5k and add 10% padding
   }, [financialData]);
   return (
-    <div className="w-full p-4 my-6 rounded-xl border bg-card text-card-foreground shadow @container/card">
+    <div className="w-full p-4 my-4 rounded-xl border bg-card text-card-foreground shadow @container/card">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-semibold text-gray-900">
           Revenue vs. Expenses
