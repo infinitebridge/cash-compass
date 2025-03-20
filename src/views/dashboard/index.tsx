@@ -1,6 +1,7 @@
 import { Receipt, DollarSign, ReceiptText } from 'lucide-react';
 import { PageHeader } from '@cash-compass/blocks';
 import { SectionCards } from './components/section-cards';
+import ExpensesRevenueTrend from './components/expenses-revenue-trend';
 import React from 'react';
 
 function Dashboard() {
@@ -53,6 +54,7 @@ function Dashboard() {
         ]}
       />
       <SectionCards />
+      <ExpensesRevenueTrend />
       <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
     </div>
   );
