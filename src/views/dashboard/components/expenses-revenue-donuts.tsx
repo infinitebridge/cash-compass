@@ -15,10 +15,10 @@ import clsx from 'clsx';
 
 export function ExpensesRevenueDonuts() {
   const expenseData = [
-    { name: 'Office', value: 25, color: 'hsl(214, 82%, 76%)' },
-    { name: 'Travel', value: 23, color: 'hsl(150, 60%, 70%)' },
-    { name: 'Software', value: 32, color: 'hsl(48, 96%, 78%)' },
-    { name: 'Marketing', value: 20, color: 'hsl(265, 70%, 80%)' },
+    { name: 'Office', value: 25, color: 'hsl(var(--chart-1))' },
+    { name: 'Travel', value: 23, color: 'hsl(var(--chart-2))' },
+    { name: 'Software', value: 32, color: 'hsl(var(--chart-3))' },
+    { name: 'Marketing', value: 20, color: 'hsl(var(--chart-4))' },
   ];
   const expensesStats = [
     {
@@ -39,9 +39,9 @@ export function ExpensesRevenueDonuts() {
     },
   ];
   const revenueData = [
-    { name: 'Product Sales', value: 45, color: 'hsl(214, 82%, 76%)' },
-    { name: 'Services', value: 25, color: 'hsl(150, 60%, 70%)' },
-    { name: 'Subscriptions', value: 30, color: 'hsl(265, 70%, 80%)' },
+    { name: 'Product Sales', value: 45, color: 'hsl(var(--chart-1))' },
+    { name: 'Services', value: 25, color: 'hsl(var(--chart-3))' },
+    { name: 'Subscriptions', value: 30, color: 'hsl(var(--chart-2))' },
   ];
 
   const revenueStats = [
