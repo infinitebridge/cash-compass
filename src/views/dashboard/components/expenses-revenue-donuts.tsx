@@ -1,13 +1,12 @@
 'use client';
 
-import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Cell } from 'recharts';
 
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
@@ -139,7 +138,7 @@ export function DonutChart({
                     className="w-3 h-3 rounded-full"
                     style={{ backgroundColor: item.color }}
                   ></div>
-                  <span className="text-sm text-muted-foreground truncate">
+                  <span className="text-xs text-muted-foreground truncate">
                     {item.name}
                   </span>
                 </div>

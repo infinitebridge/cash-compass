@@ -97,7 +97,7 @@ export default function FinancialChart() {
             </span>
           </div>
           <div className="flex items-center">
-            <span className="h-3 w-1 bg-yellow-500 mr-2"></span>
+            <span className="h-3 w-1.5 bg-amber-400 mr-2"></span>
             <span
               className={clsx(
                 'text-sm text-gray-600 transition-all ease-linear',
@@ -223,7 +223,7 @@ export default function FinancialChart() {
                           payload.find((p) => p.dataKey === 'netIncome') && (
                             <>
                               <div className="flex items-center gap-1">
-                                <div className="h-3 w-3 rounded-full bg-amber-400"></div>
+                                <div className="h-3 w-1.5 bg-amber-400"></div>
                                 <span>Net Income:</span>
                               </div>
                               <div className="text-right font-medium">
