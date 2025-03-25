@@ -4,6 +4,7 @@ import { SectionCards } from './components/section-cards';
 import ExpensesRevenueTrend from './components/expenses-revenue-trend';
 import React from 'react';
 import { ExpensesRevenueDonuts } from './components/expenses-revenue-donuts';
+import { RecentTransactions } from './components/recent-transactions';
 
 function Dashboard() {
   const [selectedPeriod, setSelectedPeriod] = React.useState('march');
@@ -56,6 +57,7 @@ function Dashboard() {
       />
       <SectionCards />
       <ExpensesRevenueTrend />
+      <RecentTransactions />
       <ExpensesRevenueDonuts />
       <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
     </div>
