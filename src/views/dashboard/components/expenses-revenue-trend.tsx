@@ -68,7 +68,7 @@ export default function FinancialChart() {
         </h2>
         <div className="flex items-center space-x-4">
           <div className="flex items-center">
-            <span className="h-3 w-3 rounded-full bg-green-500 mr-2"></span>
+            <span className="h-3 w-3 rounded-full bg-[hsl(var(--chart-2))] mr-2"></span>
 
             <span
               className={clsx(
@@ -83,7 +83,7 @@ export default function FinancialChart() {
             </span>
           </div>
           <div className="flex items-center">
-            <span className="h-3 w-3 rounded-full bg-blue-500 mr-2"></span>
+            <span className="h-3 w-3 rounded-full bg-[hsl(var(--chart-1))] mr-2"></span>
             <span
               className={clsx(
                 'text-sm text-gray-600 transition-all ease-linear',
@@ -97,7 +97,7 @@ export default function FinancialChart() {
             </span>
           </div>
           <div className="flex items-center">
-            <span className="h-3 w-1 bg-yellow-500 mr-2"></span>
+            <span className="h-3 w-1.5 bg-[hsl(var(--chart-4))] mr-2"></span>
             <span
               className={clsx(
                 'text-sm text-gray-600 transition-all ease-linear',
@@ -116,11 +116,11 @@ export default function FinancialChart() {
         config={{
           revenue: {
             label: 'Revenue',
-            color: 'hsl(var(--emerald-500))',
+            color: 'hsl(var(--chart-1))',
           },
           expenses: {
             label: 'Expenses',
-            color: 'hsl(var(--blue-500))',
+            color: 'hsl(var(--chart-2))',
           },
           netIncome: {
             label: 'Net Income',
@@ -191,7 +191,7 @@ export default function FinancialChart() {
                           payload.find((p) => p.dataKey === 'revenue') && (
                             <>
                               <div className="flex items-center gap-1">
-                                <div className="h-3 w-3 rounded-full bg-emerald-500"></div>
+                                <div className="h-3 w-3 rounded-full bg-[hsl(var(--chart-2))]"></div>
                                 <span>Revenue:</span>
                               </div>
                               <div className="text-right font-medium">
@@ -207,7 +207,7 @@ export default function FinancialChart() {
                           payload.find((p) => p.dataKey === 'expenses') && (
                             <>
                               <div className="flex items-center gap-1">
-                                <div className="h-3 w-3 rounded-full bg-blue-500"></div>
+                                <div className="h-3 w-3 rounded-full bg-[hsl(var(--chart-1))]"></div>
                                 <span>Expenses:</span>
                               </div>
                               <div className="text-right font-medium">
@@ -223,7 +223,7 @@ export default function FinancialChart() {
                           payload.find((p) => p.dataKey === 'netIncome') && (
                             <>
                               <div className="flex items-center gap-1">
-                                <div className="h-3 w-3 rounded-full bg-amber-400"></div>
+                                <div className="h-3 w-1.5 bg-[hsl(var(--chart-4))]"></div>
                                 <span>Net Income:</span>
                               </div>
                               <div className="text-right font-medium">
@@ -246,7 +246,7 @@ export default function FinancialChart() {
               <Bar
                 yAxisId="left"
                 dataKey="revenue"
-                fill="#10b981" // emerald-500
+                fill="hsl(var(--chart-2))"
                 radius={[4, 4, 0, 0]}
                 barSize={30}
               />
@@ -256,7 +256,7 @@ export default function FinancialChart() {
               <Bar
                 yAxisId="left"
                 dataKey="expenses"
-                fill="#3b82f6" // blue-500
+                fill="hsl(var(--chart-1))"
                 radius={[4, 4, 0, 0]}
                 barSize={30}
               />
@@ -267,17 +267,17 @@ export default function FinancialChart() {
                 yAxisId="right"
                 type="monotone"
                 dataKey="netIncome"
-                stroke="#fbbf24" // amber-400
+                stroke="hsl(var(--chart-4))"
                 strokeWidth={3}
                 dot={{
                   r: 6,
-                  fill: '#fbbf24',
+                  fill: 'hsl(var(--chart-4))',
                   stroke: '#ffffff',
                   strokeWidth: 2,
                 }}
                 activeDot={{
                   r: 8,
-                  fill: '#fbbf24',
+                  fill: 'hsl(var(--chart-4))',
                   stroke: '#ffffff',
                   strokeWidth: 2,
                 }}

@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { PageHeader } from './page-header';
+import { PageHeader } from './header';
 import { within, userEvent } from '@storybook/testing-library';
 import { expect } from '@storybook/jest';
 import { Receipt, DollarSign, ReceiptText } from 'lucide-react';
-import PageHeaderDocs from './page-header.mdx';
+
 const meta: Meta<typeof PageHeader> = {
   component: PageHeader,
 
-  title: 'Components/Page/Header',
+  title: 'Layout/header',
   tags: ['autodocs'],
   argTypes: {
     title: { control: 'text' },
@@ -24,7 +24,8 @@ const meta: Meta<typeof PageHeader> = {
     layout: 'padded',
     docs: {
       description: {
-        page: PageHeaderDocs,
+        component:
+          'The Header component provides a consistent header for dashboard pages, featuring a title, time period selector, and action buttons with dropdown functionality.',
       },
     },
   },

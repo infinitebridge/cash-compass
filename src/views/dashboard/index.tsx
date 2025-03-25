@@ -3,6 +3,7 @@ import { PageHeader } from '@cash-compass/blocks';
 import { SectionCards } from './components/section-cards';
 import ExpensesRevenueTrend from './components/expenses-revenue-trend';
 import React from 'react';
+import { ExpensesRevenueDonuts } from './components/expenses-revenue-donuts';
 
 function Dashboard() {
   const [selectedPeriod, setSelectedPeriod] = React.useState('march');
@@ -55,6 +56,7 @@ function Dashboard() {
       />
       <SectionCards />
       <ExpensesRevenueTrend />
+      <ExpensesRevenueDonuts />
       <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
     </div>
   );
