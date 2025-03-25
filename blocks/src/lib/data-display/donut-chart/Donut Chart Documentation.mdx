@@ -1,0 +1,287 @@
+# DonutChart
+
+A visualization component that displays data in a donut chart with supporting statistics alongside.
+
+## Overview
+
+The `DonutChart` component combines a visual pie/donut chart with textual statistics for a comprehensive view of your data. It's ideal for displaying financial breakdowns, customer segmentation, or any categorical data where proportions need to be visualized.
+
+## Features
+
+- Donut visualization of proportional data
+- Color-coded segments with legend
+- Supporting statistics display
+- Tooltip with hover interactions
+- Responsive design
+- Customizable colors
+
+## Installation
+
+Ensure you have the required dependencies installed:
+
+```bash
+npm install recharts clsx @/components/ui/card
+```
+
+## Usage
+
+```tsx
+import { DonutChart } from '@/components/DonutChart';
+
+export default function ExpenseBreakdownExample() {
+  const expenseData = [
+    { name: 'Software', value: 32, color: '#EAB308' },
+    { name: 'Travel', value: 28, color: '#10B981' },
+    { name: 'Marketing', value: 25, color: '#A855F7' },
+    { name: 'Office', value: 15, color: '#3B82F6' },
+  ];
+
+  const expenseSummary = [
+    {
+      statsTitle: 'Largest Category',
+      name: 'Software & Subscriptions',
+      value: '$13,560 (32%)',
+    },
+    {
+      statsTitle: 'Highest Growth',
+      name: 'Marketing',
+      value: '+18% vs. last month',
+      ValueclassName: 'text-green-600',
+    },
+    {
+      statsTitle: 'Pending Approvals',
+      name: '7 expenses',
+      value: '$4,580 total',
+    },
+  ];
+
+  return (
+    <DonutChart
+      title="Expense Breakdown"
+      statsData={expenseData}
+      statsSummary={expenseSummary}
+    />
+  );
+}
+```
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>title</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>The title displayed at the top of the chart card</td>
+    </tr>
+    <tr>
+      <td>
+        <code>statsData</code>
+      </td>
+      <td>
+        <code>Array&lt;StatsDataItem&gt;</code>
+      </td>
+      <td>The data to be displayed in the donut chart</td>
+    </tr>
+    <tr>
+      <td>
+        <code>statsSummary</code>
+      </td>
+      <td>
+        <code>Array&lt;StatsSummaryItem&gt;</code>
+      </td>
+      <td>The summary statistics to be displayed alongside the chart</td>
+    </tr>
+  </tbody>
+</table>
+
+### StatsDataItem
+
+<table>
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>name</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>Category name</td>
+    </tr>
+    <tr>
+      <td>
+        <code>value</code>
+      </td>
+      <td>
+        <code>number</code>
+      </td>
+      <td>Category value (percentage or absolute)</td>
+    </tr>
+    <tr>
+      <td>
+        <code>color</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>HEX color code for this segment</td>
+    </tr>
+  </tbody>
+</table>
+
+### StatsSummaryItem
+
+<table>
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>statsTitle</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>Title of the statistic</td>
+    </tr>
+    <tr>
+      <td>
+        <code>name</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>Primary statistic name/label</td>
+    </tr>
+    <tr>
+      <td>
+        <code>value</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>Value or description text</td>
+    </tr>
+    <tr>
+      <td>
+        <code>ValueclassName</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>Optional CSS class name for custom styling</td>
+    </tr>
+  </tbody>
+</table>
+
+## Examples
+
+### Expense Breakdown
+
+```tsx
+<DonutChart
+  title="Expense Breakdown"
+  statsData={[
+    { name: 'Software', value: 32, color: '#EAB308' },
+    { name: 'Travel', value: 28, color: '#10B981' },
+    { name: 'Marketing', value: 25, color: '#A855F7' },
+    { name: 'Office', value: 15, color: '#3B82F6' },
+  ]}
+  statsSummary={[
+    {
+      statsTitle: 'Largest Category',
+      name: 'Software & Subscriptions',
+      value: '$13,560 (32%)',
+    },
+    {
+      statsTitle: 'Highest Growth',
+      name: 'Marketing',
+      value: '+18% vs. last month',
+      ValueclassName: 'text-green-600',
+    },
+    {
+      statsTitle: 'Pending Approvals',
+      name: '7 expenses',
+      value: '$4,580 total',
+    },
+  ]}
+/>
+```
+
+### Revenue Sources
+
+```tsx
+<DonutChart
+  title="Revenue Sources"
+  statsData={[
+    { name: 'Product Sales', value: 45, color: '#3B82F6' },
+    { name: 'Services', value: 35, color: '#10B981' },
+    { name: 'Subscriptions', value: 20, color: '#A855F7' },
+  ]}
+  statsSummary={[
+    {
+      statsTitle: 'Most Profitable',
+      name: 'Product Sales',
+      value: '$39,350 (45%)',
+    },
+    {
+      statsTitle: 'Fastest Growing',
+      name: 'Subscriptions',
+      value: '+24% vs. last month',
+      ValueclassName: 'text-green-600',
+    },
+    {
+      statsTitle: 'Open Invoices',
+      name: '12 invoices',
+      value: '$36,580 total',
+    },
+  ]}
+/>
+```
+
+## Accessibility
+
+- Ensure your colors have sufficient contrast for colorblind users
+- Consider adding `aria-label` attributes for screen readers
+- Make sure the content is understandable without relying solely on color
+
+## Design Guidelines
+
+- Use a consistent color palette across multiple charts
+- For financial data, consider using:
+  - Green for positive/growth
+  - Red for negative/decline
+  - Blue for neutral information
+- Limit the number of segments to 5-7 for better readability
+- Order segments from largest to smallest for better visual comprehension
+
+## Dependencies
+
+This component requires:
+
+- `recharts` for chart rendering
+- `clsx` for conditional class names
+- `@/components/ui/card` for card layout components

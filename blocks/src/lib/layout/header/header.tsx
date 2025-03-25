@@ -11,7 +11,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@cash-compass/ui';
+} from '@cash-compass/ui/index';
 
 interface PageHeaderProps {
   /** The title to display */
