@@ -195,7 +195,7 @@ export const columns: ColumnDef<Transaction>[] = [
 // Update the page component to better match the image layout
 export function RecentTransactions() {
   return (
-    <main className="container mx-auto py-10">
+    <div className="w-full p-4 my-4 rounded-xl border bg-card text-card-foreground shadow">
       <GenericTable
         data={transactionData}
         columns={columns}
@@ -208,6 +208,6 @@ export function RecentTransactions() {
         defaultPageSize={5}
         onRowClick={(row) => console.log('Row clicked:', row)}
       />
-    </main>
+    </div>
   );
 }

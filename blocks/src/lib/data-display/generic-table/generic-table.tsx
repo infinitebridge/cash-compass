@@ -39,7 +39,8 @@ import {
   TableHeader,
   TableRow,
 } from '@cash-compass/ui/table';
-import { GenericSheet } from '../generic-sheet/generic-sheet';
+import { GenericSheet } from '../../layout/generic-sheet/generic-sheet';
+import clsx from 'clsx';
 
 interface GenericTableProps<T> {
   data: T[];
@@ -117,54 +118,54 @@ export function GenericTable<T>({
   };
 
   return (
-    <div className={`w-full ${className}`}>
+    <div className={clsx(`w-full`, className)}>
       <div className="flex items-center justify-between pb-4">
-        <div className="flex flex-row w-[70%] items-center gap-2">
-          <h2 className="text-xl w-52 font-semibold">{title}</h2>
+        <h2 className="tracking-tight text-lg font-semibold text-gray-900">
+          {title}
+        </h2>
+        <div className="flex gap-3">
           {enableFiltering && filterColumn && (
-            <div className="flex w-full items-center gap-2">
-              <Input
-                placeholder={`Filter ${filterColumn}...`}
-                value={
-                  (table.getColumn(filterColumn)?.getFilterValue() as string) ??
-                  ''
-                }
-                onChange={(event) =>
-                  table
-                    .getColumn(filterColumn)
-                    ?.setFilterValue(event.target.value)
-                }
-                className="max-w-sm h-8"
-              />
-            </div>
+            <Input
+              placeholder={`Filter ${filterColumn}...`}
+              value={
+                (table.getColumn(filterColumn)?.getFilterValue() as string) ??
+                ''
+              }
+              onChange={(event) =>
+                table
+                  .getColumn(filterColumn)
+                  ?.setFilterValue(event.target.value)
+              }
+              className="max-w-sm h-8"
+            />
+          )}
+          {enableColumnVisibility && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="h-8">
+                  Columns <ChevronDown className="ml-2 h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {table
+                  .getAllColumns()
+                  .filter((column) => column.getCanHide())
+                  .map((column) => (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           )}
         </div>
-        {enableColumnVisibility && (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="h-8">
-                Columns <ChevronDown className="ml-2 h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )}
       </div>
       <div>
         <Table>

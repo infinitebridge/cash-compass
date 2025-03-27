@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { GenericTable } from '@cash-compass/blocks';
+import { GenericTable } from './generic-table';
 import { ColumnDef } from '@tanstack/react-table';
 
 // User Type
