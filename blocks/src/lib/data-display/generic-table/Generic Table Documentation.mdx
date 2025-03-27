@@ -1,0 +1,318 @@
+# Generic Table Component
+
+## Overview
+
+The `GenericTable` is an infinitely flexible React component designed to render any structured data with advanced features like sorting, filtering, pagination, and column visibility.
+
+## Features
+
+- Completely type-agnostic data rendering
+- Fully customizable through generic type parameters
+- Advanced table interactions:
+  - Sorting
+  - Filtering
+  - Pagination
+  - Column visibility toggle
+- Responsive design
+- TypeScript generic support
+
+## Installation
+
+```bash
+npm install @cash-compass/blocks @tanstack/react-table
+```
+
+## Usage Examples
+
+### Basic Usage with Different Data Types
+
+```tsx
+import { GenericTable } from '@cash-compass/blocks';
+import { ColumnDef } from '@tanstack/react-table';
+
+// User Data Example
+type User = {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+};
+
+const userColumns: ColumnDef<User>[] = [
+  {
+    accessorKey: 'id',
+    header: 'ID',
+  },
+  {
+    accessorKey: 'name',
+    header: 'Name',
+  },
+  {
+    accessorKey: 'email',
+    header: 'Email',
+  },
+  {
+    accessorKey: 'role',
+    header: 'Role',
+  },
+];
+
+const users: User[] = [
+  { id: 1, name: 'John Doe', email: 'john@example.com', role: 'Admin' },
+  { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'User' },
+];
+
+// Product Inventory Example
+type Product = {
+  sku: string;
+  name: string;
+  price: number;
+  stock: number;
+};
+
+const productColumns: ColumnDef<Product>[] = [
+  {
+    accessorKey: 'sku',
+    header: 'SKU',
+  },
+  {
+    accessorKey: 'name',
+    header: 'Product Name',
+  },
+  {
+    accessorKey: 'price',
+    header: 'Price',
+    cell: (info) => `$${info.getValue<number>().toFixed(2)}`,
+  },
+  {
+    accessorKey: 'stock',
+    header: 'Stock',
+  },
+];
+
+const products: Product[] = [
+  { sku: 'TECH-001', name: 'Wireless Headphones', price: 129.99, stock: 50 },
+  { sku: 'TECH-002', name: 'Smart Watch', price: 199.99, stock: 25 },
+];
+
+function DataDisplayComponent() {
+  return (
+    <>
+      <GenericTable
+        data={users}
+        columns={userColumns}
+        title="User Management"
+        enableSorting
+        enableFiltering
+        filterColumn="name"
+      />
+
+      <GenericTable
+        data={products}
+        columns={productColumns}
+        title="Product Inventory"
+        enableSorting
+        enablePagination
+      />
+    </>
+  );
+}
+```
+
+## Props
+
+<table class="w-full border-collapse border border-gray-300">
+  <thead class="bg-gray-100">
+    <tr>
+      <th class="border border-gray-300 p-2 text-left">Prop</th>
+      <th class="border border-gray-300 p-2 text-left">Type</th>
+      <th class="border border-gray-300 p-2 text-left">Default</th>
+      <th class="border border-gray-300 p-2 text-left">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="border border-gray-300 p-2">
+        <code>data</code>
+      </td>
+      <td class="border border-gray-300 p-2">
+        <code>T[]</code>
+      </td>
+      <td class="border border-gray-300 p-2">
+        <code>[]</code>
+      </td>
+      <td class="border border-gray-300 p-2">Array of data to display</td>
+    </tr>
+    <tr>
+      <td class="border border-gray-300 p-2">
+        <code>columns</code>
+      </td>
+      <td class="border border-gray-300 p-2">
+        <code>ColumnDef&lt;T&gt;[]</code>
+      </td>
+      <td class="border border-gray-300 p-2">
+        <code>[]</code>
+      </td>
+      <td class="border border-gray-300 p-2">Column definitions</td>
+    </tr>
+    <tr>
+      <td class="border border-gray-300 p-2">
+        <code>title</code>
+      </td>
+      <td class="border border-gray-300 p-2">
+        <code>string</code>
+      </td>
+      <td class="border border-gray-300 p-2">
+        <code>'Table'</code>
+      </td>
+      <td class="border border-gray-300 p-2">Table title</td>
+    </tr>
+    <tr>
+      <td class="border border-gray-300 p-2">
+        <code>filterColumn</code>
+      </td>
+      <td class="border border-gray-300 p-2">
+        <code>string</code>
+      </td>
+      <td class="border border-gray-300 p-2">
+        <code>undefined</code>
+      </td>
+      <td class="border border-gray-300 p-2">Column to enable filtering</td>
+    </tr>
+    <tr>
+      <td class="border border-gray-300 p-2">
+        <code>enableSorting</code>
+      </td>
+      <td class="border border-gray-300 p-2">
+        <code>boolean</code>
+      </td>
+      <td class="border border-gray-300 p-2">
+        <code>true</code>
+      </td>
+      <td class="border border-gray-300 p-2">Enable column sorting</td>
+    </tr>
+    <tr>
+      <td class="border border-gray-300 p-2">
+        <code>enableFiltering</code>
+      </td>
+      <td class="border border-gray-300 p-2">
+        <code>boolean</code>
+      </td>
+      <td class="border border-gray-300 p-2">
+        <code>true</code>
+      </td>
+      <td class="border border-gray-300 p-2">Enable filtering</td>
+    </tr>
+    <tr>
+      <td class="border border-gray-300 p-2">
+        <code>enablePagination</code>
+      </td>
+      <td class="border border-gray-300 p-2">
+        <code>boolean</code>
+      </td>
+      <td class="border border-gray-300 p-2">
+        <code>true</code>
+      </td>
+      <td class="border border-gray-300 p-2">Enable pagination</td>
+    </tr>
+    <tr>
+      <td class="border border-gray-300 p-2">
+        <code>enableColumnVisibility</code>
+      </td>
+      <td class="border border-gray-300 p-2">
+        <code>boolean</code>
+      </td>
+      <td class="border border-gray-300 p-2">
+        <code>true</code>
+      </td>
+      <td class="border border-gray-300 p-2">
+        Enable column visibility toggle
+      </td>
+    </tr>
+    <tr>
+      <td class="border border-gray-300 p-2">
+        <code>defaultPageSize</code>
+      </td>
+      <td class="border border-gray-300 p-2">
+        <code>number</code>
+      </td>
+      <td class="border border-gray-300 p-2">
+        <code>5</code>
+      </td>
+      <td class="border border-gray-300 p-2">
+        Default number of rows per page
+      </td>
+    </tr>
+    <tr>
+      <td class="border border-gray-300 p-2">
+        <code>pageSizeOptions</code>
+      </td>
+      <td class="border border-gray-300 p-2">
+        <code>number[]</code>
+      </td>
+      <td class="border border-gray-300 p-2">
+        <code>[5, 10, 20, 30, 40, 50]</code>
+      </td>
+      <td class="border border-gray-300 p-2">Page size options</td>
+    </tr>
+    <tr>
+      <td class="border border-gray-300 p-2">
+        <code>onRowClick</code>
+      </td>
+      <td class="border border-gray-300 p-2">
+        <code>(row: T) => void</code>
+      </td>
+      <td class="border border-gray-300 p-2">
+        <code>undefined</code>
+      </td>
+      <td class="border border-gray-300 p-2">Callback for row click events</td>
+    </tr>
+  </tbody>
+</table>
+
+## Column Definition Flexibility
+
+Use `@tanstack/react-table`'s `ColumnDef` to define columns with:
+
+- `accessorKey`: Data property to display
+- `header`: Column header text
+- `cell`: Custom cell rendering function
+- `meta`: Additional metadata for styling or behavior
+
+## Accessibility
+
+- Keyboard navigable
+- Screen reader friendly
+- Semantic HTML table structure
+- WCAG compliant interactions
+
+## Performance Considerations
+
+- Optimized for various dataset sizes
+- Minimal re-renders
+- Efficient data manipulation with `@tanstack/react-table`
+
+## Customization
+
+Highly customizable through:
+
+- Generic type support
+- Flexible column definitions
+- Styling props
+- Event handlers
+- Feature toggles
+
+## Dependencies
+
+- React
+- @tanstack/react-table
+- Tailwind CSS
+- Lucide React (for icons)
+
+## Best Practices
+
+- Use TypeScript for type safety
+- Define clear, concise column definitions
+- Implement custom cell renderers for complex data
+- Consider performance with large datasets
+- Leverage type generics for maximum flexibility

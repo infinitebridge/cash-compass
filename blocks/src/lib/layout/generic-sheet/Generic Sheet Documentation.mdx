@@ -1,0 +1,331 @@
+import { GenericSheet } from './generic-sheet';
+import { Button } from '@cash-compass/ui/button';
+import { useState } from 'react';
+
+# GenericSheet
+
+A reusable right-side sheet component for displaying detailed information about a selected item. Built with ShadCN UI's `Sheet` component, it supports generic data types, customizable content, and footer actions. It is ideal for showing row details in a table, item details in a dashboard, or any scenario where a side panel is needed.
+
+## Features
+
+- Opens as a right-side sheet with a smooth animation
+- Generic typing for use with any data type
+- Customizable content with a default form layout
+- Configurable title and footer actions
+- Responsive design with adjustable width
+- Built with accessibility in mind (keyboard navigation, ARIA support)
+
+## Installation
+
+Ensure you have the required dependencies installed. The `GenericSheet` component relies on ShadCN UI's `Sheet` component and other UI components.
+
+```bash
+npx shadcn-ui@latest add sheet
+npx shadcn-ui@latest add button input select label
+```
+
+```tsx
+// components/GenericSheet.tsx
+'use client';
+
+import { useState } from 'react';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetFooter,
+  SheetClose,
+} from '@cash-compass/ui/sheet';
+import { Button } from '@cash-compass/ui/button';
+import { Input } from '@cash-compass/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@cash-compass/ui/select';
+import { Label } from '@cash-compass/ui/label';
+
+interface GenericSheetProps<T> {
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+  data: T | null;
+  title?: string;
+  renderContent?: (data: T) => React.ReactNode;
+  footerActions?: React.ReactNode;
+  className?: string;
+}
+
+export function GenericSheet<T>({
+  isOpen,
+  onOpenChange,
+  data,
+  title = 'Details',
+  renderContent,
+  footerActions,
+  className = '',
+}: GenericSheetProps<T>) {
+  const defaultRenderContent = (data: T) => (
+    <div className="space-y-6">
+      <div className="h-32 bg-gray-800 rounded-md flex items-center justify-center">
+        <p className="text-gray-400">Chart Placeholder</p>
+      </div>
+      <div>
+        <p className="text-sm text-gray-400">Trending up by 5.2% this month</p>
+        <p className="text-sm text-gray-400">
+          Showing total visitors for the last 6 months. This is just some random
+          text to test the layout. It spans multiple lines and should show the
+          wrap.
+        </p>
+      </div>
+      <div className="space-y-4">
+        <div>
+          <Label htmlFor="header">Header</Label>
+          <Input id="header" defaultValue="Cover page" className="mt-1" />
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <Label htmlFor="type">Type</Label>
+            <Select defaultValue="cover-page">
+              <SelectTrigger id="type" className="mt-1">
+                <SelectValue placeholder="Select type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="cover-page">Cover Page</SelectItem>
+                <SelectItem value="data-page">Data Page</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label htmlFor="status">Status</Label>
+            <Select defaultValue="active">
+              <SelectTrigger id="status" className="mt-1">
+                <SelectValue placeholder="Select status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="active">Active</SelectItem>
+                <SelectItem value="inactive">Inactive</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <Label htmlFor="target">Target</Label>
+            <Input
+              id="target"
+              type="number"
+              defaultValue={18}
+              className="mt-1"
+            />
+          </div>
+          <div>
+            <Label htmlFor="limit">Limit</Label>
+            <Input id="limit" type="number" defaultValue={5} className="mt-1" />
+          </div>
+        </div>
+        <div>
+          <Label htmlFor="reviewer">Reviewer</Label>
+          <Select defaultValue="eddie-lake">
+            <SelectTrigger id="reviewer" className="mt-1">
+              <SelectValue placeholder="Select reviewer" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="eddie-lake">Eddie Lake</SelectItem>
+              <SelectItem value="jane-doe">Jane Doe</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+    </div>
+  );
+
+  const defaultFooterActions = (
+    <>
+      <Button type="submit" className="w-full">
+        Submit
+      </Button>
+      <SheetClose asChild>
+        <Button variant="outline" className="w-full mt-2">
+          Done
+        </Button>
+      </SheetClose>
+    </>
+  );
+
+  return (
+    <Sheet open={isOpen} onOpenChange={onOpenChange}>
+      <SheetContent
+        side="right"
+        className={`w-[425px] sm:w-[425px] p-6 ${className}`}
+      >
+        <SheetHeader>
+          <SheetTitle>{title}</SheetTitle>
+        </SheetHeader>
+        <div className="mt-6">
+          {data ? (
+            renderContent ? (
+              renderContent(data)
+            ) : (
+              defaultRenderContent(data)
+            )
+          ) : (
+            <p>No data selected</p>
+          )}
+        </div>
+        <SheetFooter className="mt-6">
+          {footerActions || defaultFooterActions}
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
+  );
+}
+```
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>isOpen</code>
+      </td>
+      <td>
+        <code>boolean</code>
+      </td>
+      <td>Controls whether the sheet is open</td>
+      <td>
+        <strong>Required</strong>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>onOpenChange</code>
+      </td>
+      <td>
+        <code>(open: boolean) => void</code>
+      </td>
+      <td>Callback for when the sheet’s open state changes</td>
+      <td>
+        <strong>Required</strong>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>data</code>
+      </td>
+      <td>
+        <code>T | null</code>
+      </td>
+      <td>The data to display in the sheet (generic type)</td>
+      <td>
+        <strong>Required</strong>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>title</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>Title displayed in the sheet header</td>
+      <td>
+        <code>"Details"</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>renderContent</code>
+      </td>
+      <td>
+        <code>(data: T) => React.ReactNode</code>
+      </td>
+      <td>Custom function to render the sheet content</td>
+      <td>Default form layout</td>
+    </tr>
+    <tr>
+      <td>
+        <code>footerActions</code>
+      </td>
+      <td>
+        <code>React.ReactNode</code>
+      </td>
+      <td>Custom footer actions for the sheet</td>
+      <td>Default "Submit" and "Done" buttons</td>
+    </tr>
+    <tr>
+      <td>
+        <code>className</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>Custom CSS class for the sheet</td>
+      <td>
+        <code>""</code>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+## Usage
+
+Basic Example (Default Content)
+This example shows how to use the GenericSheet with its default form content.
+
+```tsx
+export default function BasicExample() {
+  const [isOpen, setIsOpen] = useState(false);
+  const data = { id: '1', name: 'John Doe' };
+
+  return (
+    <div>
+      <Button onClick={() => setIsOpen(true)}>Open Sheet</Button>
+      <GenericSheet
+        isOpen={isOpen}
+        onOpenChange={setIsOpen}
+        data={data}
+        title="User Details"
+      />
+    </div>
+  );
+}
+```
+
+## Accessibility
+
+- The sheet is keyboard-navigable (e.g., close with ESC key).
+- Semantic HTML and ARIA attributes are used via ShadCN UI’s `Sheet` component.
+- Ensure form fields have proper labels and descriptions for screen readers.
+- Maintain sufficient color contrast for text and interactive elements.
+
+## Design Guidelines
+
+- Use the default form layout for consistency in data entry scenarios.
+- Keep the sheet width reasonable (default is 425px) to avoid overwhelming the user.
+- Use clear, concise labels for form fields.
+- Provide visual feedback (e.g., hover states) for interactive elements in the footer.
+
+## Customization Tips
+
+- **Width**: Adjust the `w-[425px]` in the `SheetContent` className to change the sheet’s width.
+- **Chart Placeholder**: Replace the chart placeholder (`h-32 bg-gray-800`) with an actual chart component (e.g., Chart.js or Recharts).
+- **Form Functionality**: Add state management (e.g., `useState` or `react-hook-form`) to make the default form interactive.
+- **Styling**: Use the `className` prop to add custom styles (e.g., `bg-gray-100` for a different background).
+
+## Dependencies
+
+- `@cash-compass/ui/sheet`: For the `Sheet` component.
+- `@cash-compass/ui/button`, `@cash-compass/ui/input`, `@cash-compass/ui/select`, `@cash-compass/ui/label`: For form elements in the default layout.
+- Replace `@cash-compass/ui` with your actual UI library path (e.g., `@/components/ui`).
