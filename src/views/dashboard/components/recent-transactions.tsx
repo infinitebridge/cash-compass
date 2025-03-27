@@ -89,10 +89,10 @@ export const columns: ColumnDef<Transaction>[] = [
       return (
         <Badge
           variant="outline"
-          className={`px-3 py-1 rounded-full text-xs font-medium ${
+          className={`px-3 py-1 rounded-md text-xs font-medium ${
             type === 'Revenue'
-              ? 'bg-green-50 text-green-700 border-transparent'
-              : 'bg-blue-50 text-blue-700 border-transparent'
+              ? 'bg-green-100 text-green-700 border-transparent'
+              : 'bg-blue-100 text-blue-700 border-transparent'
           }`}
         >
           {type}
