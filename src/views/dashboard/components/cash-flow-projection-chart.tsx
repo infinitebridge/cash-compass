@@ -178,7 +178,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 
     return (
       <div className="rounded-lg border bg-white p-4 shadow-md">
-        <p className="font-semibold">{label}</p>
+        <p className="font-medium">{label}</p>
         <p className="text-sm text-gray-600">
           Cash Balance:{' '}
           <span className="font-medium text-blue-600">
@@ -229,7 +229,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 export default function CashFlowProjection() {
-  const [timeframe, setTimeframe] = useState<'30' | '60' | '90'>('90');
+  const [timeframe] = useState<'30' | '60' | '90'>('90');
   const startingBalance = 152890;
 
   // Calculate cumulative cash position for each day in the projection period
