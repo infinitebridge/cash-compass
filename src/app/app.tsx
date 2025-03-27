@@ -7,6 +7,7 @@ import SignUpPage from '../views/auth/sign-up';
 import { ApolloProviderWrapper } from './apollo';
 import Layout from './layout';
 import Dashboard from '../views/dashboard';
+import { RevenueManagement } from '../views/revenue';
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Dashboard />,
+      },
+      {
+        path: '/revenue',
+        element: <RevenueManagement />,
       },
     ],
   },
