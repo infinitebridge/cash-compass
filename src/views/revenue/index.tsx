@@ -1,3 +1,22 @@
+import RevenueManagementTabs from './components/revenue-tabs';
+import Invoices from './components/revenue-tabs/invoices';
+import RevenueOverview from './components/revenue-tabs/overview';
+const tabsConfig = [
+  {
+    title: 'Revenue Overview',
+    component: <RevenueOverview />,
+    key: 'overview',
+  },
+  {
+    title: 'Invoices',
+    component: <Invoices />,
+    key: 'invoices',
+  },
+];
 export function RevenueManagement() {
-  return <>revenue page here</>;
+  return (
+    <div className="px-4 lg:px-6">
+      <RevenueManagementTabs tabsConfig={tabsConfig} defaultTab="overview" />
+    </div>
+  );
 }
