@@ -1,5 +1,11 @@
 import { PageHeader } from '@cash-compass/blocks';
-import { DollarSign, Receipt, ReceiptText } from 'lucide-react';
+import {
+  DollarSign,
+  Receipt,
+  ReceiptCent,
+  ReceiptText,
+  RefreshCcw,
+} from 'lucide-react';
 import React from 'react';
 import { SectionCards } from '../dashboard/components/section-cards';
 
@@ -25,27 +31,27 @@ export const RevenueManagement = () => {
           { value: 'q1', label: 'Q1 2025' },
           { value: 'ytd', label: 'Year-to-date' },
         ]}
-        title="Revenue"
+        title="Revenue Management"
         selectedPeriod={selectedPeriod}
         onPeriodChange={handlePeriodChange}
-        actionButtonLabel="New Transaction"
+        actionButtonLabel="New Revenue"
         actionButtonColor="bg-blue-600 hover:bg-blue-700"
         dropdownItems={[
           {
-            label: 'New Expense',
-            icon: <Receipt className="h-4 w-4 mr-2" />,
+            label: 'Record Revenue',
+            icon: <DollarSign className="h-4 w-4 mr-2" />,
             iconColor: 'text-blue-500',
             onClick: handleNewExpense,
           },
           {
-            label: 'New Revenue',
-            icon: <DollarSign className="h-4 w-4 mr-2" />,
+            label: 'Create Invoice',
+            icon: <ReceiptCent className="h-4 w-4 mr-2" />,
             iconColor: 'text-green-500',
             onClick: () => console.log('New revenue'),
           },
           {
-            label: 'New Invoice',
-            icon: <ReceiptText className="h-4 w-4 mr-2" />,
+            label: 'Recurring revenue',
+            icon: <RefreshCcw className="h-4 w-4 mr-2" />,
             iconColor: 'text-purple-500',
             onClick: () => console.log('New invoice'),
           },
