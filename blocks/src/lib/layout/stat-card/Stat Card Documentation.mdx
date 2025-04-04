@@ -1,0 +1,435 @@
+import { StatCard } from '@cash-compass/ui/stat-card';
+import { Button } from '@cash-compass/ui/button';
+import { useState } from 'react';
+
+# StatCard
+
+A reusable card component for displaying metrics and statistics in a visually appealing format. Built with `@cash-compass/ui/card` and enhanced with `lucide-react` icons, `StatCard` is perfect for dashboards, reports, or any UI needing to showcase key performance indicators (KPIs) with trends, secondary values, and customizable styling.
+
+## Features
+
+- Displays a prominent title and primary value
+- Supports trend indicators (up/down) with percentage or custom icons
+- Optional secondary values or amount changes with labels
+- Customizable colors using Tailwind CSS classes
+- Responsive design with container queries for text scaling
+- Optional interactivity with click handlers
+
+## Installation
+
+Ensure you have the required dependencies installed:
+
+```bash
+npm install @cash-compass/ui lucide-react
+```
+
+Then, import StatCard into your project:
+
+```tsx
+// components/StatCard.tsx
+import React, { ReactNode } from 'react';
+import {
+  Card,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@cash-compass/ui/card';
+import { TrendingUpIcon, TrendingDownIcon } from 'lucide-react';
+
+interface StatCardProps {
+  title: string;
+  value: string | number;
+  subtitle?: string;
+  trend?: number;
+  trendLabel?: string;
+  secondaryValue?: string | number;
+  secondaryLabel?: string;
+  valueColor?: string;
+  secondaryValueColor?: string;
+  className?: string;
+  onClick?: () => void;
+  customTrendIndicator?: ReactNode;
+  amountChange?: string | number;
+  amountChangeDirection?: 'up' | 'down';
+}
+
+export const StatCard: React.FC<StatCardProps> = ({
+  title,
+  value,
+  subtitle,
+  trend,
+  trendLabel,
+  secondaryValue,
+  secondaryLabel,
+  valueColor,
+  secondaryValueColor,
+  className = '',
+  onClick,
+  customTrendIndicator,
+  amountChange,
+  amountChangeDirection = 'up',
+}) => {
+  const getTrendColor = (): string => {
+    if (trend === undefined || trend === null) return '';
+    return trend > 0 ? 'text-green-600' : 'text-red-600';
+  };
+
+  const getAmountChangeColor = (): string => {
+    if (secondaryValueColor) return secondaryValueColor;
+    return amountChangeDirection === 'up' ? 'text-green-500' : 'text-red-500';
+  };
+
+  const getValueColor = (): string => {
+    if (valueColor) return valueColor;
+    return 'text-gray-900';
+  };
+
+  return (
+    <Card
+      className={`@container/card ${className} ${
+        onClick ? 'cursor-pointer hover:bg-gray-50' : ''
+      }`}
+      onClick={onClick}
+    >
+      <CardHeader className="p-4">
+        <CardDescription className="line-clamp-1 flex gap-2 font-medium">
+          {title}
+        </CardDescription>
+        <CardTitle
+          className={`@[250px]/card:text-3xl text-2xl font-semibold tabular-nums ${getValueColor()}`}
+        >
+          {value}
+        </CardTitle>
+      </CardHeader>
+      <CardFooter className="flex-col items-start gap-1 text-sm pb-4 -mt-2">
+        {trend !== undefined && !amountChange && (
+          <div className="line-clamp-1 flex gap-2">
+            <span className={`font-medium ${getTrendColor()}`}>
+              {customTrendIndicator ||
+                (trend > 0 ? (
+                  <TrendingUpIcon className="size-4 inline mr-1" />
+                ) : (
+                  <TrendingDownIcon className="size-4 inline mr-1" />
+                ))}
+              {Math.abs(trend)}%
+            </span>
+            {trendLabel && (
+              <span className="text-muted-foreground">{trendLabel}</span>
+            )}
+          </div>
+        )}
+        {amountChange && (
+          <div className="line-clamp-1 flex items-center gap-2">
+            <span className={`font-medium ${getAmountChangeColor()}`}>
+              {amountChangeDirection === 'up' ? (
+                <TrendingUpIcon className="size-4 inline mr-1" />
+              ) : (
+                <TrendingDownIcon className="size-4 inline mr-1" />
+              )}
+              {amountChange}
+            </span>
+            {secondaryLabel && (
+              <span className="text-muted-foreground">{secondaryLabel}</span>
+            )}
+          </div>
+        )}
+        {secondaryValue !== undefined && !amountChange && (
+          <div className="text-muted-foreground">
+            {secondaryValue} {secondaryLabel}
+          </div>
+        )}
+        {subtitle &&
+          trend === undefined &&
+          secondaryValue === undefined &&
+          !amountChange && (
+            <div className="text-muted-foreground">{subtitle}</div>
+          )}
+      </CardFooter>
+    </Card>
+  );
+};
+```
+
+### Props
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>title</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>The title displayed at the top of the card</td>
+      <td>
+        <strong>Required</strong>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>value</code>
+      </td>
+      <td>
+        <code>string | number</code>
+      </td>
+      <td>The primary value displayed prominently</td>
+      <td>
+        <strong>Required</strong>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>subtitle</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>Optional subtitle text</td>
+      <td>
+        <code>undefined</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>trend</code>
+      </td>
+      <td>
+        <code>number</code>
+      </td>
+      <td>Optional trend percentage (positive for up, negative for down)</td>
+      <td>
+        <code>undefined</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>trendLabel</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>Optional label next to the trend percentage</td>
+      <td>
+        <code>undefined</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>secondaryValue</code>
+      </td>
+      <td>
+        <code>string | number</code>
+      </td>
+      <td>Optional secondary value to display at the bottom</td>
+      <td>
+        <code>undefined</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>secondaryLabel</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>Optional label for the secondary value</td>
+      <td>
+        <code>undefined</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>valueColor</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>Optional Tailwind CSS class for primary value color</td>
+      <td>
+        <code>text-gray-900</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>secondaryValueColor</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>Optional Tailwind CSS class for secondary value color</td>
+      <td>
+        <code>undefined</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>className</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>Optional CSS class for additional styling</td>
+      <td>
+        <code>""</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>onClick</code>
+      </td>
+      <td>
+        <code>() => void</code>
+      </td>
+      <td>Optional handler for making the card interactive</td>
+      <td>
+        <code>undefined</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>customTrendIndicator</code>
+      </td>
+      <td>
+        <code>ReactNode</code>
+      </td>
+      <td>Optional custom trend indicator (replaces default icons)</td>
+      <td>
+        <code>undefined</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>amountChange</code>
+      </td>
+      <td>
+        <code>string | number</code>
+      </td>
+      <td>Optional amount change value (e.g., "$15,230 this month")</td>
+      <td>
+        <code>undefined</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>amountChangeDirection</code>
+      </td>
+      <td>
+        <code>"up" | "down"</code>
+      </td>
+      <td>Optional direction for amount change</td>
+      <td>
+        <code>"up"</code>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+### Usage
+
+Basic Example
+
+> A simple StatCard with a title and value:
+
+```tsx
+export default function BasicExample() {
+  return <StatCard title="Total Users" value="1,234" />;
+}
+```
+
+### With Trend
+
+Display a card with a trend indicator:
+
+```tsx
+export default function TrendExample() {
+  return (
+    <StatCard
+      title="Revenue"
+      value="$45,678"
+      trend={12.5}
+      trendLabel="since last month"
+    />
+  );
+}
+```
+
+### With Amount Change
+
+Show an amount change with direction:
+
+```tsx
+export default function AmountChangeExample() {
+  return (
+    <StatCard
+      title="Sales"
+      value="$78,900"
+      amountChange="$15,230"
+      amountChangeDirection="up"
+      secondaryLabel="this month"
+    />
+  );
+}
+```
+
+### Interactive Example
+
+Make the card clickable with a button to demonstrate:
+
+```tsx
+export default function InteractiveExample() {
+  const [clickCount, setClickCount] = useState(0);
+
+  return (
+    <div>
+      <Button onClick={() => setClickCount(0)}>Reset Count</Button>
+      <StatCard
+        title="Clicks"
+        value={clickCount}
+        trend={5.2}
+        trendLabel="since yesterday"
+        onClick={() => setClickCount(clickCount + 1)}
+        className="mt-4"
+      />
+    </div>
+  );
+}
+```
+
+## Accessibility
+
+- Uses semantic HTML via `@cash-compass/ui/card` components.
+- Supports keyboard interaction when `onClick` is provided (e.g., Enter/Space key triggers the click).
+- Ensure sufficient color contrast when using custom `valueColor` or `secondaryValueColor`.
+- Trend icons (`TrendingUpIcon`, `TrendingDownIcon`) should have `aria-label` if used in a context requiring screen reader support.
+
+## Design Guidelines
+
+- Keep titles concise to avoid truncation (uses `line-clamp-1`).
+- Use consistent units (e.g., "$" for currency) across `value`, `secondaryValue`, and `amountChange`.
+- Leverage `trend` for percentage changes and `amountChange` for absolute changes to maintain clarity.
+- Apply `className` for layout adjustments (e.g., `w-full` for full-width cards).
+
+## Customization Tips
+
+- **Colors**: Use Tailwind classes like `text-blue-600` for `valueColor` or `secondaryValueColor`.
+- **Size**: Adjust padding/margins via `className` (e.g., `p-6` for larger padding).
+- **Icons**: Replace `customTrendIndicator` with your own JSX (e.g., `<StarIcon />`).
+- **Hover Effects**: The default `hover:bg-gray-50` applies only with `onClick`; customize further with `className`.
+
+## Dependencies
+
+- `@cash-compass/ui/card`: For `Card`, `CardHeader`, `CardTitle`, `CardDescription`, and `CardFooter`.
+- `lucide-react`: For `TrendingUpIcon` and `TrendingDownIcon`.
+- Replace `@cash-compass/ui` with your actual UI library path (e.g., `@/components/ui`).
