@@ -54,7 +54,7 @@ export default function RevenueTrend() {
     return [0, Math.ceil((maxValue * 1.1) / 5000) * 5000]; // Round up to nearest 5k and add 10% padding
   }, [financialData]);
   return (
-    <div className="w-full p-4 my-4 rounded-xl border bg-card text-card-foreground shadow @container/card">
+    <div className="w-full p-4 rounded-xl border bg-card text-card-foreground shadow @container/card">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-semibold text-gray-900">Revenue Trend</h2>
         <div className="flex items-center space-x-4">
@@ -102,7 +102,7 @@ export default function RevenueTrend() {
             color: '#fbbf24',
           },
         }}
-        className="h-[400px] w-full"
+        className="h-[300px] w-full"
       >
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart

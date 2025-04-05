@@ -8,6 +8,7 @@
     "cash-compass:lint": "nx run cash-compass:lint",
     "cash-compass:build": "nx run cash-compass:build",
     "cash-compass:codegen": "nx run cash-compass:codegen",
+    "cash-compass:storybook": "nx run blocks:storybook",
     "backend:dev": "nx run backend:serve",
     "backend:lint": "nx run backend:lint",
     "backend:build": "nx run backend:build",

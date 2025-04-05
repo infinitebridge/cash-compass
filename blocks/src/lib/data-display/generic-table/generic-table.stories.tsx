@@ -230,7 +230,7 @@ const transactionColumns: ColumnDef<Transaction>[] = [
 
 // Meta configuration for the Generic Table component
 const meta: Meta = {
-  title: 'Data Display/generic-table/GenericTable',
+  title: 'Data Display/generic-table',
   component: GenericTable,
   parameters: {
     layout: 'centered',

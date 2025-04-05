@@ -1,0 +1,198 @@
+# Statistic Card Component Documentation
+
+## Overview
+
+The `StatisticCard` is a flexible React component designed for displaying financial metrics, statistics, and key performance indicators in a visually appealing card format. It's highly customizable, supporting various visual styles, icons, and trend indicators.
+
+## Installation
+
+```bash
+npm install @components/statistic-card
+```
+
+## Basic Usage
+
+```jsx
+import { StatisticCard } from '@components/statistic-card';
+import { DollarSign } from 'lucide-react';
+
+function Dashboard() {
+  return (
+    <StatisticCard
+      title="Total Revenue"
+      value="$87,450"
+      subtitle="March 2025"
+      trend="up"
+      trendValue="8.2%"
+      trendLabel="vs. last month"
+      icon={DollarSign}
+      bgColor="bg-green-50"
+      borderColor="border-green-200"
+    />
+  );
+}
+```
+
+## Props
+
+| Prop                | Type                | Default                               | Description                                   |
+| ------------------- | ------------------- | ------------------------------------- | --------------------------------------------- |
+| `title`             | `string`            | _Required_                            | Card title (e.g., "Total Receivables")        |
+| `value`             | `string \| number`  | _Required_                            | Main statistic value (e.g., "$36,580")        |
+| `subtitle`          | `string`            | `undefined`                           | Optional subtitle text (e.g., "12 invoices")  |
+| `trend`             | `'up' \| 'down'`    | `undefined`                           | Optional trend indicator direction            |
+| `trendValue`        | `string \| number`  | `undefined`                           | Optional trend value (e.g., "8.2%")           |
+| `trendLabel`        | `string`            | `undefined`                           | Optional trend label (e.g., "vs. last month") |
+| `bgColor`           | `string`            | `'bg-white'`                          | Background color Tailwind class               |
+| `borderColor`       | `string`            | `'border-gray-200'`                   | Border color Tailwind class                   |
+| `className`         | `string`            | `''`                                  | Additional container className                |
+| `titleClassName`    | `string`            | `'text-sm text-gray-600 font-medium'` | Title element className                       |
+| `valueClassName`    | `string`            | `'text-xl text-gray-900 font-bold'`   | Value element className                       |
+| `subtitleClassName` | `string`            | `'text-sm text-gray-600'`             | Subtitle element className                    |
+| `icon`              | `React.ElementType` | `undefined`                           | Optional Lucide React icon component          |
+| `iconSize`          | `number`            | `20`                                  | Optional icon size in pixels                  |
+| `iconClassName`     | `string`            | `''`                                  | Optional icon color className                 |
+| `children`          | `React.ReactNode`   | `undefined`                           | Optional additional content                   |
+
+## Examples
+
+### Basic Statistic Card
+
+```jsx
+<StatisticCard title="Total Expenses" value={42385} subtitle="March 2025" />
+```
+
+### Card with Trend Indicator
+
+```jsx
+<StatisticCard
+  title="Pending Approval"
+  value={7}
+  subtitle="$4,580 awaiting review"
+  trend="up"
+  trendValue="12%"
+  trendLabel="vs. last week"
+/>
+```
+
+### Card with Icon
+
+```jsx
+import { Users } from 'lucide-react';
+
+<StatisticCard
+  title="Active Users"
+  value="1,247"
+  icon={Users}
+  iconClassName="text-blue-600"
+  bgColor="bg-blue-50"
+  borderColor="border-blue-200"
+/>;
+```
+
+### Custom Styled Card
+
+```jsx
+<StatisticCard
+  title="Revenue Growth"
+  value="24.8%"
+  trend="up"
+  trendValue="5.3%"
+  bgColor="bg-green-50"
+  borderColor="border-green-300"
+  titleClassName="text-xs uppercase tracking-wider text-green-700"
+  valueClassName="text-3xl font-bold text-green-800"
+/>
+```
+
+### Card with Additional Content
+
+```jsx
+<StatisticCard
+  title="Year-to-Date"
+  value="$126,785"
+  subtitle="33% of annual budget"
+>
+  <div className="mt-3 pt-3 border-t border-gray-200">
+    <div className="text-xs text-gray-500">Goal: $380,000</div>
+    <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
+      <div
+        className="bg-blue-600 h-2 rounded-full"
+        style={{ width: '33%' }}
+      ></div>
+    </div>
+  </div>
+</StatisticCard>
+```
+
+## Theming
+
+The component uses Tailwind CSS classes for styling and can be customized with your application's Tailwind theme.
+
+### Common Color Presets
+
+#### Success/Positive
+
+```jsx
+<StatisticCard
+  bgColor="bg-green-50"
+  borderColor="border-green-200"
+  valueClassName="text-green-700 text-2xl font-bold"
+  iconClassName="text-green-600"
+/>
+```
+
+#### Warning
+
+```jsx
+<StatisticCard
+  bgColor="bg-yellow-50"
+  borderColor="border-yellow-200"
+  valueClassName="text-yellow-700 text-2xl font-bold"
+  iconClassName="text-yellow-600"
+/>
+```
+
+#### Danger/Negative
+
+```jsx
+<StatisticCard
+  bgColor="bg-red-50"
+  borderColor="border-red-200"
+  valueClassName="text-red-700 text-2xl font-bold"
+  iconClassName="text-red-600"
+/>
+```
+
+#### Info/Primary
+
+```jsx
+<StatisticCard
+  bgColor="bg-blue-50"
+  borderColor="border-blue-200"
+  valueClassName="text-blue-700 text-2xl font-bold"
+  iconClassName="text-blue-600"
+/>
+```
+
+## Accessibility
+
+- The component uses semantic HTML to ensure good accessibility
+- Color contrast ratios follow WCAG guidelines when using Tailwind's default color palette
+- The trend indicators use both color and icons to convey direction
+
+## Browser Compatibility
+
+Compatible with all modern browsers that support React and CSS Flexbox.
+
+## Performance Considerations
+
+- The component memoizes the color calculations to prevent unnecessary re-renders
+- Number formatting is optimized to handle both string and numeric values
+
+## Best Practices
+
+- Use consistent styling across multiple StatisticCards within the same view
+- For dashboards, arrange cards in a grid with consistent spacing
+- For responsive layouts, use the container `className` prop to adjust width and grid positioning
+- When using icons, select ones that clearly represent the data being displayed

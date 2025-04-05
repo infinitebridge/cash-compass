@@ -10,6 +10,7 @@ const config: StorybookConfig = {
 
   docs: {
     autodocs: 'tag',
+    defaultName: 'Usage',
   },
   framework: {
     name: '@storybook/react-vite',
