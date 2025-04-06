@@ -1,6 +1,6 @@
-import RevenueManagementTabs from './components/revenue-tabs';
-import Invoices from './components/revenue-tabs/invoices';
-import RevenueOverview from './components/revenue-tabs/overview';
+import RevenueManagementTabs from './revenue-tabs';
+import Invoices from './revenue-tabs/invoices';
+import RevenueOverview from './revenue-tabs/overview';
 const tabsConfig = [
   {
     title: 'Revenue Overview',

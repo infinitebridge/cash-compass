@@ -108,12 +108,12 @@ const ReceivablesExample: React.FC = () => {
   };
 
   return (
-    <div className="w-full p-4 rounded-xl border bg-card text-card-foreground shadow @container/card">
+    <>
       <h2 className="text-lg font-semibold text-gray-900 mb-4">
         Accounts Receivable
       </h2>
       <AccountsReceivableCards data={sampleData} />
-    </div>
+    </>
   );
 };
 
