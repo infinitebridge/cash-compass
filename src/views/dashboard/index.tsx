@@ -12,14 +12,14 @@ function Dashboard() {
 
   const handlePeriodChange = (period: string) => {
     setSelectedPeriod(period);
-    // Fetch data for the selected period
+
     console.log(`Fetching data for ${period}`);
   };
 
   const handleNewExpense = () => {
     console.log('Creating new expense');
-    // Navigate to expense creation page or open modal
   };
+
   return (
     <div className="px-4 lg:px-6">
       <PageHeader
