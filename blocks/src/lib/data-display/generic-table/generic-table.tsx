@@ -64,7 +64,7 @@ interface GenericTableProps<T> {
 export function GenericTable<T>({
   data,
   columns,
-  title = 'Table',
+  title,
   filterColumn,
   enableSorting = true,
   enableFiltering = true,
@@ -119,10 +119,17 @@ export function GenericTable<T>({
 
   return (
     <div className={clsx(`w-full`, className)}>
-      <div className="flex items-center justify-between pb-4">
-        <h2 className="tracking-tight text-lg font-semibold text-gray-900">
-          {title}
-        </h2>
+      <div
+        className={clsx(
+          'flex items-center pb-4',
+          title ? 'justify-between' : 'justify-end'
+        )}
+      >
+        {title ? (
+          <h2 className="tracking-tight text-lg font-semibold text-gray-900">
+            {title}
+          </h2>
+        ) : null}
         <div className="flex gap-3">
           {enableFiltering && filterColumn && (
             <Input
@@ -171,7 +178,7 @@ export function GenericTable<T>({
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} className="border-b border-t">
+              <TableRow key={headerGroup.id} className="border-b">
                 {headerGroup.headers.map((header) => (
                   <TableHead
                     key={header.id}

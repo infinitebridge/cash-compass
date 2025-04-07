@@ -1,15 +1,23 @@
+import RevenueManagementTabs from './revenue-tabs';
+import Invoices from './revenue-tabs/invoices';
+import RevenueOverview from './revenue-tabs/overview';
 import { PageHeader } from '@cash-compass/blocks';
-import {
-  DollarSign,
-  Receipt,
-  ReceiptCent,
-  ReceiptText,
-  RefreshCcw,
-} from 'lucide-react';
+import { DollarSign, ReceiptCent, RefreshCcw } from 'lucide-react';
 import React from 'react';
 import { SectionCards } from '../dashboard/components/section-cards';
-
-export const RevenueManagement = () => {
+const tabsConfig = [
+  {
+    title: 'Revenue Overview',
+    component: <RevenueOverview />,
+    key: 'overview',
+  },
+  {
+    title: 'Invoices',
+    component: <Invoices />,
+    key: 'invoices',
+  },
+];
+export function RevenueManagement() {
   const [selectedPeriod, setSelectedPeriod] = React.useState('march');
 
   const handlePeriodChange = (period: string) => {
@@ -22,7 +30,7 @@ export const RevenueManagement = () => {
   };
 
   return (
-    <div>
+    <div className="px-4 space-y-4 lg:px-6">
       <PageHeader
         timePeriods={[
           { value: 'march', label: 'March 2025' },
@@ -58,6 +66,7 @@ export const RevenueManagement = () => {
         ]}
       />
       <SectionCards />
+      <RevenueManagementTabs tabsConfig={tabsConfig} defaultTab="overview" />
     </div>
   );
-};
+}

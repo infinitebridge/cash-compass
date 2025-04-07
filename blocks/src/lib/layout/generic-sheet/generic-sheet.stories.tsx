@@ -13,7 +13,7 @@ type SampleData = {
 
 // Meta configuration for the component
 const meta: Meta<typeof GenericSheet<SampleData>> = {
-  title: 'Layout/generic-sheet/GenericSheet',
+  title: 'Layout/generic-sheet',
   component: GenericSheet,
   tags: ['autodocs'], // Automatically generate docs from TypeScript types
   parameters: {
