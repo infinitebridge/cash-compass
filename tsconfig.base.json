@@ -16,8 +16,8 @@
     "baseUrl": ".",
     "paths": {
       "@cash-compass/blocks": ["blocks/src/index.ts"],
-      "@cash-compass/ui": ["ui/src/index.ts"],
-      "@cash-compass/utils": ["utils/src/index.ts"],
+      // "@cash-compass/ui": ["ui/src/index.ts"],
+      // "@cash-compass/utils": ["utils/src/index.ts"],
       "@cash-compass/ui/*": ["ui/src/*"],
       "@cash-compass/utils/*": ["utils/src/*"]
     }

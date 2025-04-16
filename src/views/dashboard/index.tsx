@@ -6,6 +6,7 @@ import React from 'react';
 import { ExpensesRevenueDonuts } from './components/expenses-revenue-donuts';
 import CashFlowProjection from './components/cash-flow-projection-chart';
 import { RecentTransactions } from './components/recent-transactions';
+import DialogWrapper from '../revenue/components/dialog-wrapper';
 
 function Dashboard() {
   const [selectedPeriod, setSelectedPeriod] = React.useState('march');
