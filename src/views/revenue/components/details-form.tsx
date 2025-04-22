@@ -1,8 +1,5 @@
 'use client';
 
-import type React from 'react';
-
-import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -28,11 +25,9 @@ import {
 import { Input } from '@cash-compass/ui/input';
 import { Badge } from '@cash-compass/ui/badge';
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from '@cash-compass/ui/card';
+  FancyMultiSelect,
+  MultiSelectOption,
+} from '@cash-compass/ui/multi-select';
 
 const formSchema = z.object({
   paymentMethod: z.string().min(1, {
@@ -46,8 +41,14 @@ const formSchema = z.object({
 });
 
 export default function RevenueDetailsForm() {
-  const [tags, setTags] = useState<string[]>(['Recurring']);
-  const [tagInput, setTagInput] = useState('');
+  // Default tag options
+  const tagOptions: MultiSelectOption[] = [
+    { value: 'recurring', label: 'Recurring' },
+    { value: 'one-time', label: 'One-time' },
+    { value: 'subscription', label: 'Subscription' },
+    { value: 'contract', label: 'Contract' },
+    { value: 'retainer', label: 'Retainer' },
+  ];
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -55,27 +56,13 @@ export default function RevenueDetailsForm() {
       paymentMethod: '',
       status: 'received',
       referenceNumber: '',
-      tags: ['Recurring'],
+      tags: ['recurring'],
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
     // Handle form submission
-  }
-
-  function removeTag(tag: string) {
-    setTags(tags.filter((t) => t !== tag));
-  }
-
-  function addTag(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === 'Enter' && tagInput.trim() !== '') {
-      e.preventDefault();
-      if (!tags.includes(tagInput.trim())) {
-        setTags([...tags, tagInput.trim()]);
-      }
-      setTagInput('');
-    }
   }
 
   return (
@@ -88,7 +75,9 @@ export default function RevenueDetailsForm() {
               name="paymentMethod"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Payment Method</FormLabel>
+                  <FormLabel className="text-gray-600">
+                    Payment Method
+                  </FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -116,7 +105,7 @@ export default function RevenueDetailsForm() {
               name="status"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Status *</FormLabel>
+                  <FormLabel className="text-gray-600">Status</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -148,7 +137,9 @@ export default function RevenueDetailsForm() {
               name="referenceNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Reference Number</FormLabel>
+                  <FormLabel className="text-gray-600">
+                    Reference Number
+                  </FormLabel>
                   <FormControl>
                     <Input placeholder="Enter reference number" {...field} />
                   </FormControl>
@@ -160,32 +151,49 @@ export default function RevenueDetailsForm() {
               )}
             />
 
-            <div className="space-y-2">
-              <FormLabel>Tags</FormLabel>
-              <div className="flex flex-wrap gap-2 p-3 border rounded-md">
-                {tags.map((tag) => (
-                  <Badge
-                    key={tag}
-                    variant="secondary"
-                    className="flex items-center gap-1"
-                  >
-                    {tag}
-                    <X
-                      className="h-3 w-3 cursor-pointer"
-                      onClick={() => removeTag(tag)}
+            <FormField
+              control={form.control}
+              name="tags"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-gray-600">Tags</FormLabel>
+                  <FormControl>
+                    <FancyMultiSelect
+                      options={tagOptions}
+                      value={field.value?.map(
+                        (value) =>
+                          tagOptions.find(
+                            (option) => option.value === value
+                          ) || { value, label: value }
+                      )}
+                      onChange={(selected) => {
+                        field.onChange(selected.map((item) => item.value));
+                      }}
+                      placeholder="Select or create tags..."
+                      renderBadge={(option, onRemove) => (
+                        <Badge variant="secondary">
+                          {option.label}
+                          <button
+                            className="ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                            onClick={onRemove}
+                            onMouseDown={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                            }}
+                          >
+                            <X className="h-3 w-3 text-muted-foreground hover:text-foreground" />
+                          </button>
+                        </Badge>
+                      )}
                     />
-                  </Badge>
-                ))}
-                <Input
-                  type="text"
-                  value={tagInput}
-                  onChange={(e) => setTagInput(e.target.value)}
-                  onKeyDown={addTag}
-                  placeholder="Add a tag..."
-                  className="border-0 p-0 h-7 text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
-                />
-              </div>
-            </div>
+                  </FormControl>
+                  <FormDescription>
+                    Select or create tags to categorize this revenue.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </form>
         </Form>
       </div>

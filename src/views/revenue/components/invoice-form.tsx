@@ -74,39 +74,39 @@ export default function InvoiceForm() {
     <div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-          <div className="bg-blue-50 p-4 rounded-lg">
-            <div className="flex items-center gap-3">
-              <FormField
-                control={form.control}
-                name="createInvoice"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md">
-                    <div className="flex-1">
-                      <div className="flex justify-between items-center">
-                        <div className="flex gap-2 items-center mb-1">
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value}
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                          <FormLabel className="text-lg font-medium text-blue-700">
-                            Create an invoice for this revenue
-                          </FormLabel>
-                        </div>
-                        <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">
-                          Recommended
-                        </Badge>
-                      </div>
-                      <FormDescription className="text-blue-700">
-                        Creating an invoice allows you to track payment status,
-                        send reminders, and maintain professional records.
-                      </FormDescription>
+          <div className="flex items-start space-x-3 bg-gray-100 p-4 rounded-lg border border-border bg-card">
+            <FormField
+              control={form.control}
+              name="createInvoice"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 w-full">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      className="mt-1"
+                    />
+                  </FormControl>
+                  <div className="flex-1 space-y-1">
+                    <div className="flex justify-between items-center">
+                      <FormLabel className="text-base font-medium">
+                        Create an invoice for this revenue
+                      </FormLabel>
+                      <Badge
+                        variant="outline"
+                        className="bg-gray-100 text-primary border-primary/20"
+                      >
+                        Recommended
+                      </Badge>
                     </div>
-                  </FormItem>
-                )}
-              />
-            </div>
+                    <FormDescription className="text-muted-foreground text-sm">
+                      Creating an invoice allows you to track payment status,
+                      send reminders, and maintain professional records.
+                    </FormDescription>
+                  </div>
+                </FormItem>
+              )}
+            />
           </div>
 
           <div className="space-y-6">
@@ -242,7 +242,7 @@ export default function InvoiceForm() {
             />
           </div>
 
-          <div className="pt-4 border-t">
+          {/* <div className="pt-4 border-t">
             <Button
               variant="ghost"
               type="button"
@@ -251,7 +251,7 @@ export default function InvoiceForm() {
               <ChevronLeft className="h-4 w-4" />
               Back to Details
             </Button>
-          </div>
+          </div> */}
         </form>
       </Form>
     </div>

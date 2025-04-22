@@ -103,7 +103,7 @@ export function RevenueForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 ">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-2">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Revenue Date Field */}
           <FormField
@@ -111,9 +111,7 @@ export function RevenueForm() {
             name="revenueDate"
             render={({ field }) => (
               <FormItem className="flex flex-col">
-                <FormLabel className="text-base font-medium">
-                  Revenue Date <span className="text-blue-600">*</span>
-                </FormLabel>
+                <FormLabel className="text-gray-600">Revenue Date</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
                     <FormControl>
@@ -152,14 +150,12 @@ export function RevenueForm() {
             control={form.control}
             name="amount"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-base font-medium">
-                  Amount <span className="text-blue-600">*</span>
-                </FormLabel>
+              <FormItem className="-mt-2.5">
+                <FormLabel className="text-gray-600">Amount</FormLabel>
                 <FormControl>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                      <span className="text-gray-500">$</span>
+                      <span className="text-gray-600">$</span>
                     </div>
                     <Input
                       placeholder="0.00"
@@ -184,16 +180,14 @@ export function RevenueForm() {
           name="customer"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-base font-medium">
-                Customer <span className="text-blue-600">*</span>
-              </FormLabel>
+              <FormLabel className="text-gray-600">Customer</FormLabel>
               <div className="flex gap-2">
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger className="border-blue-600 w-full">
+                    <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select a customer" />
                     </SelectTrigger>
                   </FormControl>
@@ -205,14 +199,6 @@ export function RevenueForm() {
                     ))}
                   </SelectContent>
                 </Select>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="icon"
-                  className="border-gray-300"
-                >
-                  <Plus className="h-5 w-5" />
-                </Button>
               </div>
               <FormMessage />
             </FormItem>
@@ -225,7 +211,7 @@ export function RevenueForm() {
           name="category"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-base font-medium">
+              <FormLabel className="text-gray-600">
                 Category/Source <span className="text-blue-600">*</span>
               </FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
@@ -253,9 +239,7 @@ export function RevenueForm() {
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-base font-medium">
-                Description
-              </FormLabel>
+              <FormLabel className="text-gray-600">Description</FormLabel>
               <FormControl>
                 <Textarea
                   placeholder="Enter revenue details"

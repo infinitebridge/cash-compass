@@ -31,21 +31,6 @@ export function Header() {
     setIsOpen(true);
   };
 
-  const tabs = ['Basic Info', 'Details', 'Invoice Options'];
-
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case 0:
-        return <RevenueForm />;
-      case 1:
-        return <RevenueDetailsForm />;
-      case 2:
-        return <InvoiceForm />;
-      default:
-        return null;
-    }
-  };
-
   return (
     <>
       <PageHeader
@@ -84,11 +69,10 @@ export function Header() {
       />
       <DialogWrapper
         title="New Revenue"
-        children={renderTabContent()}
-        trigger={null} // No trigger since it's controlled by the dropdown
+        trigger={null}
+        children={undefined}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
-        tabs={tabs}
         open={isOpen}
         onOpen={() => setIsOpen(true)}
         onClose={() => setIsOpen(false)}
