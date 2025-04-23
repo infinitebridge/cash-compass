@@ -89,17 +89,17 @@ export default function InvoiceForm() {
                   </FormControl>
                   <div className="flex-1 space-y-1">
                     <div className="flex justify-between items-center">
-                      <FormLabel className="text-base font-medium">
+                      <FormLabel className="text-sm font-medium">
                         Create an invoice for this revenue
                       </FormLabel>
                       <Badge
                         variant="outline"
-                        className="bg-gray-100 text-primary border-primary/20"
+                        className="text-xs bg-gray-100 text-primary border-primary/20"
                       >
                         Recommended
                       </Badge>
                     </div>
-                    <FormDescription className="text-muted-foreground text-sm">
+                    <FormDescription className="text-muted-foreground text-xs">
                       Creating an invoice allows you to track payment status,
                       send reminders, and maintain professional records.
                     </FormDescription>
