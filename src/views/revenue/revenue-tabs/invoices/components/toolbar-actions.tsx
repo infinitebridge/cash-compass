@@ -1,6 +1,6 @@
 'use client';
 
-import { Task } from './types';
+import { Invoice } from './types';
 import type { Table } from '@tanstack/react-table';
 import { Download } from 'lucide-react';
 
@@ -10,7 +10,7 @@ import { exportTableToCSV } from '@cash-compass/utils';
 import { DeleteTasksDialog } from './delete-dialog';
 
 interface TasksTableToolbarActionsProps {
-  readonly table: Table<Task>;
+  readonly table: Table<Invoice>;
 }
 
 export function TasksTableToolbarActions({

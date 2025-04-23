@@ -4,7 +4,7 @@ import { Loader } from 'lucide-react';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { Task } from './types';
+import { Invoice } from './types';
 
 import {
   Button,
@@ -32,7 +32,7 @@ import {
 
 interface UpdateTaskSheetProps
   extends React.ComponentPropsWithRef<typeof Sheet> {
-  task: Task | null;
+  task: Invoice | null;
 }
 
 export function UpdateTaskSheet({ task, ...props }: UpdateTaskSheetProps) {
@@ -100,10 +100,12 @@ export function UpdateTaskSheet({ task, ...props }: UpdateTaskSheetProps) {
                       <SelectGroup>
                         {(
                           [
-                            'completed',
-                            'pending',
-                            'canceled',
-                          ] as Task['status'][]
+                            'Sent',
+                            'Paid',
+                            'Overdue',
+                            'Draft',
+                            'Cancelled',
+                          ] as Invoice['status'][]
                         ).map((item) => (
                           <SelectItem
                             key={item}
@@ -139,10 +141,12 @@ export function UpdateTaskSheet({ task, ...props }: UpdateTaskSheetProps) {
                       <SelectGroup>
                         {(
                           [
-                            'completed',
-                            'pending',
-                            'canceled',
-                          ] as Task['status'][]
+                            'Sent',
+                            'Paid',
+                            'Overdue',
+                            'Draft',
+                            'Cancelled',
+                          ] as Invoice['status'][]
                         ).map((item) => (
                           <SelectItem
                             key={item}

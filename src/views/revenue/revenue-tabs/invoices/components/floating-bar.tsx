@@ -1,4 +1,4 @@
-import { Task } from './types';
+import { Invoice } from './types';
 import { SelectTrigger } from '@radix-ui/react-select';
 import type { Table } from '@tanstack/react-table';
 import { CheckCircle2, Download, Loader, Trash2, X } from 'lucide-react';
@@ -23,7 +23,7 @@ import {
 import { exportTableToCSV } from '@cash-compass/utils';
 
 interface TasksTableFloatingBarProps {
-  table: Table<Task>;
+  table: Table<Invoice>;
 }
 
 export function TasksTableFloatingBar({ table }: TasksTableFloatingBarProps) {
@@ -78,7 +78,7 @@ export function TasksTableFloatingBar({ table }: TasksTableFloatingBarProps) {
             <Separator orientation="vertical" className="hidden h-5 sm:block" />
             <div className="flex items-center gap-1.5">
               <Select
-                onValueChange={(value: Task['status']) => {
+                onValueChange={(value: Invoice['status']) => {
                   setAction('update-status');
 
                   startTransition(async () => {
@@ -116,7 +116,13 @@ export function TasksTableFloatingBar({ table }: TasksTableFloatingBarProps) {
                 <SelectContent align="center">
                   <SelectGroup>
                     {(
-                      ['completed', 'pending', 'canceled'] as Task['status'][]
+                      [
+                        'Sent',
+                        'Paid',
+                        'Overdue',
+                        'Draft',
+                        'Cancelled',
+                      ] as Invoice['status'][]
                     ).map((status) => (
                       <SelectItem
                         key={status}

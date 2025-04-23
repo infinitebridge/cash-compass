@@ -55,11 +55,14 @@ export interface DataTableRowAction<TData> {
   row: Row<TData>;
   type: 'update' | 'delete';
 }
-export type Task = {
-  id: string;
-  name: string;
-  status: 'completed' | 'pending' | 'canceled';
-  last_run: Date;
-  schedule: string;
-  label?: string; // Making label optional since it's used in the dropdown
-};
+
+export interface Invoice {
+  invoice_id: number;
+  invoice_number: string;
+  customer_name: string;
+  issue_date: Date;
+  due_date: Date;
+  amount_total: number;
+  balance_remaining: number;
+  status: 'Sent' | 'Paid' | 'Overdue' | 'Draft' | 'Cancelled';
+}

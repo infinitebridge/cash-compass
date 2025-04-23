@@ -2,7 +2,7 @@
 
 import { SelectIcon } from '@radix-ui/react-select';
 import type { Column } from '@tanstack/react-table';
-import { ArrowDown, ArrowUp, ChevronsUpDown, EyeOff } from 'lucide-react';
+import { ArrowDown, ArrowUp, ChevronsUpDown, EyeOff, X } from 'lucide-react';
 
 import {
   Select,
@@ -30,6 +30,7 @@ export function DataTableColumnHeader<TData, TValue>({
   const ascValue = `${column.id}-asc`;
   const descValue = `${column.id}-desc`;
   const hideValue = `${column.id}-hide`;
+  const resetValue = `${column.id}-reset`;
 
   return (
     <div className={cn('flex items-center gap-2', className)}>
@@ -45,6 +46,7 @@ export function DataTableColumnHeader<TData, TValue>({
           if (value === ascValue) column.toggleSorting(false);
           else if (value === descValue) column.toggleSorting(true);
           else if (value === hideValue) column.toggleVisibility(false);
+          else if (value === resetValue) column.clearSorting();
         }}
       >
         <SelectTrigger
@@ -89,6 +91,17 @@ export function DataTableColumnHeader<TData, TValue>({
                   Desc
                 </span>
               </SelectItem>
+              {column.getIsSorted() && (
+                <SelectItem value={resetValue}>
+                  <span className="flex items-center">
+                    <X
+                      className="mr-2 size-3.5 text-muted-foreground/70"
+                      aria-hidden="true"
+                    />
+                    Reset
+                  </span>
+                </SelectItem>
+              )}
             </>
           )}
           {column.getCanHide() && (

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { DataTableSkeleton } from './data-table/data-table-skeleton';
 
 import { Shell } from '@cash-compass/ui';
-import { TasksTable } from './table';
+import { Table } from './table';
 
 export default function TableComponent() {
   return (
@@ -19,7 +19,7 @@ export default function TableComponent() {
           />
         }
       >
-        <TasksTable />
+        <Table />
       </React.Suspense>
     </Shell>
   );

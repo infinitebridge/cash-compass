@@ -1,7 +1,14 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { Task } from '../../types';
-import { CheckCircle2, CircleIcon, CircleX, Timer } from 'lucide-react';
+import { Invoice } from '../../types';
+import {
+  CheckCircle2,
+  CircleDashed,
+  CircleIcon,
+  CircleX,
+  Send,
+  Timer,
+} from 'lucide-react';
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -50,14 +57,16 @@ export function composeEventHandlers<E>(
 
 /**
  * Returns the appropriate status icon based on the provided status.
- * @param status - The status of the task.
+ * @param status - The status of the invoice.
  * @returns A React component representing the status icon.
  */
-export function getStatusIcon(status: Task['status']) {
+export function getStatusIcon(status: Invoice['status']) {
   const statusIcons = {
-    completed: CheckCircle2,
-    pending: Timer,
-    canceled: CircleX,
+    Paid: CheckCircle2,
+    Cancelled: CircleX,
+    Sent: Send,
+    Overdue: CircleX,
+    Draft: CircleDashed,
   };
   return statusIcons[status] || CircleIcon;
 }

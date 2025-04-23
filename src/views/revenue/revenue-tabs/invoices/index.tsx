@@ -1,6 +1,6 @@
 import { Button } from '@cash-compass/ui';
 import InvoicesCards from './invoices-cards';
-import { InvoiceTable } from './invoices-table';
+
 import { PlusIcon } from 'lucide-react';
 import TableComponent from './components/table-component';
 
@@ -15,7 +15,6 @@ const RevenueOverview = () => {
         </Button>
       </div>
       <InvoicesCards />
-      <InvoiceTable />
       <TableComponent />
     </div>
   );

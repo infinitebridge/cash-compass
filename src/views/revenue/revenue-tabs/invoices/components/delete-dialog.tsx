@@ -1,6 +1,6 @@
 'use client';
 
-import { Task } from './types';
+import { Invoice } from './types';
 import type { Row } from '@tanstack/react-table';
 import { Loader, Trash } from 'lucide-react';
 import * as React from 'react';
@@ -29,7 +29,7 @@ import { useMediaQuery } from './data-table/hooks/use-media-query';
 
 interface DeleteTasksDialogProps
   extends React.ComponentPropsWithoutRef<typeof Dialog> {
-  tasks: Row<Task>['original'][];
+  tasks: Row<Invoice>['original'][];
   showTrigger?: boolean;
   onSuccess?: () => void;
 }
@@ -66,7 +66,7 @@ export function DeleteTasksDialog({
         {showTrigger ? (
           <DialogTrigger asChild>
             <Button variant="outline" size="sm">
-              <Trash className="mr-2 size-4" aria-hidden="true" />
+              <Trash className="size-4" aria-hidden="true" />
               Delete ({tasks.length})
             </Button>
           </DialogTrigger>

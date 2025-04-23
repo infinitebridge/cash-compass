@@ -1,8 +1,8 @@
-import { Task } from './types';
 import type {
   DataTableAdvancedFilterField,
   DataTableFilterField,
   DataTableRowAction,
+  Invoice,
 } from './types';
 import * as React from 'react';
 import { DataTable } from './data-table/data-table';
@@ -13,211 +13,164 @@ import { DeleteTasksDialog } from './delete-dialog';
 import { getColumns } from './columns';
 import { TasksTableToolbarActions } from './toolbar-actions';
 
-export function TasksTable() {
-  const data = [
+export function Table() {
+  const invoices: Invoice[] = [
     {
-      id: 'd290f1ee-6c54-4b01-90e6-d701748f0851',
-      name: 'Network Vulnerability Scan',
-      status: 'completed',
-      last_run: new Date('2024-02-17T14:30:00Z'),
-      schedule: 'daily',
+      invoice_id: 1001,
+      invoice_number: 'INV-2025-018',
+      customer_name: 'XYZ Corporation',
+      issue_date: new Date(2025, 2, 18), // Mar 18, 2025
+      due_date: new Date(2025, 3, 17), // Apr 17, 2025
+      amount_total: 5000.0,
+      balance_remaining: 5000.0,
+      status: 'Sent',
     },
     {
-      id: '04dbc84b-6b23-4848-aba5-32d48c52dd4a',
-      name: 'Malware Detection Scan',
-      status: 'pending',
-      last_run: new Date('2024-02-19T11:45:00Z'),
-      schedule: 'weekly',
+      invoice_id: 1002,
+      invoice_number: 'INV-2025-017',
+      customer_name: 'ABC Inc',
+      issue_date: new Date(2025, 2, 15), // Mar 15, 2025
+      due_date: new Date(2025, 3, 14), // Apr 14, 2025
+      amount_total: 12500.0,
+      balance_remaining: 0.0,
+      status: 'Paid',
     },
     {
-      id: '7d9c5a3e-8e1b-4a7c-9c21-f9db3d789aa2',
-      name: 'SSL Certificate Validation',
-      status: 'pending',
-      last_run: new Date('2024-02-17T13:20:00Z'),
-      schedule: 'monthly',
+      invoice_id: 1003,
+      invoice_number: 'INV-2025-016',
+      customer_name: 'Global Solutions Ltd',
+      issue_date: new Date(2025, 2, 12), // Mar 12, 2025
+      due_date: new Date(2025, 3, 11), // Apr 11, 2025
+      amount_total: 8400.0,
+      balance_remaining: 0.0,
+      status: 'Paid',
     },
     {
-      id: '3b69e169-a623-4e85-a126-6472c8c90f66',
-      name: 'Port Security Scan',
-      status: 'canceled',
-      last_run: new Date('2024-02-18T09:30:00Z'),
-      schedule: 'weekly',
+      invoice_id: 1004,
+      invoice_number: 'INV-2025-015',
+      customer_name: 'DEF Corp',
+      issue_date: new Date(2025, 2, 10), // Mar 10, 2025
+      due_date: new Date(2025, 2, 9), // Mar 9, 2025 (overdue)
+      amount_total: 8750.0,
+      balance_remaining: 8750.0,
+      status: 'Overdue',
     },
     {
-      id: '9e854aa2-f985-4678-9f2c-d2387a7f49e1',
-      name: 'Database Security Audit',
-      status: 'pending',
-      last_run: new Date('2024-02-19T08:00:00Z'),
-      schedule: 'daily',
+      invoice_id: 1005,
+      invoice_number: 'INV-2025-014',
+      customer_name: 'Tech Innovations LLC',
+      issue_date: new Date(2025, 2, 5), // Mar 5, 2025
+      due_date: new Date(2025, 3, 4), // Apr 4, 2025
+      amount_total: 2800.0,
+      balance_remaining: 0.0,
+      status: 'Paid',
     },
     {
-      id: 'c5c4c1d9-9c2d-4c5e-a8b3-8d8f8e7f6e5d',
-      name: 'Firewall Configuration Check',
-      status: 'pending',
-      last_run: new Date('2024-02-20T16:15:00Z'),
-      schedule: 'weekly',
+      invoice_id: 1006,
+      invoice_number: 'INV-2025-013',
+      customer_name: 'Acme Enterprises',
+      issue_date: new Date(2025, 2, 3), // Mar 3, 2025
+      due_date: new Date(2025, 3, 2), // Apr 2, 2025
+      amount_total: 4350.0,
+      balance_remaining: 4350.0,
+      status: 'Sent',
     },
     {
-      id: 'b2b1a9c8-7f6e-5d4c-3b2a-1c0d9e8f7d6e',
-      name: 'Access Control Audit',
-      status: 'pending',
-      last_run: new Date('2024-02-19T14:20:00Z'),
-      schedule: 'monthly',
+      invoice_id: 1007,
+      invoice_number: 'INV-2025-012',
+      customer_name: 'Innovative Systems Inc',
+      issue_date: new Date(2025, 1, 28), // Feb 28, 2025
+      due_date: new Date(2025, 2, 30), // Mar 30, 2025
+      amount_total: 7650.0,
+      balance_remaining: 0.0,
+      status: 'Paid',
     },
     {
-      id: 'a1b2c3d4-e5f6-7a8b-9c0d-ef1234567890',
-      name: 'Endpoint Protection Scan',
-      status: 'completed',
-      last_run: new Date('2024-02-21T10:30:00Z'),
-      schedule: 'weekly',
-    },
-    // Additional 20 items
-    {
-      id: 'f7e6d5c4-b3a2-1098-7654-3210fedcba98',
-      name: 'User Permission Review',
-      status: 'completed',
-      last_run: new Date('2024-02-20T09:15:00Z'),
-      schedule: 'monthly',
+      invoice_id: 1008,
+      invoice_number: 'INV-2025-011',
+      customer_name: 'First Choice Services',
+      issue_date: new Date(2025, 1, 25), // Feb 25, 2025
+      due_date: new Date(2025, 2, 27), // Mar 27, 2025
+      amount_total: 3200.0,
+      balance_remaining: 0.0,
+      status: 'Paid',
     },
     {
-      id: '1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d',
-      name: 'Password Policy Compliance',
-      status: 'pending',
-      last_run: new Date('2024-02-22T13:40:00Z'),
-      schedule: 'weekly',
+      invoice_id: 1009,
+      invoice_number: 'INV-2025-010',
+      customer_name: 'Summit Solutions',
+      issue_date: new Date(2025, 1, 20), // Feb 20, 2025
+      due_date: new Date(2025, 2, 22), // Mar 22, 2025
+      amount_total: 9800.0,
+      balance_remaining: 0.0,
+      status: 'Paid',
     },
     {
-      id: '9f8e7d6c-5b4a-3210-fedc-ba9876543210',
-      name: 'Data Encryption Verification',
-      status: 'pending',
-      last_run: new Date('2024-02-18T15:30:00Z'),
-      schedule: 'daily',
+      invoice_id: 1010,
+      invoice_number: 'INV-2025-009',
+      customer_name: 'Horizon Consulting',
+      issue_date: new Date(2025, 1, 15), // Feb 15, 2025
+      due_date: new Date(2025, 2, 1), // Mar 1, 2025 (overdue)
+      amount_total: 11250.0,
+      balance_remaining: 11250.0,
+      status: 'Overdue',
     },
     {
-      id: '2d3e4f5a-6b7c-8d9e-0f1a-2b3c4d5e6f7a',
-      name: 'Cloud Resources Audit',
-      status: 'completed',
-      last_run: new Date('2024-02-21T11:25:00Z'),
-      schedule: 'weekly',
+      invoice_id: 1011,
+      invoice_number: 'INV-2025-008',
+      customer_name: 'Dynamic Partners LLC',
+      issue_date: new Date(2025, 1, 10), // Feb 10, 2025
+      due_date: new Date(2025, 2, 12), // Mar 12, 2025
+      amount_total: 5675.0,
+      balance_remaining: 0.0,
+      status: 'Paid',
     },
     {
-      id: 'abcdef12-3456-7890-abcd-ef1234567890',
-      name: 'Mobile Device Security Check',
-      status: 'pending',
-      last_run: new Date('2024-02-22T10:00:00Z'),
-      schedule: 'daily',
+      invoice_id: 1012,
+      invoice_number: 'INV-2025-007',
+      customer_name: 'Elite Industries',
+      issue_date: new Date(2025, 1, 5), // Feb 5, 2025
+      due_date: new Date(2025, 2, 7), // Mar 7, 2025
+      amount_total: 4125.0,
+      balance_remaining: 0.0,
+      status: 'Paid',
     },
     {
-      id: 'fedcba98-7654-3210-fedc-ba9876543210',
-      name: 'Phishing Vulnerability Assessment',
-      status: 'canceled',
-      last_run: new Date('2024-02-19T16:45:00Z'),
-      schedule: 'monthly',
+      invoice_id: 1013,
+      invoice_number: 'INV-2025-006',
+      customer_name: 'Premier Solutions Corp',
+      issue_date: new Date(2025, 0, 28), // Jan 28, 2025
+      due_date: new Date(2025, 1, 27), // Feb 27, 2025
+      amount_total: 8950.0,
+      balance_remaining: 0.0,
+      status: 'Paid',
     },
     {
-      id: '11223344-5566-7788-99aa-bbccddeeff00',
-      name: 'API Security Scan',
-      status: 'pending',
-      last_run: new Date('2024-02-20T08:30:00Z'),
-      schedule: 'weekly',
+      invoice_id: 1014,
+      invoice_number: 'INV-2025-005',
+      customer_name: 'NextGen Systems',
+      issue_date: new Date(2025, 0, 20), // Jan 20, 2025
+      due_date: new Date(2025, 1, 19), // Feb 19, 2025
+      amount_total: 6300.0,
+      balance_remaining: 0.0,
+      status: 'Paid',
     },
     {
-      id: 'aabbccdd-eeff-0011-2233-445566778899',
-      name: 'Network Traffic Analysis',
-      status: 'completed',
-      last_run: new Date('2024-02-21T14:15:00Z'),
-      schedule: 'daily',
+      invoice_id: 1015,
+      invoice_number: 'INV-2025-004',
+      customer_name: 'Global Enterprise Partners',
+      issue_date: new Date(2025, 0, 15), // Jan 15, 2025
+      due_date: new Date(2025, 1, 14), // Feb 14, 2025
+      amount_total: 15800.0,
+      balance_remaining: 0.0,
+      status: 'Paid',
     },
-    {
-      id: '12ab34cd-56ef-78ab-90cd-ef1234abcdef',
-      name: 'Software Update Verification',
-      status: 'pending',
-      last_run: new Date('2024-02-19T09:50:00Z'),
-      schedule: 'weekly',
-    },
-    {
-      id: '98765432-1098-7654-3210-987654321098',
-      name: 'Backup System Integrity Check',
-      status: 'pending',
-      last_run: new Date('2024-02-22T11:35:00Z'),
-      schedule: 'daily',
-    },
-    {
-      id: 'a9b8c7d6-e5f4-3210-a9b8-c7d6e5f43210',
-      name: 'Intrusion Detection System Test',
-      status: 'pending',
-      last_run: new Date('2024-02-20T15:20:00Z'),
-      schedule: 'monthly',
-    },
-    {
-      id: '11aabb22-33cc-44dd-55ee-ff66778899aa',
-      name: 'VPN Security Assessment',
-      status: 'completed',
-      last_run: new Date('2024-02-21T09:10:00Z'),
-      schedule: 'weekly',
-    },
-    {
-      id: 'abcd1234-efgh-5678-ijkl-9012mnopqrst',
-      name: 'Email Security Filter Check',
-      status: 'pending',
-      last_run: new Date('2024-02-19T13:05:00Z'),
-      schedule: 'daily',
-    },
-    {
-      id: 'zyx98765-wvu4-3210-tsrq-ponmlkjihgfe',
-      name: 'Authentication System Audit',
-      status: 'pending',
-      last_run: new Date('2024-02-22T14:50:00Z'),
-      schedule: 'monthly',
-    },
-    {
-      id: '123abc45-67de-89fg-01hi-jklmno23pqrs',
-      name: 'IoT Device Security Scan',
-      status: 'canceled',
-      last_run: new Date('2024-02-20T11:55:00Z'),
-      schedule: 'weekly',
-    },
-    {
-      id: 'abcxyz12-3456-7890-def4-56789uvw0123',
-      name: 'Source Code Security Review',
-      status: 'pending',
-      last_run: new Date('2024-02-19T10:40:00Z'),
-      schedule: 'monthly',
-    },
-    {
-      id: '11335577-9911-2244-6688-0022446688aa',
-      name: 'Database Backup Verification',
-      status: 'completed',
-      last_run: new Date('2024-02-21T12:30:00Z'),
-      schedule: 'daily',
-    },
-    {
-      id: '99887766-5544-3322-1100-ffeeddccbbaa',
-      name: 'Server Hardening Verification',
-      status: 'pending',
-      last_run: new Date('2024-02-20T14:00:00Z'),
-      schedule: 'weekly',
-    },
-    {
-      id: 'a1s2d3f4-g5h6-j7k8-l9p0-q1w2e3r4t5y6',
-      name: 'Third-Party Integration Security Audit',
-      status: 'pending',
-      last_run: new Date('2024-02-22T09:25:00Z'),
-      schedule: 'monthly',
-    },
-    {
-      id: 'z9x8c7v6-b5n4-m3k2-j1h0-g9f8e7d6c5b4',
-      name: 'Compliance Documentation Review',
-      status: 'completed',
-      last_run: new Date('2024-02-21T15:45:00Z'),
-      schedule: 'weekly',
-    },
-  ] as Task[];
-  const pageCount = data.length;
+  ];
+  const pageCount = invoices.length;
   const statusCounts = 10;
 
   const [rowAction, setRowAction] =
-    React.useState<DataTableRowAction<Task> | null>(null);
+    React.useState<DataTableRowAction<Invoice> | null>(null);
 
   const columns = React.useMemo(() => getColumns({ setRowAction }), []);
 
@@ -232,23 +185,23 @@ export function TasksTable() {
    * @prop {React.ReactNode} [icon] - An optional icon to display next to the label.
    * @prop {boolean} [withCount] - An optional boolean to display the count of the filter option.
    */
-  const filterFields: DataTableFilterField<Task>[] = [
+  const filterFields: DataTableFilterField<Invoice>[] = [
     {
-      id: 'name',
-      label: 'Name',
-      placeholder: 'Filter Scans...',
+      id: 'customer_name',
+      label: 'customer name',
+      placeholder: 'Filter customer_name...',
     },
     {
       id: 'status',
       label: 'Status',
-      options: (['completed', 'pending', 'canceled'] as Task['status'][]).map(
-        (status) => ({
-          label: toSentenceCase(status),
-          value: status,
-          icon: getStatusIcon(status),
-          count: statusCounts,
-        })
-      ),
+      options: (
+        ['Sent', 'Paid', 'Overdue', 'Draft', 'Cancelled'] as Invoice['status'][]
+      ).map((status) => ({
+        label: toSentenceCase(status),
+        value: status,
+        icon: getStatusIcon(status),
+        count: statusCounts,
+      })),
     },
     // {
     //   id: "priority",
@@ -272,9 +225,9 @@ export function TasksTable() {
    * 3. Used with DataTableAdvancedToolbar: Enables a more sophisticated filtering UI.
    * 4. Date and boolean types: Adds support for filtering by date ranges and boolean values.
    */
-  const advancedFilterFields: DataTableAdvancedFilterField<Task>[] = [
+  const advancedFilterFields: DataTableAdvancedFilterField<Invoice>[] = [
     {
-      id: 'name',
+      id: 'invoice_id',
       label: 'Name',
       type: 'text',
     },
@@ -282,34 +235,42 @@ export function TasksTable() {
       id: 'status',
       label: 'Status',
       type: 'multi-select',
-      options: (['completed', 'pending', 'canceled'] as Task['status'][]).map(
-        (status) => ({
-          label: toSentenceCase(status),
-          value: status,
-          icon: getStatusIcon(status),
-          count: statusCounts,
-        })
-      ),
+      options: (
+        ['Sent', 'Paid', 'Overdue', 'Draft', 'Cancelled'] as Invoice['status'][]
+      ).map((status) => ({
+        label: toSentenceCase(status),
+        value: status,
+        icon: getStatusIcon(status),
+        count: statusCounts,
+      })),
     },
 
     {
-      id: 'last_run',
-      label: 'Last Run',
+      id: 'issue_date',
+      label: 'issue date',
+      type: 'date',
+    },
+    {
+      id: 'due_date',
+      label: 'Due date',
       type: 'date',
     },
   ];
 
   const { table } = useDataTable({
-    data: data.slice(0, 10),
+    data: invoices.slice(0, 10),
     columns,
     pageCount,
     filterFields,
     enableAdvancedFilter: true,
     initialState: {
-      sorting: [{ id: 'last_run', desc: true }],
+      sorting: [
+        { id: 'issue_date', desc: true },
+        { id: 'due_date', desc: true },
+      ],
       columnPinning: { right: ['actions'] },
     },
-    getRowId: (originalRow) => originalRow.id,
+    getRowId: (originalRow) => originalRow.invoice_id.toString(),
     shallow: false,
     clearOnDefault: true,
   });
