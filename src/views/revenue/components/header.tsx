@@ -2,9 +2,6 @@ import { PageHeader } from '@cash-compass/blocks';
 import { DollarSign, ReceiptCent, RefreshCcw } from 'lucide-react';
 import React, { useState } from 'react';
 import DialogWrapper from './dialog-wrapper';
-import { RevenueForm } from './basic-info-form';
-import RevenueDetailsForm from './details-form';
-import InvoiceForm from './invoice-form';
 
 export function Header() {
   const [selectedPeriod, setSelectedPeriod] = React.useState('march');

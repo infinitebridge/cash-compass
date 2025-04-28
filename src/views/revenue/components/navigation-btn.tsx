@@ -8,7 +8,7 @@ type Props = {
 
 const NavigationBtn = ({ children, action }: Props) => {
   return (
-    <Button variant={'ghost'} onClick={action}>
+    <Button className="p-0" variant={'ghost'} onClick={action}>
       {children}
     </Button>
   );

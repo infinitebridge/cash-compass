@@ -205,15 +205,12 @@ export function RevenueForm() {
           )}
         />
 
-        {/* Category/Source Field */}
         <FormField
           control={form.control}
           name="category"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-gray-600">
-                Category/Source <span className="text-blue-600">*</span>
-              </FormLabel>
+              <FormLabel className="text-gray-600">Category/Source</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger className="border-gray-300">

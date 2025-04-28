@@ -5,9 +5,8 @@ import {
   DialogTitle,
 } from '@cash-compass/ui/dialog';
 import { Dispatch, ReactNode, SetStateAction } from 'react';
-import Tabs from './tabs';
 import { Button } from '@cash-compass/ui/button';
-import { ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import RevenueManagementTabs from '../revenue-tabs';
 import { RevenueForm } from './basic-info-form';
 import RevenueDetailsForm from './details-form';
@@ -16,7 +15,7 @@ import NavigationBtn from './navigation-btn';
 
 type Props = {
   title: string;
-  children: ReactNode;
+  children?: ReactNode;
   trigger: ReactNode;
   activeTab: number;
   setActiveTab: Dispatch<SetStateAction<number>>;
@@ -25,7 +24,15 @@ type Props = {
   onClose: () => void;
 };
 
-const DialogWrapper = ({ title, children, trigger, open, onClose }: Props) => {
+const DialogWrapper = ({
+  title,
+  children,
+  trigger,
+  activeTab,
+  setActiveTab,
+  open,
+  onClose,
+}: Props) => {
   const tabsConfig = [
     {
       title: 'Basic Info',
@@ -44,6 +51,18 @@ const DialogWrapper = ({ title, children, trigger, open, onClose }: Props) => {
     },
   ];
 
+  function goNext() {
+    if (activeTab < tabsConfig.length - 1) {
+      setActiveTab((prev) => prev + 1);
+    }
+  }
+
+  function returnBack() {
+    if (activeTab > 0) {
+      setActiveTab((prev) => prev - 1);
+    }
+  }
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
       {trigger}
@@ -53,30 +72,46 @@ const DialogWrapper = ({ title, children, trigger, open, onClose }: Props) => {
           <div className="py-2">
             <RevenueManagementTabs
               tabsConfig={tabsConfig}
-              defaultTab="basic-info"
+              defaultTab={tabsConfig[0].key}
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
             />
           </div>
         </DialogHeader>
 
-        <>{children}</>
+        {/* Render the active tab component */}
 
-        <hr />
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-          <NavigationBtn
-            children={
+        {/* Navigation */}
+        <div className="flex flex-row items-center gap-4 mt-4">
+          {activeTab > 0 && (
+            <NavigationBtn action={returnBack}>
+              <div className="flex flex-row gap-2 items-center">
+                <ChevronLeft className="h-3 w-3" />
+                <span>Prev</span>
+              </div>
+            </NavigationBtn>
+          )}
+          {activeTab < tabsConfig.length - 1 && (
+            <NavigationBtn action={goNext}>
               <div className="flex flex-row gap-2 items-center">
                 <span>Next</span>
                 <ChevronRight className="h-3 w-3" />
               </div>
-            }
-            action={() => console.log('ok')}
-          />
+            </NavigationBtn>
+          )}
+        </div>
+
+        <hr className="my-6" />
+
+        {/* Footer Buttons */}
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
           <div className="flex-1"></div>
           <div className="flex gap-4 w-full sm:w-auto">
             <Button
               type="button"
               variant="outline"
               className="flex-1 sm:flex-none border-gray-300"
+              onClick={onClose}
             >
               Cancel
             </Button>
