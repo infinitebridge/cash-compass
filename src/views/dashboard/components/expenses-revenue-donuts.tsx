@@ -51,7 +51,7 @@ export function ExpensesRevenueDonuts() {
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full my-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
       <DonutChart
         title="Expense Breakdown"
         statsData={expenseData}

@@ -1,4 +1,4 @@
-import RevenueManagementTabs from './revenue-tabs';
+import RevenueTabs from './revenue-tabs';
 import Invoices from './revenue-tabs/invoices';
 import RevenueOverview from './revenue-tabs/overview';
 import { StatisticsCards } from './components/statistic-cards';
@@ -20,7 +20,7 @@ export function RevenueManagement() {
     <div className="px-4 space-y-4 lg:px-6">
       <Header />
       <StatisticsCards />
-      <RevenueManagementTabs tabsConfig={tabsConfig} defaultTab="overview" />
+      <RevenueTabs tabsConfig={tabsConfig} defaultTab="overview" />
     </div>
   );
 }
