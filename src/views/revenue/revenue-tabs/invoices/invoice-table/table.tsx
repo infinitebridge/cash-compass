@@ -12,6 +12,8 @@ import { getStatusIcon, toSentenceCase } from './data-table/lib/utils';
 import { DeleteTasksDialog } from './delete-dialog';
 import { getColumns } from './columns';
 import { TasksTableToolbarActions } from './toolbar-actions';
+import { Eye } from 'lucide-react';
+import { Button } from '@cash-compass/ui';
 
 export function Table() {
   const invoices: Invoice[] = [
@@ -24,6 +26,36 @@ export function Table() {
       amount_total: 5000.0,
       balance_remaining: 5000.0,
       status: 'Sent',
+      actions: {
+        menuActions: [
+          {
+            label: 'Edit',
+            action(row) {
+              console.log(`edit row ${row.invoice_id}`);
+            },
+          },
+          {
+            shortcut: '⌘⌫',
+            label: 'Delete',
+            className:
+              'bg-red-100 text-red-400 !focus:text-red-500 !focus:bg-red-100 !hover:text-red-500 transition',
+            action(row) {
+              console.log(`edit row ${row.invoice_id}`);
+            },
+          },
+        ],
+        customActions: [
+          (row) => (
+            <Button
+              aria-label="Open menu"
+              variant="ghost"
+              className="flex size-8 p-0 data-[state=open]:bg-muted"
+            >
+              <Eye className="flex size-8 p-0 hover:bg-muted text-green-400" />
+            </Button>
+          ),
+        ],
+      },
     },
     {
       invoice_id: 1002,
@@ -34,6 +66,23 @@ export function Table() {
       amount_total: 12500.0,
       balance_remaining: 0.0,
       status: 'Paid',
+      actions: {
+        menuActions: [
+          {
+            label: 'Edit',
+            action(row) {
+              console.log(`edit row ${row.invoice_id}`);
+            },
+          },
+          {
+            label: 'Delete',
+            className: 'bg-red-100 text-red-400 hover:text-red-500 transition',
+            action(row) {
+              console.log(`edit row ${row.invoice_id}`);
+            },
+          },
+        ],
+      },
     },
     {
       invoice_id: 1003,
@@ -44,6 +93,23 @@ export function Table() {
       amount_total: 8400.0,
       balance_remaining: 0.0,
       status: 'Paid',
+      actions: {
+        menuActions: [
+          {
+            label: 'Edit',
+            action(row) {
+              console.log(`edit row ${row.invoice_id}`);
+            },
+          },
+          {
+            label: 'Delete',
+            className: 'bg-red-100 text-red-400 hover:text-red-500 transition',
+            action(row) {
+              console.log(`edit row ${row.invoice_id}`);
+            },
+          },
+        ],
+      },
     },
     {
       invoice_id: 1004,
@@ -54,7 +120,25 @@ export function Table() {
       amount_total: 8750.0,
       balance_remaining: 8750.0,
       status: 'Overdue',
+      actions: {
+        menuActions: [
+          {
+            label: 'Edit',
+            action(row) {
+              console.log(`edit row ${row.invoice_id}`);
+            },
+          },
+          {
+            label: 'Delete',
+            className: 'bg-red-100 text-red-400 hover:text-red-500 transition',
+            action(row) {
+              console.log(`edit row ${row.invoice_id}`);
+            },
+          },
+        ],
+      },
     },
+
     {
       invoice_id: 1005,
       invoice_number: 'INV-2025-014',
@@ -64,6 +148,23 @@ export function Table() {
       amount_total: 2800.0,
       balance_remaining: 0.0,
       status: 'Paid',
+      actions: {
+        menuActions: [
+          {
+            label: 'Edit',
+            action(row) {
+              console.log(`edit row ${row.invoice_id}`);
+            },
+          },
+          {
+            label: 'Delete',
+            className: 'bg-red-100 text-red-400 hover:text-red-500 transition',
+            action(row) {
+              console.log(`edit row ${row.invoice_id}`);
+            },
+          },
+        ],
+      },
     },
     {
       invoice_id: 1006,
@@ -74,6 +175,23 @@ export function Table() {
       amount_total: 4350.0,
       balance_remaining: 4350.0,
       status: 'Sent',
+      actions: {
+        menuActions: [
+          {
+            label: 'Edit',
+            action(row) {
+              console.log(`edit row ${row.invoice_id}`);
+            },
+          },
+          {
+            label: 'Delete',
+            className: 'bg-red-100 text-red-400 hover:text-red-500 transition',
+            action(row) {
+              console.log(`edit row ${row.invoice_id}`);
+            },
+          },
+        ],
+      },
     },
     {
       invoice_id: 1007,
@@ -84,6 +202,23 @@ export function Table() {
       amount_total: 7650.0,
       balance_remaining: 0.0,
       status: 'Paid',
+      actions: {
+        menuActions: [
+          {
+            label: 'Edit',
+            action(row) {
+              console.log(`edit row ${row.invoice_id}`);
+            },
+          },
+          {
+            label: 'Delete',
+            className: 'bg-red-100 text-red-400 hover:text-red-500 transition',
+            action(row) {
+              console.log(`edit row ${row.invoice_id}`);
+            },
+          },
+        ],
+      },
     },
     {
       invoice_id: 1008,
@@ -94,6 +229,23 @@ export function Table() {
       amount_total: 3200.0,
       balance_remaining: 0.0,
       status: 'Paid',
+      actions: {
+        menuActions: [
+          {
+            label: 'Edit',
+            action(row) {
+              console.log(`edit row ${row.invoice_id}`);
+            },
+          },
+          {
+            label: 'Delete',
+            className: 'bg-red-100 text-red-400 hover:text-red-500 transition',
+            action(row) {
+              console.log(`edit row ${row.invoice_id}`);
+            },
+          },
+        ],
+      },
     },
     {
       invoice_id: 1009,
@@ -104,6 +256,23 @@ export function Table() {
       amount_total: 9800.0,
       balance_remaining: 0.0,
       status: 'Paid',
+      actions: {
+        menuActions: [
+          {
+            label: 'Edit',
+            action(row) {
+              console.log(`edit row ${row.invoice_id}`);
+            },
+          },
+          {
+            label: 'Delete',
+            className: 'bg-red-100 text-red-400 hover:text-red-500 transition',
+            action(row) {
+              console.log(`edit row ${row.invoice_id}`);
+            },
+          },
+        ],
+      },
     },
     {
       invoice_id: 1010,
@@ -114,6 +283,23 @@ export function Table() {
       amount_total: 11250.0,
       balance_remaining: 11250.0,
       status: 'Overdue',
+      actions: {
+        menuActions: [
+          {
+            label: 'Edit',
+            action(row) {
+              console.log(`edit row ${row.invoice_id}`);
+            },
+          },
+          {
+            label: 'Delete',
+            className: 'bg-red-100 text-red-400 hover:text-red-500 transition',
+            action(row) {
+              console.log(`edit row ${row.invoice_id}`);
+            },
+          },
+        ],
+      },
     },
     {
       invoice_id: 1011,
@@ -124,6 +310,23 @@ export function Table() {
       amount_total: 5675.0,
       balance_remaining: 0.0,
       status: 'Paid',
+      actions: {
+        menuActions: [
+          {
+            label: 'Edit',
+            action(row) {
+              console.log(`edit row ${row.invoice_id}`);
+            },
+          },
+          {
+            label: 'Delete',
+            className: 'bg-red-100 text-red-400 hover:text-red-500 transition',
+            action(row) {
+              console.log(`edit row ${row.invoice_id}`);
+            },
+          },
+        ],
+      },
     },
     {
       invoice_id: 1012,
@@ -134,6 +337,23 @@ export function Table() {
       amount_total: 4125.0,
       balance_remaining: 0.0,
       status: 'Paid',
+      actions: {
+        menuActions: [
+          {
+            label: 'Edit',
+            action(row) {
+              console.log(`edit row ${row.invoice_id}`);
+            },
+          },
+          {
+            label: 'Delete',
+            className: 'bg-red-100 text-red-400 hover:text-red-500 transition',
+            action(row) {
+              console.log(`edit row ${row.invoice_id}`);
+            },
+          },
+        ],
+      },
     },
     {
       invoice_id: 1013,
@@ -144,6 +364,23 @@ export function Table() {
       amount_total: 8950.0,
       balance_remaining: 0.0,
       status: 'Paid',
+      actions: {
+        menuActions: [
+          {
+            label: 'Edit',
+            action(row) {
+              console.log(`edit row ${row.invoice_id}`);
+            },
+          },
+          {
+            label: 'Delete',
+            className: 'bg-red-100 text-red-400 hover:text-red-500 transition',
+            action(row) {
+              console.log(`edit row ${row.invoice_id}`);
+            },
+          },
+        ],
+      },
     },
     {
       invoice_id: 1014,
@@ -154,6 +391,23 @@ export function Table() {
       amount_total: 6300.0,
       balance_remaining: 0.0,
       status: 'Paid',
+      actions: {
+        menuActions: [
+          {
+            label: 'Edit',
+            action(row) {
+              console.log(`edit row ${row.invoice_id}`);
+            },
+          },
+          {
+            label: 'Delete',
+            className: 'bg-red-100 text-red-400 hover:text-red-500 transition',
+            action(row) {
+              console.log(`edit row ${row.invoice_id}`);
+            },
+          },
+        ],
+      },
     },
     {
       invoice_id: 1015,
@@ -164,6 +418,23 @@ export function Table() {
       amount_total: 15800.0,
       balance_remaining: 0.0,
       status: 'Paid',
+      actions: {
+        menuActions: [
+          {
+            label: 'Edit',
+            action(row) {
+              console.log(`edit row ${row.invoice_id}`);
+            },
+          },
+          {
+            label: 'Delete',
+            className: 'bg-red-100 text-red-400 hover:text-red-500 transition',
+            action(row) {
+              console.log(`edit row ${row.invoice_id}`);
+            },
+          },
+        ],
+      },
     },
   ];
   const pageCount = invoices.length;
@@ -172,7 +443,7 @@ export function Table() {
   const [rowAction, setRowAction] =
     React.useState<DataTableRowAction<Invoice> | null>(null);
 
-  const columns = React.useMemo(() => getColumns({ setRowAction }), []);
+  const columns = React.useMemo(() => getColumns(), []);
 
   /**
    * This component can render either a faceted filter or a search filter based on the `options` prop.

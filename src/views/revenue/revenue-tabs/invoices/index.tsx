@@ -2,7 +2,7 @@ import { Button } from '@cash-compass/ui';
 import InvoicesCards from './invoices-cards';
 
 import { PlusIcon } from 'lucide-react';
-import TableComponent from './components/table-component';
+import TableComponent from './invoice-table/table-component';
 
 const RevenueOverview = () => {
   return (

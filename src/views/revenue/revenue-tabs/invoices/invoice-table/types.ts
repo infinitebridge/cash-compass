@@ -3,6 +3,7 @@ import type { z } from 'zod';
 
 import type { DataTableConfig } from './data-table/config/data-table';
 import type { filterSchema } from './data-table/lib/parsers';
+import { ReactNode } from 'react';
 
 export type Prettify<T> = {
   [K in keyof T]: T[K];
@@ -56,6 +57,16 @@ export interface DataTableRowAction<TData> {
   type: 'update' | 'delete';
 }
 
+export type Action = {
+  customActions?: ((row: Invoice) => ReactNode)[];
+  menuActions: {
+    label: ReactNode;
+    className?: string;
+    shortcut?: string;
+    action: (row: Invoice) => void;
+  }[];
+};
+
 export interface Invoice {
   invoice_id: number;
   invoice_number: string;
@@ -65,4 +76,5 @@ export interface Invoice {
   amount_total: number;
   balance_remaining: number;
   status: 'Sent' | 'Paid' | 'Overdue' | 'Draft' | 'Cancelled';
+  actions: Action;
 }

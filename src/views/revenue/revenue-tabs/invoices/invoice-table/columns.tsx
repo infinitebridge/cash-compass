@@ -1,8 +1,7 @@
 import { Invoice } from './types';
-import type { DataTableRowAction } from './types';
+
 import type { ColumnDef } from '@tanstack/react-table';
-import { CircleDashed, Ellipsis } from 'lucide-react';
-import * as React from 'react';
+import { CircleDashed, EllipsisVertical } from 'lucide-react';
 
 import { DataTableColumnHeader } from './data-table/data-table-column-header';
 
@@ -11,7 +10,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
   Button,
@@ -19,16 +17,9 @@ import {
 } from '@cash-compass/ui';
 
 import { formatDate, getStatusIcon } from './data-table/lib/utils';
+import clsx from 'clsx';
 
-interface GetColumnsProps {
-  setRowAction: React.Dispatch<
-    React.SetStateAction<DataTableRowAction<Invoice> | null>
-  >;
-}
-
-export function getColumns({
-  setRowAction,
-}: GetColumnsProps): ColumnDef<Invoice>[] {
+export function getColumns(): ColumnDef<Invoice>[] {
   return [
     {
       id: 'select',
@@ -184,34 +175,46 @@ export function getColumns({
         <DataTableColumnHeader column={column} title="ACTIONS" />
       ),
       cell: function Cell({ row }) {
-        // const [isUpdatePending, startUpdateTransition] = React.useTransition();
+        const menuAction = row.original.actions.menuActions;
+        const customAction = row.original.actions.customActions;
+        const rowData = row.original;
 
         return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                aria-label="Open menu"
-                variant="ghost"
-                className="flex size-8 p-0 data-[state=open]:bg-muted"
-              >
-                <Ellipsis className="size-4" aria-hidden="true" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-40">
-              <DropdownMenuItem
-                onSelect={() => setRowAction({ row, type: 'update' })}
-              >
-                Edit
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onSelect={() => setRowAction({ row, type: 'delete' })}
-              >
-                Delete
-                <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="flex items-center justify-end pr-5">
+            {customAction?.map((Action, i) => (
+              <Action
+                {...rowData}
+                key={`${rowData.invoice_id}-action-${i + 1}`}
+              />
+            ))}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  aria-label="Open menu"
+                  variant="ghost"
+                  className="flex size-8 p-0 data-[state=open]:bg-muted"
+                >
+                  <EllipsisVertical className="size-4" aria-hidden="true" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-40">
+                {menuAction.map(({ label, action, className, shortcut }) => {
+                  return (
+                    <DropdownMenuItem
+                      key={`${rowData.invoice_id}-${label}`}
+                      className={clsx(className)}
+                      onSelect={() => action(rowData)}
+                    >
+                      {label}
+                      {shortcut ? (
+                        <DropdownMenuShortcut>{shortcut}</DropdownMenuShortcut>
+                      ) : null}
+                    </DropdownMenuItem>
+                  );
+                })}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         );
       },
     },
