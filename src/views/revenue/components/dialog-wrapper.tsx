@@ -82,7 +82,7 @@ const DialogWrapper = ({
         {/* Render the active tab component */}
 
         {/* Navigation */}
-        <div className="flex flex-row items-center gap-4 mt-4">
+        <div className="flex flex-row items-center gap-8 mt-4">
           {activeTab > 0 && (
             <NavigationBtn action={returnBack}>
               <div className="flex flex-row gap-2 items-center">
