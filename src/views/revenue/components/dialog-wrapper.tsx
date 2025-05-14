@@ -82,26 +82,24 @@ const DialogWrapper = ({
         {/* Render the active tab component */}
 
         {/* Navigation */}
-        <div className="flex flex-row items-center gap-8 mt-4">
+        <div className="flex flex-row items-center gap-8">
           {activeTab > 0 && (
             <NavigationBtn action={returnBack}>
-              <div className="flex flex-row gap-2 items-center">
+              <div className="flex flex-row gap-2 items-center px-3">
                 <ChevronLeft className="h-3 w-3" />
                 <span>Prev</span>
               </div>
             </NavigationBtn>
           )}
           {activeTab < tabsConfig.length - 1 && (
-            <NavigationBtn action={goNext}>
-              <div className="flex flex-row gap-2 items-center">
+            <NavigationBtn action={goNext} className="ml-auto">
+              <div className="flex flex-row gap-2 items-center px-3">
                 <span>Next</span>
                 <ChevronRight className="h-3 w-3" />
               </div>
             </NavigationBtn>
           )}
         </div>
-
-        <hr className="my-6" />
 
         {/* Footer Buttons */}
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4">

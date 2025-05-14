@@ -1,14 +1,20 @@
 import { Button } from '@cash-compass/ui/button';
+import clsx from 'clsx';
 import { ReactNode } from 'react';
 
-type Props = {
+type NavigationBtnProps = {
   children: ReactNode;
   action: () => void;
+  className?: string;
 };
 
-const NavigationBtn = ({ children, action }: Props) => {
+const NavigationBtn = ({ children, action, className }: NavigationBtnProps) => {
   return (
-    <Button className="p-0" variant={'ghost'} onClick={action}>
+    <Button
+      className={clsx('p-0', className)}
+      variant={'ghost'}
+      onClick={action}
+    >
       {children}
     </Button>
   );
