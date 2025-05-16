@@ -1,13 +1,12 @@
 'use client';
 
-import { useState } from 'react';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { format } from 'date-fns';
-import { CalendarIcon, ChevronLeft } from 'lucide-react';
+import { CalendarIcon } from 'lucide-react';
+import debounce from 'lodash.debounce';
 
-import { Button } from '@cash-compass/ui/button';
 import {
   Form,
   FormControl,
@@ -15,6 +14,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from '@cash-compass/ui/form';
 import { Input } from '@cash-compass/ui/input';
 import { Textarea } from '@cash-compass/ui/textarea';
@@ -33,97 +33,138 @@ import {
   PopoverTrigger,
 } from '@cash-compass/ui/popover';
 import { Badge } from '@cash-compass/ui/badge';
+import { Button } from '@cash-compass/ui/button';
 import { cn } from '@cash-compass/utils/lib/utils';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-const formSchema = z.object({
-  createInvoice: z.boolean().default(true),
-  invoiceNumber: z.string().min(1, {
-    message: 'Invoice number is required.',
-  }),
-  dueDate: z.date({
-    required_error: 'Due date is required.',
-  }),
-  paymentTerms: z.string().min(1, {
-    message: 'Payment terms are required.',
-  }),
-  notes: z.string().optional(),
-  sendImmediately: z.boolean().default(false),
-});
+const invoiceFormSchema = z
+  .object({
+    createInvoice: z.boolean().default(true),
+    invoiceNumber: z
+      .string()
+      .min(1, { message: 'Invoice number is required.' }),
+    dueDate: z.date({ required_error: 'Due date is required.' }),
+    paymentTerms: z.string().min(1, { message: 'Payment terms are required.' }),
+    notes: z
+      .string()
+      .max(1000, 'Notes must be 1000 characters or less')
+      .optional(),
+    sendImmediately: z.boolean().default(false),
+  })
+  .refine((data) => {
+    // Only validate invoice fields if createInvoice is true
+    if (!data.createInvoice) return true;
+    return true; // All other fields are already validated by Zod
+  });
 
-export default function InvoiceForm() {
-  const [date, setDate] = useState<Date>(new Date(2025, 3, 20));
+export type FormSchema = z.infer<typeof invoiceFormSchema>;
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
+type Props = {
+  onValid: (data: any, isValid: boolean) => void;
+  triggerSubmit: boolean;
+  initialData?: Partial<FormSchema>;
+};
+
+export default function InvoiceForm({
+  onValid,
+  triggerSubmit,
+  initialData,
+}: Props) {
+  const form = useForm<FormSchema>({
+    resolver: zodResolver(invoiceFormSchema),
+    defaultValues: initialData || {
       createInvoice: true,
-      invoiceNumber: 'INV-2025-042',
-      dueDate: new Date(2025, 3, 20),
-      paymentTerms: 'net30',
-      notes: '',
       sendImmediately: false,
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    // Handle form submission
-  }
+  const createInvoice = form.watch('createInvoice');
+
+  // Handle form validation and submission
+  const validateForm = useCallback(async () => {
+    const isValid = await form.trigger();
+    const formValues = form.getValues();
+    onValid(formValues, isValid); // This is crucial
+    return isValid;
+  }, [form, onValid]);
+
+  // Handle manual validation trigger from parent
+  useEffect(() => {
+    if (triggerSubmit) {
+      validateForm();
+    }
+  }, [triggerSubmit, validateForm]);
+
+  // Real-time validation with debounce
+  useEffect(() => {
+    const subscription = form.watch(
+      debounce(() => {
+        validateForm();
+      }, 300)
+    );
+    return () => subscription.unsubscribe();
+  }, [form.watch, validateForm]);
 
   return (
-    <div>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
-          <div className="flex items-start space-x-3 bg-gray-100 p-4 rounded-lg border border-border bg-card">
-            <FormField
-              control={form.control}
-              name="createInvoice"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 w-full">
-                  <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                      className="mt-1"
-                    />
-                  </FormControl>
-                  <div className="flex-1 space-y-1">
-                    <div className="flex justify-between items-center">
-                      <FormLabel className="text-sm font-medium">
-                        Create an invoice for this revenue
-                      </FormLabel>
-                      <Badge
-                        variant="outline"
-                        className="text-xs bg-gray-100 text-primary border-primary/20"
-                      >
-                        Recommended
-                      </Badge>
-                    </div>
-                    <FormDescription className="text-muted-foreground text-xs">
-                      Creating an invoice allows you to track payment status,
-                      send reminders, and maintain professional records.
-                    </FormDescription>
-                  </div>
-                </FormItem>
-              )}
-            />
-          </div>
+    <Form {...form}>
+      <form className="space-y-6">
+        <FormField
+          control={form.control}
+          name="createInvoice"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-start space-x-3 bg-card px-4 py-3 rounded-lg border w-full">
+              <FormControl>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={(checked) => {
+                    field.onChange(checked);
+                    validateForm();
+                  }}
+                  className="mt-2.5"
+                />
+              </FormControl>
+              <div className="flex-1 space-y-1">
+                <div className="flex justify-between items-center">
+                  <FormLabel className="text-sm font-medium">
+                    Create an invoice for this revenue
+                  </FormLabel>
+                  <Badge
+                    variant="outline"
+                    className="text-xs bg-gray-100 text-primary border-primary/20"
+                  >
+                    Recommended
+                  </Badge>
+                </div>
+                <FormDescription className="text-xs text-muted-foreground">
+                  Creating an invoice allows you to track payment status, send
+                  reminders, and maintain professional records.
+                </FormDescription>
+              </div>
+            </FormItem>
+          )}
+        />
 
-          <div className="space-y-6">
+        {createInvoice && (
+          <>
             <FormField
               control={form.control}
               name="invoiceNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-gray-700 font-medium">
-                    Invoice Number
-                  </FormLabel>
+                  <FormLabel>Invoice Number</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        validateForm();
+                      }}
+                    />
                   </FormControl>
-                  <FormDescription className="text-gray-500">
+                  <FormDescription className="text-muted-foreground">
                     Auto-generated, but you can customize it
                   </FormDescription>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -132,10 +173,8 @@ export default function InvoiceForm() {
               control={form.control}
               name="dueDate"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-gray-700 font-medium">
-                    Due Date
-                  </FormLabel>
+                <FormItem className="flex flex-col">
+                  <FormLabel>Due Date</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
@@ -146,11 +185,9 @@ export default function InvoiceForm() {
                             !field.value && 'text-muted-foreground'
                           )}
                         >
-                          {field.value ? (
-                            format(field.value, 'dd/MM/yyyy')
-                          ) : (
-                            <span>Pick a date</span>
-                          )}
+                          {field.value
+                            ? format(field.value, 'dd/MM/yyyy')
+                            : 'Pick a date'}
                           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
                       </FormControl>
@@ -159,16 +196,17 @@ export default function InvoiceForm() {
                       <Calendar
                         mode="single"
                         selected={field.value}
-                        onSelect={(date) => {
-                          if (date) {
-                            field.onChange(date);
-                            setDate(date);
+                        onSelect={(selectedDate) => {
+                          if (selectedDate) {
+                            field.onChange(selectedDate);
+                            validateForm();
                           }
                         }}
                         initialFocus
                       />
                     </PopoverContent>
                   </Popover>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -178,12 +216,13 @@ export default function InvoiceForm() {
               name="paymentTerms"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-gray-700 font-medium">
-                    Payment Terms
-                  </FormLabel>
+                  <FormLabel>Payment Terms</FormLabel>
                   <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      validateForm();
+                    }}
+                    value={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -200,6 +239,7 @@ export default function InvoiceForm() {
                       </SelectItem>
                     </SelectContent>
                   </Select>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -209,16 +249,19 @@ export default function InvoiceForm() {
               name="notes"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-gray-700 font-medium">
-                    Notes to Customer
-                  </FormLabel>
+                  <FormLabel>Notes to Customer</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="Notes visible to customer on invoice"
                       className="min-h-[100px]"
                       {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        validateForm();
+                      }}
                     />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -231,29 +274,22 @@ export default function InvoiceForm() {
                   <FormControl>
                     <Checkbox
                       checked={field.value}
-                      onCheckedChange={field.onChange}
+                      onCheckedChange={(checked) => {
+                        field.onChange(checked);
+                        validateForm();
+                      }}
                     />
                   </FormControl>
                   <div className="space-y-1 leading-none">
                     <FormLabel>Send invoice immediately</FormLabel>
                   </div>
+                  <FormMessage />
                 </FormItem>
               )}
             />
-          </div>
-
-          {/* <div className="pt-4 border-t">
-            <Button
-              variant="ghost"
-              type="button"
-              className="flex items-center gap-2"
-            >
-              <ChevronLeft className="h-4 w-4" />
-              Back to Details
-            </Button>
-          </div> */}
-        </form>
-      </Form>
-    </div>
+          </>
+        )}
+      </form>
+    </Form>
   );
 }

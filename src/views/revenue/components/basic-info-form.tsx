@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { format } from 'date-fns';
-import { CalendarIcon, ChevronDown, ChevronRight, Plus } from 'lucide-react';
+import { CalendarIcon } from 'lucide-react';
+import debounce from 'lodash.debounce';
 
 import { Button } from '@cash-compass/ui/button';
 import { Calendar } from '@cash-compass/ui/calendar';
@@ -33,21 +34,38 @@ import {
 import { Textarea } from '@cash-compass/ui/textarea';
 import { cn } from '@cash-compass/utils/lib/utils';
 
-const formSchema = z.object({
-  revenueDate: z.date({
-    required_error: 'Revenue date is required',
-  }),
-  amount: z.string().min(1, 'Amount is required'),
-  customer: z.string({
-    required_error: 'Customer is required',
-  }),
-  category: z.string({
-    required_error: 'Category is required',
-  }),
-  description: z.string().optional(),
+const basicInfoFormSchema = z.object({
+  revenueDate: z
+    .date({
+      required_error: 'Revenue date is required',
+      invalid_type_error: 'Invalid date format',
+    })
+    .refine((date) => !isNaN(date.getTime()), {
+      message: 'Invalid date selected',
+    }),
+  amount: z
+    .string()
+    .min(1, 'Amount is required')
+    .refine((val) => !isNaN(Number(val.replace(/,/g, ''))), {
+      message: 'Amount must be a valid number',
+    }),
+  customer: z
+    .string()
+    .min(1, 'Customer is required')
+    .refine((val) => customers.some((c) => c.id === val), {
+      message: 'Selected customer is not valid',
+    }),
+  category: z
+    .string()
+    .min(1, 'Category is required')
+    .refine((val) => categories.some((c) => c.id === val), {
+      message: 'Selected category is not valid',
+    }),
+  description: z
+    .string()
+    .max(500, 'Description must be 500 characters or less')
+    .optional(),
 });
-
-type FormValues = z.infer<typeof formSchema>;
 
 // Sample data for dropdowns
 const customers = [
@@ -63,47 +81,66 @@ const categories = [
   { id: '4', name: 'Other' },
 ];
 
-export function RevenueForm() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+type FormSchema = z.infer<typeof basicInfoFormSchema>;
 
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      revenueDate: new Date(),
-      amount: '',
-      description: '',
+type RevenueFormProps = {
+  onValid: (data: any, isValid: boolean) => void;
+  triggerSubmit: boolean;
+  initialData?: Partial<FormSchema>;
+};
+
+export function RevenueForm({
+  onValid,
+  triggerSubmit,
+  initialData,
+}: RevenueFormProps) {
+  const form = useForm<FormSchema>({
+    resolver: zodResolver(basicInfoFormSchema),
+    defaultValues: initialData || {
+      amount: '0.00',
     },
   });
 
-  function onSubmit(data: FormValues) {
-    setIsSubmitting(true);
-    // Simulate API call
-    console.log(data);
-    setTimeout(() => {
-      setIsSubmitting(false);
-      // Reset form or redirect
-    }, 1000);
-  }
-
-  function formatCurrency(value: string) {
-    // Remove all non-numeric characters
+  // Format currency input
+  const formatCurrency = (value: string) => {
     const numericValue = value.replace(/[^0-9.]/g, '');
-
-    // Format as currency
     if (numericValue) {
-      const formatted = new Intl.NumberFormat('en-US', {
+      return new Intl.NumberFormat('en-US', {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
       }).format(Number.parseFloat(numericValue));
-      return formatted;
     }
-
     return '0.00';
-  }
+  };
+
+  // Handle form validation and submission
+  const validateForm = useCallback(async () => {
+    const isValid = await form.trigger();
+    const formValues = form.getValues();
+    onValid(formValues, isValid); // This is crucial
+    return isValid;
+  }, [form, onValid]);
+
+  // Handle manual validation trigger from parent
+  useEffect(() => {
+    if (triggerSubmit) {
+      validateForm();
+    }
+  }, [triggerSubmit, validateForm]);
+
+  // Real-time validation with debounce
+  useEffect(() => {
+    const subscription = form.watch(
+      debounce(() => {
+        validateForm();
+      }, 300)
+    );
+    return () => subscription.unsubscribe();
+  }, [form.watch, validateForm]);
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-2">
+      <form className="space-y-4 py-2">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Revenue Date Field */}
           <FormField
@@ -160,10 +197,12 @@ export function RevenueForm() {
                     <Input
                       placeholder="0.00"
                       className="pl-8 border-gray-300"
-                      {...field}
+                      value={field.value}
                       onChange={(e) => {
                         const formatted = formatCurrency(e.target.value);
-                        form.setValue('amount', formatted);
+                        form.setValue('amount', formatted, {
+                          shouldValidate: true,
+                        });
                       }}
                     />
                   </div>
@@ -183,8 +222,11 @@ export function RevenueForm() {
               <FormLabel className="text-gray-600">Customer</FormLabel>
               <div className="flex gap-2">
                 <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  onValueChange={(value) => {
+                    field.onChange(value);
+                    validateForm();
+                  }}
+                  value={field.value}
                 >
                   <FormControl>
                     <SelectTrigger className="w-full">
@@ -205,13 +247,20 @@ export function RevenueForm() {
           )}
         />
 
+        {/* Category Field */}
         <FormField
           control={form.control}
           name="category"
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-gray-600">Category/Source</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select
+                onValueChange={(value) => {
+                  field.onChange(value);
+                  validateForm();
+                }}
+                value={field.value}
+              >
                 <FormControl>
                   <SelectTrigger className="border-gray-300">
                     <SelectValue placeholder="Select a category" />
@@ -242,14 +291,16 @@ export function RevenueForm() {
                   placeholder="Enter revenue details"
                   className="min-h-[120px] border-gray-300 resize-none"
                   {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                    validateForm();
+                  }}
                 />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-
-        {/* Navigation and Action Buttons */}
       </form>
     </Form>
   );
