@@ -1,5 +1,6 @@
 import { AuthenticateWithRedirectCallback } from '@clerk/clerk-react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { NuqsAdapter } from 'nuqs/adapters/react';
 
 import SignInPage from '../views/auth/sign-in';
 import SignUpPage from '../views/auth/sign-up';
@@ -47,7 +48,11 @@ const router = createBrowserRouter([
 ]);
 
 export function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <NuqsAdapter>
+      <RouterProvider router={router} />
+    </NuqsAdapter>
+  );
 }
 
 export default App;

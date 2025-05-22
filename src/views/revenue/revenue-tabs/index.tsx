@@ -1,7 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@cash-compass/ui';
 import { FunctionComponent, ReactNode } from 'react';
 
-interface RevenueManagementTabsProps {
+interface RevenueTabsProps {
   tabsConfig: {
     title: string;
     component: ReactNode;
@@ -10,7 +10,7 @@ interface RevenueManagementTabsProps {
   defaultTab: string;
 }
 
-const RevenueManagementTabs: FunctionComponent<RevenueManagementTabsProps> = ({
+const RevenueTabs: FunctionComponent<RevenueTabsProps> = ({
   tabsConfig,
   defaultTab,
 }) => {
@@ -29,4 +29,4 @@ const RevenueManagementTabs: FunctionComponent<RevenueManagementTabsProps> = ({
   );
 };
 
-export default RevenueManagementTabs;
+export default RevenueTabs;
