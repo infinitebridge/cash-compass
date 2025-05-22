@@ -5,7 +5,7 @@ import { DataTableSkeleton } from './data-table/data-table-skeleton';
 import { Shell } from '@cash-compass/ui';
 import { Table } from './table';
 
-export default function TableComponent() {
+export default function ExpensesTable() {
   return (
     <Shell className="gap-2 !pt-4 !pb-0">
       <React.Suspense

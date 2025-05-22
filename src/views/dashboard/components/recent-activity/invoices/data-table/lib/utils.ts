@@ -3,6 +3,7 @@ import { twMerge } from 'tailwind-merge';
 import { Invoice } from '../../types';
 import {
   CheckCircle2,
+  CircleAlert,
   CircleDashed,
   CircleIcon,
   CircleX,
@@ -65,7 +66,7 @@ export function getStatusIcon(status: Invoice['status']) {
     Paid: CheckCircle2,
     Cancelled: CircleX,
     Sent: Send,
-    Overdue: CircleX,
+    Overdue: CircleAlert,
     Draft: CircleDashed,
   };
   return statusIcons[status] || CircleIcon;

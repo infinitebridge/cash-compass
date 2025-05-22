@@ -1,4 +1,4 @@
-import { Invoice } from './types';
+import { Expense, ExpenseStatus } from './types';
 
 import type { ColumnDef } from '@tanstack/react-table';
 import { CircleDashed, EllipsisVertical } from 'lucide-react';
@@ -19,11 +19,11 @@ import {
 import { formatDate, getStatusIcon } from './data-table/lib/utils';
 import clsx from 'clsx';
 
-export function getColumns(): ColumnDef<Invoice>[] {
+export function getColumns(): ColumnDef<Expense>[] {
   return [
     {
       id: 'select',
-      size: 10,
+      size: 4,
       header: ({ table }) => (
         <Checkbox
           checked={
@@ -35,7 +35,6 @@ export function getColumns(): ColumnDef<Invoice>[] {
           className="translate-y-0.5"
         />
       ),
-
       cell: ({ row }) => (
         <div className="w-12">
           <Checkbox
@@ -50,60 +49,62 @@ export function getColumns(): ColumnDef<Invoice>[] {
       enableHiding: false,
     },
     {
-      accessorKey: 'customer_name',
+      accessorKey: 'date',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="CUSTOMER" />
+        <DataTableColumnHeader column={column} title="DATE" />
+      ),
+      cell: ({ cell }) => {
+        return formatDate(cell.getValue() as Date, {
+          month: 'numeric',
+          day: '2-digit',
+          year: 'numeric',
+        });
+      },
+      enableSorting: false,
+      enableHiding: true,
+      size: 10,
+    },
+    {
+      accessorKey: 'description',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="DESCRIPTION" />
       ),
       cell: ({ row }) => (
-        <div className="w-42">{row.getValue('customer_name')}</div>
+        <div className="w-42 truncate">{row.getValue('description')}</div>
       ),
       enableSorting: true,
       enableHiding: true,
     },
 
     {
-      accessorKey: 'issue_date',
+      accessorKey: 'category',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="ISSUE DATE" />
+        <DataTableColumnHeader column={column} title="CATEGORY" />
       ),
-      cell: ({ cell }) => formatDate(cell.getValue() as Date),
-
-      enableSorting: false,
+      cell: ({ row }) => <div className="w-42">{row.getValue('category')}</div>,
+      enableSorting: true,
       enableHiding: true,
-      size: 10,
     },
     {
-      accessorKey: 'due_date',
+      accessorKey: 'vendor',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="DUE DATE" />
+        <DataTableColumnHeader column={column} title="VENDOR" />
       ),
-      cell: ({ cell }) => formatDate(cell.getValue() as Date),
+      cell: ({ row }) => (
+        <div className="w-42 truncate" title={row.getValue('vendor')}>
+          {row.getValue('vendor')}
+        </div>
+      ),
+      enableSorting: true,
       enableHiding: true,
-      size: 10,
     },
     {
-      accessorKey: 'amount_total',
+      accessorKey: 'amount',
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="AMOUNT" />
       ),
       cell: ({ row }) => {
-        const amount = Number.parseFloat(row.getValue('amount_total'));
-        const formatted = new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: 'USD',
-        }).format(amount);
-        return <div>{formatted}</div>;
-      },
-      enableHiding: true,
-      size: 10,
-    },
-    {
-      accessorKey: 'balance_remaining',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="BALANCE" />
-      ),
-      cell: ({ row }) => {
-        const amount = Number.parseFloat(row.getValue('balance_remaining'));
+        const amount = parseFloat(row.getValue('amount'));
         const formatted = new Intl.NumberFormat('en-US', {
           style: 'currency',
           currency: 'USD',
@@ -121,23 +122,32 @@ export function getColumns(): ColumnDef<Invoice>[] {
         <DataTableColumnHeader column={column} title="STATUS" />
       ),
       cell: ({ row }) => {
-        const status = (
-          [
-            'Sent',
-            'Paid',
-            'Overdue',
-            'Draft',
-            'Cancelled',
-          ] as Invoice['status'][]
-        ).find((status) => status === row.original.status);
+        const status = row.original.status;
+        const Icon = getStatusIcon(status);
 
-        if (!status) return null;
-
-        const Icon = getStatusIcon(row.original.status);
+        // Define status colors for badges
+        const statusColors = {
+          invoiced: 'bg-blue-50 text-blue-700 border-blue-200',
+          paid: 'bg-green-50 text-green-700 border-green-200',
+          approved: 'bg-green-50 text-green-700 border-green-200',
+          pending: 'bg-yellow-50 text-yellow-700 border-yellow-200',
+          rejected: 'bg-red-50 text-red-700 border-red-200',
+          overdue: 'bg-red-50 text-red-700 border-red-200',
+          draft: 'bg-gray-50 text-gray-700 border-gray-200',
+          expected: 'bg-blue-50 text-blue-700 border-blue-200',
+          sent: 'bg-blue-50 text-blue-700 border-blue-200',
+          received: 'bg-green-50 text-green-700 border-green-200',
+        };
 
         return (
-          <Badge variant="outline" className="py-1 [&>svg]:size-3.5">
-            <Icon />
+          <Badge
+            variant="outline"
+            className={clsx(
+              'py-1 [&>svg]:size-3.5 flex items-center gap-1',
+              statusColors[status] || 'border-gray-200'
+            )}
+          >
+            <Icon className="shrink-0" />
             <span className="capitalize">{status}</span>
           </Badge>
         );
@@ -146,31 +156,19 @@ export function getColumns(): ColumnDef<Invoice>[] {
         label: 'Status',
         variant: 'multiSelect',
         options: (
-          [
-            'Sent',
-            'Paid',
-            'Overdue',
-            'Draft',
-            'Cancelled',
-          ] as Invoice['status'][]
+          ['approved', 'pending', 'rejected', 'draft'] as ExpenseStatus[]
         ).map((status) => ({
           label: status.charAt(0).toUpperCase() + status.slice(1),
           value: status,
-
           icon: getStatusIcon(status),
         })),
         icon: CircleDashed,
       },
       enableColumnFilter: true,
-
-      // filterFn: (row, id, value) => {
-      //   return Array.isArray(value) && value.includes(row.getValue(id));
-      // },
     },
     {
       id: 'actions',
       size: 10,
-
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="ACTIONS" />
       ),
@@ -182,10 +180,7 @@ export function getColumns(): ColumnDef<Invoice>[] {
         return (
           <div className="flex items-center justify-end pr-5">
             {customAction?.map((Action, i) => (
-              <Action
-                {...rowData}
-                key={`${rowData.invoice_id}-action-${i + 1}`}
-              />
+              <Action key={`${rowData.id}-action-${i + 1}`} {...rowData} />
             ))}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -201,7 +196,7 @@ export function getColumns(): ColumnDef<Invoice>[] {
                 {menuAction.map(({ label, action, className, shortcut }) => {
                   return (
                     <DropdownMenuItem
-                      key={`${rowData.invoice_id}-${label}`}
+                      key={`${rowData.id}-${label}`}
                       className={clsx(className)}
                       onSelect={() => action(rowData)}
                     >

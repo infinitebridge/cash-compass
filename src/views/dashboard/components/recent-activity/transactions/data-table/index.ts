@@ -1,13 +1,13 @@
 import type { ColumnSort, Row } from '@tanstack/react-table';
+
 import type { z } from 'zod';
 
-import type { DataTableConfig } from './data-table/config/data-table';
-import type { filterSchema } from './data-table/lib/parsers';
-import { ReactNode } from 'react';
+import type { DataTableConfig } from './config/data-table';
+import type { filterSchema } from './lib/parsers';
 
 export type Prettify<T> = {
   [K in keyof T]: T[K];
-};
+} & {};
 
 export type StringKeyOf<TData> = Extract<keyof TData, string>;
 
@@ -55,29 +55,4 @@ export type Filter<TData> = Prettify<
 export interface DataTableRowAction<TData> {
   row: Row<TData>;
   type: 'update' | 'delete';
-}
-
-export type Action = {
-  customActions?: ((row: RevenueTransation) => ReactNode)[];
-  menuActions: {
-    label: ReactNode;
-    className?: string;
-    shortcut?: string;
-    action: (row: RevenueTransation) => void;
-  }[];
-};
-
-export interface RevenueTransation {
-  invoice_id: number;
-  invoice_number: string;
-  customer_name: string;
-  source_name: string;
-
-  issue_date: Date;
-  due_date: Date;
-  amount_total: number;
-  balance_remaining: number;
-  status: 'invoiced' | 'paid' | 'overdue' | 'expected' | 'received';
-
-  actions: Action;
 }

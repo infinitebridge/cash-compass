@@ -57,27 +57,25 @@ export interface DataTableRowAction<TData> {
   type: 'update' | 'delete';
 }
 
+export type ExpenseStatus = 'approved' | 'pending' | 'rejected' | 'draft';
+
+export interface Expense {
+  id: string;
+  description: string;
+  vendor: string;
+  category: string;
+  date: Date;
+  amount: number;
+  status: ExpenseStatus;
+  actions: Action;
+}
+
 export type Action = {
-  customActions?: ((row: RevenueTransation) => ReactNode)[];
+  customActions?: ((row: Expense) => ReactNode)[];
   menuActions: {
     label: ReactNode;
     className?: string;
     shortcut?: string;
-    action: (row: RevenueTransation) => void;
+    action: (row: Expense) => void;
   }[];
 };
-
-export interface RevenueTransation {
-  invoice_id: number;
-  invoice_number: string;
-  customer_name: string;
-  source_name: string;
-
-  issue_date: Date;
-  due_date: Date;
-  amount_total: number;
-  balance_remaining: number;
-  status: 'invoiced' | 'paid' | 'overdue' | 'expected' | 'received';
-
-  actions: Action;
-}

@@ -1,4 +1,4 @@
-import { RevenueTransation } from './types';
+import { Invoice } from './types';
 
 import type { ColumnDef } from '@tanstack/react-table';
 import { CircleDashed, EllipsisVertical } from 'lucide-react';
@@ -19,7 +19,7 @@ import {
 import { formatDate, getStatusIcon } from './data-table/lib/utils';
 import clsx from 'clsx';
 
-export function getColumns(): ColumnDef<RevenueTransation>[] {
+export function getColumns(): ColumnDef<Invoice>[] {
   return [
     {
       id: 'select',
@@ -50,14 +50,17 @@ export function getColumns(): ColumnDef<RevenueTransation>[] {
       enableHiding: false,
     },
     {
-      accessorKey: 'issue_date',
+      accessorKey: 'invoice_number',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="ISSUE DATE" />
+        <DataTableColumnHeader column={column} title="INVOICE #" />
       ),
-      cell: ({ cell }) => formatDate(cell.getValue() as Date),
-      enableSorting: false,
+      cell: ({ row }) => (
+        <div className="w-42 text-blue-500 underline">
+          {row.getValue('invoice_number')}
+        </div>
+      ),
+      enableSorting: true,
       enableHiding: true,
-      size: 10,
     },
     {
       accessorKey: 'customer_name',
@@ -70,16 +73,26 @@ export function getColumns(): ColumnDef<RevenueTransation>[] {
       enableSorting: true,
       enableHiding: true,
     },
+
     {
-      accessorKey: 'source_name',
+      accessorKey: 'issue_date',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="SOURCE" />
+        <DataTableColumnHeader column={column} title="ISSUE DATE" />
       ),
-      cell: ({ row }) => (
-        <div className="w-42">{row.getValue('source_name')}</div>
-      ),
-      enableSorting: true,
+      cell: ({ cell }) => formatDate(cell.getValue() as Date),
+
+      enableSorting: false,
       enableHiding: true,
+      size: 10,
+    },
+    {
+      accessorKey: 'due_date',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="DUE DATE" />
+      ),
+      cell: ({ cell }) => formatDate(cell.getValue() as Date),
+      enableHiding: true,
+      size: 10,
     },
     {
       accessorKey: 'amount_total',
@@ -98,6 +111,22 @@ export function getColumns(): ColumnDef<RevenueTransation>[] {
       size: 10,
     },
     {
+      accessorKey: 'balance_remaining',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="BALANCE" />
+      ),
+      cell: ({ row }) => {
+        const amount = Number.parseFloat(row.getValue('balance_remaining'));
+        const formatted = new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+        }).format(amount);
+        return <div>{formatted}</div>;
+      },
+      enableHiding: true,
+      size: 10,
+    },
+    {
       accessorKey: 'status',
       enableHiding: true,
       size: 10,
@@ -105,26 +134,33 @@ export function getColumns(): ColumnDef<RevenueTransation>[] {
         <DataTableColumnHeader column={column} title="STATUS" />
       ),
       cell: ({ row }) => {
-        const status = row.original.status;
-        const Icon = getStatusIcon(status);
+        const status = (
+          [
+            'Sent',
+            'Paid',
+            'Overdue',
+            'Draft',
+            'Cancelled',
+          ] as Invoice['status'][]
+        ).find((status) => status === row.original.status);
 
+        if (!status) return null;
+
+        const Icon = getStatusIcon(row.original.status);
         // Define status colors for badges
         const statusColors = {
-          invoiced: 'bg-blue-50 text-blue-700 border-blue-200',
-          paid: 'bg-green-50 text-green-700 border-green-200',
-          overdue: 'bg-red-50 text-red-700 border-red-200',
-          expected: 'bg-blue-50 text-blue-700 border-blue-200',
-          received: 'bg-green-50 text-green-700 border-green-200',
-          sent: 'bg-green-50 text-green-700 border-green-200',
+          Paid: 'bg-green-50 text-green-700 border-green-200',
+          Cancelled: 'bg-red-50 text-red-700 border-red-200',
+          Overdue: 'bg-red-50 text-red-700 border-red-200',
+          Draft: 'bg-gray-50 text-gray-700 border-gray-200',
+          Sent: 'bg-blue-50 text-blue-700 border-blue-200',
         };
         return (
           <Badge
             variant="outline"
             className={clsx(
               'py-1 [&>svg]:size-3.5 flex items-center gap-1',
-              statusColors[
-                status.toLowerCase() as RevenueTransation['status']
-              ] || 'border-gray-200'
+              statusColors[status] || 'border-gray-200'
             )}
           >
             <Icon />
@@ -137,12 +173,12 @@ export function getColumns(): ColumnDef<RevenueTransation>[] {
         variant: 'multiSelect',
         options: (
           [
-            'invoiced',
-            'paid',
-            'overdue',
-            'expected',
-            'received',
-          ] as RevenueTransation['status'][]
+            'Sent',
+            'Paid',
+            'Overdue',
+            'Draft',
+            'Cancelled',
+          ] as Invoice['status'][]
         ).map((status) => ({
           label: status.charAt(0).toUpperCase() + status.slice(1),
           value: status,
@@ -156,19 +192,6 @@ export function getColumns(): ColumnDef<RevenueTransation>[] {
       // filterFn: (row, id, value) => {
       //   return Array.isArray(value) && value.includes(row.getValue(id));
       // },
-    },
-    {
-      accessorKey: 'invoice_number',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="INVOICE" />
-      ),
-      cell: ({ row }) => (
-        <div className="w-42 text-blue-500 underline">
-          {row.getValue('invoice_number')}
-        </div>
-      ),
-      enableSorting: true,
-      enableHiding: true,
     },
     {
       id: 'actions',

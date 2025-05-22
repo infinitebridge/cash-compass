@@ -1,18 +1,30 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@cash-compass/ui';
-import TransactionsTable from './transactions-table';
-import InvoiceTable from './invoices-table';
+import Transactions from './transactions';
+import Invoices from './invoices';
+import Expenses from './expenses';
+import Revenue from './revenue';
 
 import ActivitiesTab from './tabs';
 
 const tabsConfig = [
   {
     title: 'All activities',
-    component: <TransactionsTable />,
+    component: <Transactions />,
     key: 'all',
   },
   {
+    title: 'Expenses',
+    component: <Expenses />,
+    key: 'expenses',
+  },
+  {
+    title: 'Revenue',
+    component: <Revenue />,
+    key: 'revenue',
+  },
+  {
     title: 'Invoices',
-    component: <InvoiceTable />,
+    component: <Invoices />,
     key: 'invoices',
   },
 ];
