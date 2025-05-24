@@ -3,6 +3,7 @@ import Invoices from './revenue-tabs/invoices';
 import RevenueOverview from './revenue-tabs/overview';
 import { StatisticsCards } from './components/statistic-cards';
 import { Header } from './components/header';
+import Customers from './revenue-tabs/customers';
 const tabsConfig = [
   {
     title: 'Revenue Overview',
@@ -13,6 +14,11 @@ const tabsConfig = [
     title: 'Invoices',
     component: <Invoices />,
     key: 'invoices',
+  },
+  {
+    title: 'Customers',
+    component: <Customers />,
+    key: 'customers',
   },
 ];
 export function RevenueManagement() {
