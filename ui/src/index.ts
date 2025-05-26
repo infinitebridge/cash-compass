@@ -34,3 +34,5 @@ export * from './shell';
 export * from './portal';
 export * from './date-range-picker';
 export * from './textarea';
+export * from './alert';
+export * from './progress';
