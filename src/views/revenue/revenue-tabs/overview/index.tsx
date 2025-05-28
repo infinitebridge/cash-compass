@@ -1,7 +1,7 @@
 import AccountsReceivableCards from './accounts-receivable-cards';
 
 import { RevenueDonutChart } from './revenue-donut-chart';
-import { RevenueTransactions } from './revenue-transactions';
+import TableComponent from './revenue-table/table-component';
 import RevenueTrend from './revenue-trend';
 
 const RevenueOverview = () => {
@@ -17,7 +17,7 @@ const RevenueOverview = () => {
       </div>
       <div className="w-full p-4 rounded-xl border bg-card text-card-foreground space-y-4 shadow @container/card">
         <AccountsReceivableCards />
-        <RevenueTransactions />
+        <TableComponent />
       </div>
     </>
   );

@@ -1,318 +1,343 @@
-# Generic Table Component
+# Revenue Table Component
 
-## Overview
-
-The `GenericTable` is an infinitely flexible React component designed to render any structured data with advanced features like sorting, filtering, pagination, and column visibility.
+The `TableComponent` is a sophisticated data table implementation designed specifically for displaying and managing revenue transactions. It provides a rich set of features including sorting, filtering, pagination, and row actions.
 
 ## Features
 
-- Completely type-agnostic data rendering
-- Fully customizable through generic type parameters
-- Advanced table interactions:
-  - Sorting
-  - Filtering
-  - Pagination
-  - Column visibility toggle
-- Responsive design
-- TypeScript generic support
+- 📊 Responsive data table with customizable columns
+- 🔍 Built-in search functionality
+- 🎯 Advanced filtering capabilities
+- 📱 Mobile-friendly design
+- ⚡ React Suspense integration for better performance
+- 💅 Customizable loading states
+- 🛠️ Row actions and custom actions
+- 📝 Status indicators for transactions
 
-## Installation
-
-```bash
-npm install @cash-compass/blocks @tanstack/react-table
-```
-
-## Usage Examples
-
-### Basic Usage with Different Data Types
+## Basic Usage
 
 ```tsx
-import { GenericTable } from '@cash-compass/blocks';
-import { ColumnDef } from '@tanstack/react-table';
+import { TableComponent } from './table-component';
 
-// User Data Example
-type User = {
-  id: number;
-  name: string;
-  email: string;
-  role: string;
-};
-
-const userColumns: ColumnDef<User>[] = [
-  {
-    accessorKey: 'id',
-    header: 'ID',
-  },
-  {
-    accessorKey: 'name',
-    header: 'Name',
-  },
-  {
-    accessorKey: 'email',
-    header: 'Email',
-  },
-  {
-    accessorKey: 'role',
-    header: 'Role',
-  },
-];
-
-const users: User[] = [
-  { id: 1, name: 'John Doe', email: 'john@example.com', role: 'Admin' },
-  { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'User' },
-];
-
-// Product Inventory Example
-type Product = {
-  sku: string;
-  name: string;
-  price: number;
-  stock: number;
-};
-
-const productColumns: ColumnDef<Product>[] = [
-  {
-    accessorKey: 'sku',
-    header: 'SKU',
-  },
-  {
-    accessorKey: 'name',
-    header: 'Product Name',
-  },
-  {
-    accessorKey: 'price',
-    header: 'Price',
-    cell: (info) => `$${info.getValue<number>().toFixed(2)}`,
-  },
-  {
-    accessorKey: 'stock',
-    header: 'Stock',
-  },
-];
-
-const products: Product[] = [
-  { sku: 'TECH-001', name: 'Wireless Headphones', price: 129.99, stock: 50 },
-  { sku: 'TECH-002', name: 'Smart Watch', price: 199.99, stock: 25 },
-];
-
-function DataDisplayComponent() {
-  return (
-    <>
-      <GenericTable
-        data={users}
-        columns={userColumns}
-        title="User Management"
-        enableSorting
-        enableFiltering
-        filterColumn="name"
-      />
-
-      <GenericTable
-        data={products}
-        columns={productColumns}
-        title="Product Inventory"
-        enableSorting
-        enablePagination
-      />
-    </>
-  );
+function RevenuePage() {
+  return <TableComponent />;
 }
 ```
 
-## Props
+## Data Structure
 
-<table class="w-full border-collapse border border-gray-300">
-  <thead class="bg-gray-100">
-    <tr>
-      <th class="border border-gray-300 p-2 text-left">Prop</th>
-      <th class="border border-gray-300 p-2 text-left">Type</th>
-      <th class="border border-gray-300 p-2 text-left">Default</th>
-      <th class="border border-gray-300 p-2 text-left">Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td class="border border-gray-300 p-2">
-        <code>data</code>
-      </td>
-      <td class="border border-gray-300 p-2">
-        <code>T[]</code>
-      </td>
-      <td class="border border-gray-300 p-2">
-        <code>[]</code>
-      </td>
-      <td class="border border-gray-300 p-2">Array of data to display</td>
-    </tr>
-    <tr>
-      <td class="border border-gray-300 p-2">
-        <code>columns</code>
-      </td>
-      <td class="border border-gray-300 p-2">
-        <code>ColumnDef&lt;T&gt;[]</code>
-      </td>
-      <td class="border border-gray-300 p-2">
-        <code>[]</code>
-      </td>
-      <td class="border border-gray-300 p-2">Column definitions</td>
-    </tr>
-    <tr>
-      <td class="border border-gray-300 p-2">
-        <code>title</code>
-      </td>
-      <td class="border border-gray-300 p-2">
-        <code>string</code>
-      </td>
-      <td class="border border-gray-300 p-2">
-        <code>'Table'</code>
-      </td>
-      <td class="border border-gray-300 p-2">Table title</td>
-    </tr>
-    <tr>
-      <td class="border border-gray-300 p-2">
-        <code>filterColumn</code>
-      </td>
-      <td class="border border-gray-300 p-2">
-        <code>string</code>
-      </td>
-      <td class="border border-gray-300 p-2">
-        <code>undefined</code>
-      </td>
-      <td class="border border-gray-300 p-2">Column to enable filtering</td>
-    </tr>
-    <tr>
-      <td class="border border-gray-300 p-2">
-        <code>enableSorting</code>
-      </td>
-      <td class="border border-gray-300 p-2">
-        <code>boolean</code>
-      </td>
-      <td class="border border-gray-300 p-2">
-        <code>true</code>
-      </td>
-      <td class="border border-gray-300 p-2">Enable column sorting</td>
-    </tr>
-    <tr>
-      <td class="border border-gray-300 p-2">
-        <code>enableFiltering</code>
-      </td>
-      <td class="border border-gray-300 p-2">
-        <code>boolean</code>
-      </td>
-      <td class="border border-gray-300 p-2">
-        <code>true</code>
-      </td>
-      <td class="border border-gray-300 p-2">Enable filtering</td>
-    </tr>
-    <tr>
-      <td class="border border-gray-300 p-2">
-        <code>enablePagination</code>
-      </td>
-      <td class="border border-gray-300 p-2">
-        <code>boolean</code>
-      </td>
-      <td class="border border-gray-300 p-2">
-        <code>true</code>
-      </td>
-      <td class="border border-gray-300 p-2">Enable pagination</td>
-    </tr>
-    <tr>
-      <td class="border border-gray-300 p-2">
-        <code>enableColumnVisibility</code>
-      </td>
-      <td class="border border-gray-300 p-2">
-        <code>boolean</code>
-      </td>
-      <td class="border border-gray-300 p-2">
-        <code>true</code>
-      </td>
-      <td class="border border-gray-300 p-2">
-        Enable column visibility toggle
-      </td>
-    </tr>
-    <tr>
-      <td class="border border-gray-300 p-2">
-        <code>defaultPageSize</code>
-      </td>
-      <td class="border border-gray-300 p-2">
-        <code>number</code>
-      </td>
-      <td class="border border-gray-300 p-2">
-        <code>5</code>
-      </td>
-      <td class="border border-gray-300 p-2">
-        Default number of rows per page
-      </td>
-    </tr>
-    <tr>
-      <td class="border border-gray-300 p-2">
-        <code>pageSizeOptions</code>
-      </td>
-      <td class="border border-gray-300 p-2">
-        <code>number[]</code>
-      </td>
-      <td class="border border-gray-300 p-2">
-        <code>[5, 10, 20, 30, 40, 50]</code>
-      </td>
-      <td class="border border-gray-300 p-2">Page size options</td>
-    </tr>
-    <tr>
-      <td class="border border-gray-300 p-2">
-        <code>onRowClick</code>
-      </td>
-      <td class="border border-gray-300 p-2">
-        <code>(row: T) => void</code>
-      </td>
-      <td class="border border-gray-300 p-2">
-        <code>undefined</code>
-      </td>
-      <td class="border border-gray-300 p-2">Callback for row click events</td>
-    </tr>
-  </tbody>
-</table>
+The table expects data in the following format:
 
-## Column Definition Flexibility
-
-Use `@tanstack/react-table`'s `ColumnDef` to define columns with:
-
-- `accessorKey`: Data property to display
-- `header`: Column header text
-- `cell`: Custom cell rendering function
-- `meta`: Additional metadata for styling or behavior
-
-## Accessibility
-
-- Keyboard navigable
-- Screen reader friendly
-- Semantic HTML table structure
-- WCAG compliant interactions
-
-## Performance Considerations
-
-- Optimized for various dataset sizes
-- Minimal re-renders
-- Efficient data manipulation with `@tanstack/react-table`
+```typescript
+interface RevenueTransation {
+  invoice_id: number;
+  invoice_number: string;
+  customer_name: string;
+  source_name: string;
+  issue_date: Date;
+  due_date: Date;
+  amount_total: number;
+  balance_remaining: number;
+  status: 'Sent' | 'Paid' | 'Overdue' | 'Draft' | 'Cancelled';
+  actions: {
+    customActions?: ((row: RevenueTransation) => ReactNode)[];
+    menuActions: {
+      label: ReactNode;
+      className?: string;
+      shortcut?: string;
+      action: (row: RevenueTransation) => void;
+    }[];
+  };
+}
+```
 
 ## Customization
 
-Highly customizable through:
+### Loading State
 
-- Generic type support
-- Flexible column definitions
-- Styling props
-- Event handlers
-- Feature toggles
+The component includes a customizable loading skeleton. You can modify the skeleton's appearance by adjusting the following props:
+
+```tsx
+<DataTableSkeleton
+  columnCount={6} // Number of columns
+  searchableColumnCount={1} // Number of searchable columns
+  filterableColumnCount={2} // Number of filterable columns
+  cellWidths={[
+    // Width of each column
+    '10rem',
+    '40rem',
+    '12rem',
+    '12rem',
+    '8rem',
+    '8rem',
+  ]}
+  shrinkZero // Prevent cell shrinking
+/>
+```
+
+### Row Actions
+
+You can customize row actions by providing an `actions` object in your data:
+
+```typescript
+const actions = {
+  menuActions: [
+    {
+      label: 'Edit',
+      action: (row) => {
+        // Handle edit action
+      },
+    },
+    {
+      label: 'Delete',
+      shortcut: '⌘⌫',
+      className: 'text-red-500',
+      action: (row) => {
+        // Handle delete action
+      },
+    },
+  ],
+  customActions: [
+    (row) => (
+      <Button variant="ghost" size="sm">
+        View Details
+      </Button>
+    ),
+  ],
+};
+```
+
+### Status Handling
+
+The component supports the following status values:
+
+- `Sent`
+- `Paid`
+- `Overdue`
+- `Draft`
+- `Cancelled`
+
+Each status is automatically styled with appropriate colors and icons.
+
+### Custom Cell Rendering
+
+The table component allows for custom cell rendering through the `cell` property in column definitions. Here are some examples:
+
+#### Basic Custom Cell
+
+```typescript
+{
+  accessorKey: 'customer_name',
+  header: ({ column }) => (
+    <DataTableColumnHeader column={column} title="CUSTOMER" />
+  ),
+  cell: ({ row }) => (
+    <div className="w-42">{row.getValue('customer_name')}</div>
+  ),
+  enableSorting: true,
+  enableHiding: true,
+}
+```
+
+#### Formatted Currency Cell
+
+```typescript
+{
+  accessorKey: 'amount_total',
+  header: ({ column }) => (
+    <DataTableColumnHeader column={column} title="AMOUNT" />
+  ),
+  cell: ({ row }) => {
+    const amount = Number.parseFloat(row.getValue('amount_total'));
+    const formatted = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(amount);
+    return <div>{formatted}</div>;
+  },
+  enableHiding: true,
+  size: 10,
+}
+```
+
+#### Status Cell with Badge
+
+```typescript
+{
+  accessorKey: 'status',
+  header: ({ column }) => (
+    <DataTableColumnHeader column={column} title="STATUS" />
+  ),
+  cell: ({ row }) => {
+    const status = row.original.status;
+    const Icon = getStatusIcon(status);
+    return (
+      <Badge variant="outline" className="py-1 [&>svg]:size-3.5">
+        <Icon />
+        <span className="capitalize">{status}</span>
+      </Badge>
+    );
+  },
+  meta: {
+    label: 'Status',
+    variant: 'multiSelect',
+    options: ['Sent', 'Paid', 'Overdue', 'Draft', 'Cancelled'].map((status) => ({
+      label: status.charAt(0).toUpperCase() + status.slice(1),
+      value: status,
+      icon: getStatusIcon(status),
+    })),
+  },
+}
+```
+
+#### Interactive Cell with Link
+
+```typescript
+{
+  accessorKey: 'invoice_number',
+  header: ({ column }) => (
+    <DataTableColumnHeader column={column} title="INVOICE" />
+  ),
+  cell: ({ row }) => (
+    <div className="w-42 text-blue-500 hover:underline hover:text-blue-600 transition cursor-pointer">
+      {row.getValue('invoice_number')}
+    </div>
+  ),
+  enableSorting: true,
+  enableHiding: true,
+}
+```
+
+#### Action Cell with Dropdown Menu
+
+```typescript
+{
+  id: 'actions',
+  header: ({ column }) => (
+    <DataTableColumnHeader column={column} title="ACTIONS" />
+  ),
+  cell: ({ row }) => {
+    const { menuActions, customActions } = row.original.actions;
+    return (
+      <div className="flex items-center justify-end pr-5">
+        {customActions?.map((Action, i) => (
+          <Action key={`action-${i}`} {...row.original} />
+        ))}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <EllipsisVertical className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {menuActions.map(({ label, action, className, shortcut }) => (
+              <DropdownMenuItem
+                key={label}
+                className={className}
+                onSelect={() => action(row.original)}
+              >
+                {label}
+                {shortcut && <DropdownMenuShortcut>{shortcut}</DropdownMenuShortcut>}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    );
+  },
+}
+```
+
+### Cell Customization Tips
+
+1. **Styling**:
+
+   - Use Tailwind classes for consistent styling
+   - Add responsive classes for mobile views
+   - Use the `className` prop for custom styling
+
+2. **Performance**:
+
+   - Memoize complex cell renderers using `React.memo`
+   - Keep cell components lightweight
+   - Avoid heavy computations in cell renderers
+
+3. **Accessibility**:
+
+   - Add appropriate ARIA labels
+   - Ensure keyboard navigation works
+   - Maintain proper color contrast
+
+4. **State Management**:
+   - Use the `row.original` property to access the full row data
+   - Handle cell updates through the table's state management
+   - Use the `row.getValue()` method for column values
+
+## Styling
+
+The component uses Tailwind CSS for styling. You can customize the appearance by:
+
+1. Modifying the Shell component's className:
+
+```tsx
+<Shell className="gap-2 custom-class">
+```
+
+2. Overriding the default styles in your global CSS:
+
+```css
+.revenue-table {
+  /* Custom styles */
+}
+```
+
+## Performance Considerations
+
+- The component uses React Suspense for better loading performance
+- Data is loaded lazily to improve initial page load
+- Virtual scrolling is implemented for large datasets
+- Memoization is used for expensive computations
+
+## Error Handling
+
+The component includes built-in error boundaries and will display appropriate error states when:
+
+- Data loading fails
+- Network errors occur
+- Invalid data is provided
+
+## Accessibility
+
+- ARIA labels are included for all interactive elements
+- Keyboard navigation is fully supported
+- Screen reader compatibility is maintained
+- Color contrast meets WCAG 2.1 standards
+
+## Browser Support
+
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
 
 ## Dependencies
 
-- React
+- React 18+
 - @tanstack/react-table
-- Tailwind CSS
-- Lucide React (for icons)
+- @cash-compass/ui
+- @cash-compass/utils
+- lucide-react
 
-## Best Practices
+## Contributing
 
-- Use TypeScript for type safety
-- Define clear, concise column definitions
-- Implement custom cell renderers for complex data
-- Consider performance with large datasets
-- Leverage type generics for maximum flexibility
+When contributing to this component:
+
+1. Follow the existing patterns for cell rendering
+2. Maintain consistent styling using Tailwind
+3. Add appropriate TypeScript types
+4. Include accessibility features
+5. Add tests for new functionality
+6. Update documentation for any changes
+
+## License
+
+This component is part of the Cash Compass project and is subject to its licensing terms.

@@ -30,7 +30,8 @@ export function StatisticsCards() {
       <StatCard
         title="Year-to-Date"
         value="$245,780"
-        secondaryLabel="73% of quarterly target"
+        secondaryLabel=" of quarterly target"
+        secondaryValue="73%"
         valueColor="text-green-600"
       />
     </div>

@@ -5,7 +5,7 @@ import ExpensesRevenueTrend from './components/expenses-revenue-trend';
 import React from 'react';
 import { ExpensesRevenueDonuts } from './components/expenses-revenue-donuts';
 import CashFlowProjection from './components/cash-flow-projection-chart';
-import { RecentTransactions } from './components/recent-transactions';
+import { RecentActivities } from './components/recent-activity';
 
 function Dashboard() {
   const [selectedPeriod, setSelectedPeriod] = React.useState('march');
@@ -21,7 +21,7 @@ function Dashboard() {
   };
 
   return (
-    <div className="px-4 lg:px-6">
+    <div className="px-4 lg:px-6 space-y-4">
       <PageHeader
         timePeriods={[
           { value: 'march', label: 'March 2025' },
@@ -59,7 +59,7 @@ function Dashboard() {
       <SectionCards />
       <ExpensesRevenueTrend />
       <ExpensesRevenueDonuts />
-      <RecentTransactions />
+      <RecentActivities />
       <CashFlowProjection />
     </div>
   );
