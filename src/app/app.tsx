@@ -9,6 +9,7 @@ import { ApolloProviderWrapper } from './apollo';
 import Layout from './layout';
 import Dashboard from '../views/dashboard';
 import { RevenueManagement } from '../views/revenue';
+import { ExpensesManagement } from '../views/expenses';
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
       {
         path: '/revenue',
         element: <RevenueManagement />,
+      },
+      {
+        path: '/expenses',
+        element: <ExpensesManagement />,
       },
     ],
   },

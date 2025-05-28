@@ -7,6 +7,7 @@ import {
   CardTitle,
 } from './card';
 import { TrendingUpIcon, TrendingDownIcon } from 'lucide-react';
+import clsx from 'clsx';
 
 interface StatCardProps {
   /** The title displayed at the top of the card */
@@ -131,7 +132,7 @@ export const StatCard: React.FC<StatCardProps> = ({
         {/* Case 2: Display amount change (like "$15,230 this month") */}
         {amountChange && (
           <div className="line-clamp-1 flex items-center gap-2">
-            <span className={`font-medium ${getAmountChangeColor()}`}>
+            <span className={clsx(`font-medium`, getAmountChangeColor())}>
               {amountChangeDirection === 'up' ? (
                 <TrendingUpIcon className="size-4 inline mr-1" />
               ) : (
