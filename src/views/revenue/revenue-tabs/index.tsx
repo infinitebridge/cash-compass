@@ -4,49 +4,34 @@ import {
   TabsList,
   TabsTrigger,
 } from '@cash-compass/ui/tabs';
-import { Dispatch, FunctionComponent, ReactNode, SetStateAction } from 'react';
+import { FunctionComponent, ReactNode } from 'react';
 
-interface RevenueManagementTabsProps {
+interface RevenueTabsProps {
   tabsConfig: {
     title: string;
     component: ReactNode;
     key: string;
   }[];
-  activeTab: number;
   defaultTab: string;
-  setActiveTab: Dispatch<SetStateAction<number>>;
 }
 
-const RevenueManagementTabs: FunctionComponent<RevenueManagementTabsProps> = ({
+const RevenueTabs: FunctionComponent<RevenueTabsProps> = ({
   tabsConfig,
   defaultTab,
-  activeTab,
-  setActiveTab,
 }) => {
   return (
-    <Tabs
-      value={tabsConfig[activeTab]?.key}
-      onValueChange={(val) =>
-        setActiveTab(tabsConfig.findIndex((item) => item.key === val))
-      }
-      defaultValue={defaultTab}
-      className=""
-    >
+    <Tabs defaultValue={defaultTab} className="">
       <TabsList>
-        {tabsConfig.map((tab) => (
-          <TabsTrigger key={tab.key} value={tab.key}>
-            {tab.title}
-          </TabsTrigger>
-        ))}
+        {tabsConfig.map((tab) => {
+          return <TabsTrigger value={tab.key}>{tab.title}</TabsTrigger>;
+        })}
       </TabsList>
 
-      {tabsConfig.map((tab) => (
-        <TabsContent key={tab.key} value={tab.key}>
-          {tab.component}
-        </TabsContent>
-      ))}
+      {tabsConfig.map((tab) => {
+        return <TabsContent value={tab.key}>{tab.component}</TabsContent>;
+      })}
     </Tabs>
   );
 };
 
-export default RevenueManagementTabs;
+export default RevenueTabs;

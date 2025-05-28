@@ -33,6 +33,21 @@ import {
 } from '@cash-compass/ui/select';
 import { Textarea } from '@cash-compass/ui/textarea';
 import { cn } from '@cash-compass/utils/lib/utils';
+import { useFormValidation } from '../../../context/form-validation-context';
+
+// Move these outside component to avoid recreation on each render
+const customers = [
+  { id: '1', name: 'Acme Inc.' },
+  { id: '2', name: 'Globex Corporation' },
+  { id: '3', name: 'Stark Industries' },
+];
+
+const categories = [
+  { id: '1', name: 'Sales' },
+  { id: '2', name: 'Services' },
+  { id: '3', name: 'Subscription' },
+  { id: '4', name: 'Other' },
+];
 
 const basicInfoFormSchema = z.object({
   revenueDate: z
@@ -67,37 +82,33 @@ const basicInfoFormSchema = z.object({
     .optional(),
 });
 
-// Sample data for dropdowns
-const customers = [
-  { id: '1', name: 'Acme Inc.' },
-  { id: '2', name: 'Globex Corporation' },
-  { id: '3', name: 'Stark Industries' },
-];
-
-const categories = [
-  { id: '1', name: 'Sales' },
-  { id: '2', name: 'Services' },
-  { id: '3', name: 'Subscription' },
-  { id: '4', name: 'Other' },
-];
-
 type FormSchema = z.infer<typeof basicInfoFormSchema>;
 
 type RevenueFormProps = {
-  onValid: (data: any, isValid: boolean) => void;
-  triggerSubmit: boolean;
-  initialData?: Partial<FormSchema>;
+  triggerSubmit?: boolean;
+  isNavigating?: boolean;
 };
 
-export function RevenueForm({
-  onValid,
-  triggerSubmit,
-  initialData,
-}: RevenueFormProps) {
+export function RevenueForm({ triggerSubmit, isNavigating }: RevenueFormProps) {
+  const {
+    formData,
+    validationTrigger,
+    updateFormData,
+    updateFormValidation,
+    setFieldTouched,
+    setFieldError,
+    clearFieldError,
+  } = useFormValidation();
+
+  // Initialize form with context data or defaults
   const form = useForm<FormSchema>({
     resolver: zodResolver(basicInfoFormSchema),
-    defaultValues: initialData || {
-      amount: '0.00',
+    defaultValues: {
+      revenueDate: formData.basicInfo?.revenueDate || undefined,
+      amount: formData.basicInfo?.amount || '0.00',
+      customer: formData.basicInfo?.customer || '',
+      category: formData.basicInfo?.category || '',
+      description: formData.basicInfo?.description || '',
     },
   });
 
@@ -113,30 +124,105 @@ export function RevenueForm({
     return '0.00';
   };
 
-  // Handle form validation and submission
+  // Enhanced validation function that integrates with context
   const validateForm = useCallback(async () => {
-    const isValid = await form.trigger();
-    const formValues = form.getValues();
-    onValid(formValues, isValid); // This is crucial
-    return isValid;
-  }, [form, onValid]);
+    try {
+      // Trigger react-hook-form validation
+      const isValid = await form.trigger();
+      const formValues = form.getValues();
 
-  // Handle manual validation trigger from parent
+      // Update context with current form data
+      updateFormData('basicInfo', formValues);
+
+      // Update validation status in context
+      updateFormValidation('basicInfo', isValid);
+
+      // Handle field-level errors for better UX
+      if (!isValid) {
+        const errors = form.formState.errors;
+        Object.keys(errors).forEach((fieldName) => {
+          const error = errors[fieldName as keyof FormSchema];
+          if (error?.message) {
+            setFieldError('basicInfo', fieldName, error.message);
+          }
+        });
+      } else {
+        // Clear all errors if form is valid
+        Object.keys(form.getValues()).forEach((fieldName) => {
+          clearFieldError('basicInfo', fieldName);
+        });
+      }
+
+      console.log('BasicInfo form validation:', { isValid, formValues });
+      return isValid;
+    } catch (error) {
+      console.error('BasicInfo validation error:', error);
+      updateFormValidation('basicInfo', false);
+      return false;
+    }
+  }, [
+    form,
+    updateFormData,
+    updateFormValidation,
+    setFieldError,
+    clearFieldError,
+  ]);
+
+  // Handle validation triggers from context
   useEffect(() => {
-    if (triggerSubmit) {
+    if (triggerSubmit || validationTrigger) {
+      console.log('BasicInfo: Validation triggered', {
+        triggerSubmit,
+        validationTrigger,
+      });
       validateForm();
     }
-  }, [triggerSubmit, validateForm]);
+  }, [triggerSubmit, validationTrigger, validateForm]);
 
-  // Real-time validation with debounce
+  // Real-time validation with debounce - updates context immediately
+  const debouncedValidation = useCallback(
+    debounce(async () => {
+      await validateForm();
+    }, 300),
+    [validateForm]
+  );
+
+  // Watch for form changes and update context
   useEffect(() => {
-    const subscription = form.watch(
-      debounce(() => {
-        validateForm();
-      }, 300)
-    );
-    return () => subscription.unsubscribe();
-  }, [form.watch, validateForm]);
+    const subscription = form.watch((formValues) => {
+      // Always update context with current data
+      updateFormData('basicInfo', formValues);
+
+      // Trigger debounced validation
+      debouncedValidation();
+    });
+
+    return () => {
+      subscription.unsubscribe();
+      debouncedValidation.cancel();
+    };
+  }, [form.watch, updateFormData, debouncedValidation]);
+
+  // Handle field touch events
+  const handleFieldTouch = (fieldName: string) => {
+    setFieldTouched('basicInfo', fieldName, true);
+  };
+
+  // Sync form with context data when it changes externally
+  useEffect(() => {
+    const contextData = formData.basicInfo;
+    if (contextData && Object.keys(contextData).length > 0) {
+      // Only update if the data is different to avoid infinite loops
+      const currentValues = form.getValues();
+      const hasChanges = Object.keys(contextData).some(
+        (key) => contextData[key] !== currentValues[key as keyof FormSchema]
+      );
+
+      if (hasChanges) {
+        form.reset(contextData);
+      }
+    }
+  }, [formData.basicInfo, form]);
 
   return (
     <Form {...form}>
@@ -158,6 +244,7 @@ export function RevenueForm({
                           'pl-3 text-left font-normal border-gray-300',
                           !field.value && 'text-muted-foreground'
                         )}
+                        onFocus={() => handleFieldTouch('revenueDate')}
                       >
                         {field.value ? (
                           format(field.value, 'dd/MM/yyyy')
@@ -172,7 +259,10 @@ export function RevenueForm({
                     <Calendar
                       mode="single"
                       selected={field.value}
-                      onSelect={field.onChange}
+                      onSelect={(date) => {
+                        field.onChange(date);
+                        handleFieldTouch('revenueDate');
+                      }}
                       initialFocus
                     />
                   </PopoverContent>
@@ -198,11 +288,13 @@ export function RevenueForm({
                       placeholder="0.00"
                       className="pl-8 border-gray-300"
                       value={field.value}
+                      onFocus={() => handleFieldTouch('amount')}
                       onChange={(e) => {
                         const formatted = formatCurrency(e.target.value);
                         form.setValue('amount', formatted, {
                           shouldValidate: true,
                         });
+                        handleFieldTouch('amount');
                       }}
                     />
                   </div>
@@ -212,7 +304,6 @@ export function RevenueForm({
             )}
           />
         </div>
-
         {/* Customer Field */}
         <FormField
           control={form.control}
@@ -224,12 +315,15 @@ export function RevenueForm({
                 <Select
                   onValueChange={(value) => {
                     field.onChange(value);
-                    validateForm();
+                    handleFieldTouch('customer');
                   }}
                   value={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger className="w-full">
+                    <SelectTrigger
+                      className="w-full"
+                      onFocus={() => handleFieldTouch('customer')}
+                    >
                       <SelectValue placeholder="Select a customer" />
                     </SelectTrigger>
                   </FormControl>
@@ -246,7 +340,6 @@ export function RevenueForm({
             </FormItem>
           )}
         />
-
         {/* Category Field */}
         <FormField
           control={form.control}
@@ -257,12 +350,15 @@ export function RevenueForm({
               <Select
                 onValueChange={(value) => {
                   field.onChange(value);
-                  validateForm();
+                  handleFieldTouch('category');
                 }}
                 value={field.value}
               >
                 <FormControl>
-                  <SelectTrigger className="border-gray-300">
+                  <SelectTrigger
+                    className="border-gray-300"
+                    onFocus={() => handleFieldTouch('category')}
+                  >
                     <SelectValue placeholder="Select a category" />
                   </SelectTrigger>
                 </FormControl>
@@ -278,8 +374,6 @@ export function RevenueForm({
             </FormItem>
           )}
         />
-
-        {/* Description Field */}
         <FormField
           control={form.control}
           name="description"
@@ -291,9 +385,10 @@ export function RevenueForm({
                   placeholder="Enter revenue details"
                   className="min-h-[120px] border-gray-300 resize-none"
                   {...field}
+                  onFocus={() => handleFieldTouch('description')}
                   onChange={(e) => {
                     field.onChange(e);
-                    validateForm();
+                    handleFieldTouch('description');
                   }}
                 />
               </FormControl>

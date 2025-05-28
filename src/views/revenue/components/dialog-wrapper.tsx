@@ -4,14 +4,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@cash-compass/ui/dialog';
-import { Dispatch, ReactNode, SetStateAction, useRef, useState } from 'react';
+import { Dispatch, ReactNode, SetStateAction, useEffect } from 'react';
 import { Button } from '@cash-compass/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import RevenueManagementTabs from '../revenue-tabs';
 import { RevenueForm } from './basic-info-form';
 import RevenueDetailsForm from './details-form';
 import InvoiceForm from './invoice-form';
 import NavigationBtn from './navigation-btn';
+import CustomRevenueManagementTabs from '../revenue-tabs/custom-tabs';
+import {
+  FormValidationProvider,
+  useFormValidation,
+} from '../../../context/form-validation-context';
 
 type Props = {
   title: string;
@@ -24,7 +28,8 @@ type Props = {
   onClose: () => void;
 };
 
-const DialogWrapper = ({
+// Inner component that uses the validation context
+const DialogContentInner = ({
   title,
   children,
   trigger,
@@ -33,130 +38,107 @@ const DialogWrapper = ({
   open,
   onClose,
 }: Props) => {
-  // Initialize with empty objects to prevent undefined errors
-  const [formData, setFormData] = useState<Record<number, any>>({
-    0: {}, // Basic info tab
-    1: {}, // Details tab
-    2: {}, // Invoice options tab
-  });
-  const [validationTrigger, setValidationTrigger] = useState(false);
-  // Track form validation state for each tab
-  const [formValidation, setFormValidation] = useState<Record<number, boolean>>(
-    {
-      0: false, // Basic info tab initially invalid
-      1: false, // Details tab initially invalid
-      2: false, // Invoice options tab initially invalid
+  const {
+    formData,
+    formValidation,
+    validationTrigger,
+    isNavigating,
+    isDialogValidating,
+    setIsNavigating,
+    setValidationTrigger,
+    areFormsValid,
+    isDialogValid,
+    validateAllForms,
+    resetFormContext,
+  } = useFormValidation();
+
+  // Reset context when dialog opens
+  useEffect(() => {
+    if (open) {
+      resetFormContext();
     }
-  );
-  // Track if we're attempting to navigate
-  const [isNavigating, setIsNavigating] = useState(false);
+  }, [open, resetFormContext]);
 
-  // Handle form validation results
-  const handleFormValid = (data: any, isValid: boolean) => {
-    // Store form data for current tab
-    setFormData((prev) => ({
-      ...prev,
-      [activeTab]: data,
-    }));
-
-    // Update validation state for current tab
-    setFormValidation((prev) => ({
-      ...prev,
-      [activeTab]: isValid,
-    }));
-
-    // Handle navigation if we were triggered by Next button
-    if (isNavigating && isValid && activeTab < 2) {
-      // We need to reset the validation trigger first to avoid issues
-      setValidationTrigger(false);
-      setIsNavigating(false);
-
-      // Use setTimeout to ensure state updates happen before navigation
-      setTimeout(() => {
-        setActiveTab(activeTab + 1);
-      }, 50);
-    } else {
-      // If we were navigating but validation failed, reset the flags
-      if (isNavigating) {
-        setIsNavigating(false);
-      }
-    }
-  };
-
-  // Function to check if all required forms are valid for submission
-  const areFormsValid = () => {
-    // Always require Basic Info (tab 0) to be valid
-    if (!formValidation[0]) return false;
-
-    // If we've moved past Details tab, require it to be valid
-    if (activeTab > 0 && !formValidation[1]) return false;
-
-    // For the Invoice tab (2), only check validation if:
-    // 1. We're on that tab, AND
-    // 2. The createInvoice checkbox is checked
-    if (activeTab === 2) {
-      const createInvoiceChecked = formData[2]?.createInvoice;
-
-      // If createInvoice is checked, require validation
-      if (createInvoiceChecked && !formValidation[2]) {
-        return false;
-      }
-
-      // If createInvoice is not checked, ignore validation for tab 2
-    }
-
-    // If all required validations pass, we're good to go
-    return true;
-  };
-
-  // Handle Next button click
-  const handleNextClick = () => {
-    console.log('Next clicked, triggering validation for tab', activeTab);
+  // Handle Next button click with improved navigation logic
+  const handleNextClick = async () => {
+    console.log('Next clicked, validating current tab:', activeTab);
     setIsNavigating(true);
     setValidationTrigger(true);
+
+    // Wait a bit for validation to process
+    setTimeout(() => {
+      const currentTabValid = getCurrentTabValidation();
+
+      if (currentTabValid && activeTab < 2) {
+        setActiveTab(activeTab + 1);
+      }
+
+      setIsNavigating(false);
+      setValidationTrigger(false);
+    }, 150);
   };
 
-  // Handle form submission
-  const handleSubmit = () => {
-    // Validate current tab
-    setValidationTrigger(true);
+  // Get current tab validation status
+  const getCurrentTabValidation = () => {
+    const createInvoiceChecked = formData.invoice?.createInvoice;
 
-    // Use a small timeout to ensure validation has time to process
-    setTimeout(() => {
-      if (areFormsValid()) {
+    switch (activeTab) {
+      case 0:
+        return formValidation.basicInfo;
+      case 1:
+        return formValidation.details;
+      case 2:
+        return createInvoiceChecked ? formValidation.invoice : true;
+      default:
+        return false;
+    }
+  };
+
+  // Handle form submission with enhanced validation
+  const handleSubmit = async () => {
+    console.log('Submit clicked, validating all forms...');
+
+    try {
+      const isValid = await validateAllForms();
+
+      if (isValid) {
         // Prepare final data for submission
-        // If createInvoice is unchecked, we can omit the invoice details
         const finalData = {
-          ...formData[0],
-          ...formData[1],
-          ...(formData[2]?.createInvoice
-            ? formData[2]
+          ...formData.basicInfo,
+          ...formData.details,
+          ...(formData.invoice?.createInvoice
+            ? formData.invoice
             : { createInvoice: false }),
         };
 
         console.log('All forms valid! Submitting data:', finalData);
         onClose();
+
+        // TODO: Add your actual submission logic here
+        // await submitRevenueData(finalData);
       } else {
-        console.log('Form validation failed. Cannot submit.', formValidation);
-        setValidationTrigger(false);
+        console.log('Form validation failed:', {
+          basicInfo: formValidation.basicInfo,
+          details: formValidation.details,
+          invoice: formValidation.invoice,
+          formData: formData,
+        });
       }
-    }, 100);
+    } catch (error) {
+      console.error('Validation error:', error);
+    }
   };
 
-  // Debug outputs
-  console.log('Current tab:', activeTab);
-  console.log('Form validation status:', formValidation);
-  console.log('Form data:', formData);
-
+  // Enhanced tab configuration with better data passing
   const tabsConfig = [
     {
       title: 'Basic Info',
       key: 'basic-info',
       component: (
         <RevenueForm
-          onValid={handleFormValid}
+          // Remove the old props and let the form component use the context directly
           triggerSubmit={validationTrigger && activeTab === 0}
-          initialData={formData[0]}
+          isNavigating={isNavigating && activeTab === 0}
         />
       ),
     },
@@ -165,9 +147,8 @@ const DialogWrapper = ({
       key: 'details',
       component: (
         <RevenueDetailsForm
-          onValid={handleFormValid}
           triggerSubmit={validationTrigger && activeTab === 1}
-          initialData={formData[1]} // Use data from tab 1, not tab 0
+          isNavigating={isNavigating && activeTab === 1}
         />
       ),
     },
@@ -176,13 +157,18 @@ const DialogWrapper = ({
       key: 'options',
       component: (
         <InvoiceForm
-          onValid={handleFormValid}
           triggerSubmit={validationTrigger && activeTab === 2}
-          initialData={formData[2]} // Use data from tab 2
+          isNavigating={isNavigating && activeTab === 2}
         />
       ),
     },
   ];
+
+  // Debug outputs (can be removed in production)
+  console.log('Current tab:', activeTab);
+  console.log('Form validation status:', formValidation);
+  console.log('Form data:', formData);
+  console.log('Is dialog valid:', isDialogValid());
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -191,7 +177,7 @@ const DialogWrapper = ({
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <div className="py-2">
-            <RevenueManagementTabs
+            <CustomRevenueManagementTabs
               tabsConfig={tabsConfig}
               defaultTab={tabsConfig[0].key}
               activeTab={activeTab}
@@ -206,6 +192,7 @@ const DialogWrapper = ({
             <NavigationBtn
               action={() => setActiveTab((prev) => prev - 1)}
               className="flex-none"
+              // disabled={isDialogValidating}
             >
               <div className="flex flex-row gap-2 items-center px-3">
                 <ChevronLeft className="h-3 w-3" />
@@ -217,9 +204,10 @@ const DialogWrapper = ({
             <NavigationBtn
               action={handleNextClick}
               className={activeTab > 0 ? 'ml-auto' : 'ml-auto'}
+              // disabled={isDialogValidating || isNavigating}
             >
               <div className="flex flex-row gap-2 items-center px-3">
-                <span>Next</span>
+                <span>{isNavigating ? 'Validating...' : 'Next'}</span>
                 <ChevronRight className="h-3 w-3" />
               </div>
             </NavigationBtn>
@@ -235,21 +223,31 @@ const DialogWrapper = ({
               variant="outline"
               className="flex-1 sm:flex-none border-gray-300"
               onClick={onClose}
+              disabled={isDialogValidating}
             >
               Cancel
             </Button>
             <Button
               type="submit"
               className="flex-1 sm:flex-none bg-green-600 hover:bg-green-700"
-              disabled={!areFormsValid()}
+              disabled={!isDialogValid() || isDialogValidating}
               onClick={handleSubmit}
             >
-              Save Revenue
+              {isDialogValidating ? 'Validating...' : 'Save Revenue'}
             </Button>
           </div>
         </div>
       </DialogContent>
     </Dialog>
+  );
+};
+
+// Main component wrapper with FormValidationProvider
+const DialogWrapper = (props: Props) => {
+  return (
+    <FormValidationProvider>
+      <DialogContentInner {...props} />
+    </FormValidationProvider>
   );
 };
 

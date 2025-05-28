@@ -30,6 +30,7 @@ import {
   FancyMultiSelect,
   MultiSelectOption,
 } from '@cash-compass/ui/multi-select';
+import { useFormValidation } from '../../../context/form-validation-context';
 
 const revenueDetailsFormSchema = z.object({
   paymentMethod: z.string().min(1, {
@@ -48,20 +49,32 @@ const revenueDetailsFormSchema = z.object({
 type FormSchema = z.infer<typeof revenueDetailsFormSchema>;
 
 type Props = {
-  onValid: (data: any, isValid: boolean) => void;
-  triggerSubmit: boolean;
-  initialData?: Partial<FormSchema>;
+  triggerSubmit?: boolean;
+  isNavigating?: boolean;
 };
 
 export default function RevenueDetailsForm({
-  onValid,
   triggerSubmit,
-  initialData,
+  isNavigating,
 }: Props) {
+  const {
+    formData,
+    validationTrigger,
+    updateFormData,
+    updateFormValidation,
+    setFieldTouched,
+    setFieldError,
+    clearFieldError,
+  } = useFormValidation();
+
+  // Initialize form with context data or defaults
   const form = useForm<FormSchema>({
     resolver: zodResolver(revenueDetailsFormSchema),
-    defaultValues: initialData || {
-      tags: [],
+    defaultValues: {
+      paymentMethod: formData.details?.paymentMethod || '',
+      status: formData.details?.status || '',
+      referenceNumber: formData.details?.referenceNumber || '',
+      tags: formData.details?.tags || [],
     },
   });
 
@@ -73,30 +86,105 @@ export default function RevenueDetailsForm({
     { value: 'retainer', label: 'Retainer' },
   ];
 
-  // Handle form validation and submission
+  // Enhanced validation function that integrates with context
   const validateForm = useCallback(async () => {
-    const isValid = await form.trigger();
-    const formValues = form.getValues();
-    onValid(formValues, isValid); // This is crucial
-    return isValid;
-  }, [form, onValid]);
+    try {
+      // Trigger react-hook-form validation
+      const isValid = await form.trigger();
+      const formValues = form.getValues();
 
-  // Handle manual validation trigger from parent
+      // Update context with current form data
+      updateFormData('details', formValues);
+
+      // Update validation status in context
+      updateFormValidation('details', isValid);
+
+      // Handle field-level errors for better UX
+      if (!isValid) {
+        const errors = form.formState.errors;
+        Object.keys(errors).forEach((fieldName) => {
+          const error = errors[fieldName as keyof FormSchema];
+          if (error?.message) {
+            setFieldError('details', fieldName, error.message);
+          }
+        });
+      } else {
+        // Clear all errors if form is valid
+        Object.keys(form.getValues()).forEach((fieldName) => {
+          clearFieldError('details', fieldName);
+        });
+      }
+
+      console.log('Details form validation:', { isValid, formValues });
+      return isValid;
+    } catch (error) {
+      console.error('Details validation error:', error);
+      updateFormValidation('details', false);
+      return false;
+    }
+  }, [
+    form,
+    updateFormData,
+    updateFormValidation,
+    setFieldError,
+    clearFieldError,
+  ]);
+
+  // Handle validation triggers from context
   useEffect(() => {
-    if (triggerSubmit) {
+    if (triggerSubmit || validationTrigger) {
+      console.log('Details: Validation triggered', {
+        triggerSubmit,
+        validationTrigger,
+      });
       validateForm();
     }
-  }, [triggerSubmit, validateForm]);
+  }, [triggerSubmit, validationTrigger, validateForm]);
 
-  // Real-time validation with debounce
+  // Real-time validation with debounce - updates context immediately
+  const debouncedValidation = useCallback(
+    debounce(async () => {
+      await validateForm();
+    }, 300),
+    [validateForm]
+  );
+
+  // Watch for form changes and update context
   useEffect(() => {
-    const subscription = form.watch(
-      debounce(() => {
-        validateForm();
-      }, 300)
-    );
-    return () => subscription.unsubscribe();
-  }, [form.watch, validateForm]);
+    const subscription = form.watch((formValues) => {
+      // Always update context with current data
+      updateFormData('details', formValues);
+
+      // Trigger debounced validation
+      debouncedValidation();
+    });
+
+    return () => {
+      subscription.unsubscribe();
+      debouncedValidation.cancel();
+    };
+  }, [form.watch, updateFormData, debouncedValidation]);
+
+  // Handle field touch events
+  const handleFieldTouch = (fieldName: string) => {
+    setFieldTouched('details', fieldName, true);
+  };
+
+  // Sync form with context data when it changes externally
+  useEffect(() => {
+    const contextData = formData.details;
+    if (contextData && Object.keys(contextData).length > 0) {
+      // Only update if the data is different to avoid infinite loops
+      const currentValues = form.getValues();
+      const hasChanges = Object.keys(contextData).some(
+        (key) => contextData[key] !== currentValues[key as keyof FormSchema]
+      );
+
+      if (hasChanges) {
+        form.reset(contextData);
+      }
+    }
+  }, [formData.details, form]);
 
   return (
     <Form {...form}>
@@ -110,12 +198,14 @@ export default function RevenueDetailsForm({
               <Select
                 onValueChange={(value) => {
                   field.onChange(value);
-                  validateForm();
+                  handleFieldTouch('paymentMethod');
                 }}
                 value={field.value}
               >
                 <FormControl>
-                  <SelectTrigger>
+                  <SelectTrigger
+                    onFocus={() => handleFieldTouch('paymentMethod')}
+                  >
                     <SelectValue placeholder="Select payment method" />
                   </SelectTrigger>
                 </FormControl>
@@ -141,12 +231,12 @@ export default function RevenueDetailsForm({
               <Select
                 onValueChange={(value) => {
                   field.onChange(value);
-                  validateForm();
+                  handleFieldTouch('status');
                 }}
                 value={field.value}
               >
                 <FormControl>
-                  <SelectTrigger>
+                  <SelectTrigger onFocus={() => handleFieldTouch('status')}>
                     <SelectValue placeholder="Select status" />
                   </SelectTrigger>
                 </FormControl>
@@ -177,9 +267,10 @@ export default function RevenueDetailsForm({
                 <Input
                   placeholder="Enter reference number"
                   {...field}
+                  onFocus={() => handleFieldTouch('referenceNumber')}
                   onChange={(e) => {
                     field.onChange(e);
-                    validateForm();
+                    handleFieldTouch('referenceNumber');
                   }}
                 />
               </FormControl>
@@ -210,7 +301,7 @@ export default function RevenueDetailsForm({
                   onChange={(selected) => {
                     const values = selected.map((item) => item.value);
                     field.onChange(values);
-                    validateForm();
+                    handleFieldTouch('tags');
                   }}
                   placeholder="Select or create tags..."
                   renderBadge={(option, onRemove) => (
@@ -221,7 +312,7 @@ export default function RevenueDetailsForm({
                         onClick={(e) => {
                           e.preventDefault();
                           onRemove();
-                          validateForm();
+                          handleFieldTouch('tags');
                         }}
                         onMouseDown={(e) => {
                           e.preventDefault();
