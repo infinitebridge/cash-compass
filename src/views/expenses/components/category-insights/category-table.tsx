@@ -156,15 +156,9 @@ export function CategoryTable() {
 
                   <TableCell>
                     <div className="space-y-1">
-                      <div className="flex justify-between text-xs">
-                        <span>{budgetUsage.toFixed(1)}%</span>
-                      </div>
-                      <Progress
-                        value={Math.min(budgetUsage, 100)}
-                        className={`h-2 ${
-                          isOverBudget ? '[&>div]:bg-destructive' : ''
-                        }`}
-                      />
+                      <span className="font-medium">
+                        {budgetUsage.toFixed(1)}%
+                      </span>
                     </div>
                   </TableCell>
 
