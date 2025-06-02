@@ -1,4 +1,9 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@cash-compass/ui';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@cash-compass/ui/tabs';
 import { FunctionComponent, ReactNode } from 'react';
 
 interface RevenueTabsProps {

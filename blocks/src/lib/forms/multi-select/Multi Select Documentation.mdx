@@ -1,0 +1,296 @@
+# FancyMultiSelect
+
+A flexible, customizable multi-select component for React applications that displays selected options as badges and supports custom rendering for both options and badges.
+
+![FancyMultiSelect component preview](https://placeholder.com/image)
+
+## Features
+
+- 💫 Beautiful badge-based UI for selected options
+- 🔍 Filterable dropdown list of options
+- 🎨 Fully customizable rendering for both options and badges
+- ⌨️ Keyboard navigation support
+- 🧩 Controlled and uncontrolled usage modes
+- 🔄 TypeScript support with generic typing
+
+## Installation
+
+```bash
+npm install @cash-compass/ui
+# or
+yarn add @cash-compass/ui
+# or
+pnpm add @cash-compass/ui
+```
+
+## Basic Usage
+
+```jsx
+import { FancyMultiSelect } from '@cash-compass/ui';
+
+// Define your options
+const options = [
+  { value: 'income', label: 'Income' },
+  { value: 'expenses', label: 'Expenses' },
+  { value: 'investments', label: 'Investments' },
+  // ...more options
+];
+
+// Use the component
+function App() {
+  const [selected, setSelected] = React.useState([options[0]]);
+
+  return (
+    <FancyMultiSelect
+      options={options}
+      value={selected}
+      onChange={setSelected}
+      placeholder="Select categories..."
+    />
+  );
+}
+```
+
+## Props
+
+<table>
+  <thead>
+    <tr>
+      <th>Prop</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>options</code>
+      </td>
+      <td>
+        <code>MultiSelectOption[]</code>
+      </td>
+      <td>Required</td>
+      <td>Array of options with value and label properties</td>
+    </tr>
+    <tr>
+      <td>
+        <code>value</code>
+      </td>
+      <td>
+        <code>MultiSelectOption[]</code>
+      </td>
+      <td>
+        <code>undefined</code>
+      </td>
+      <td>Controlled selected values</td>
+    </tr>
+    <tr>
+      <td>
+        <code>defaultValue</code>
+      </td>
+      <td>
+        <code>MultiSelectOption[]</code>
+      </td>
+      <td>
+        <code>[]</code>
+      </td>
+      <td>Default selected values (for uncontrolled usage)</td>
+    </tr>
+    <tr>
+      <td>
+        <code>onChange</code>
+      </td>
+      <td>
+        <code>(selected: MultiSelectOption[]) => void</code>
+      </td>
+      <td>
+        <code>undefined</code>
+      </td>
+      <td>Callback when selection changes</td>
+    </tr>
+    <tr>
+      <td>
+        <code>placeholder</code>
+      </td>
+      <td>
+        <code>string</code>
+      </td>
+      <td>
+        <code>'Select options...'</code>
+      </td>
+      <td>Placeholder text when no selection</td>
+    </tr>
+    <tr>
+      <td>
+        <code>renderOption</code>
+      </td>
+      <td>
+        <code>(option: MultiSelectOption) => React.ReactNode</code>
+      </td>
+      <td>
+        <code>undefined</code>
+      </td>
+      <td>Custom renderer for dropdown options</td>
+    </tr>
+    <tr>
+      <td>
+        <code>renderBadge</code>
+      </td>
+      <td>
+        <code>
+          (option: MultiSelectOption, onRemove: () => void) => React.ReactNode
+        </code>
+      </td>
+      <td>
+        <code>undefined</code>
+      </td>
+      <td>Custom renderer for selected option badges</td>
+    </tr>
+  </tbody>
+</table>
+
+### MultiSelectOption Type
+
+```typescript
+type MultiSelectOption = {
+  value: string;
+  label: string;
+};
+```
+
+You can extend this type with additional properties if needed:
+
+```typescript
+type UserOption = MultiSelectOption & {
+  avatar?: string;
+  role?: string;
+};
+```
+
+## Advanced Usage
+
+### Custom Option Rendering
+
+```jsx
+<FancyMultiSelect
+  options={userOptions}
+  value={selectedUsers}
+  onChange={setSelectedUsers}
+  placeholder="Select team members..."
+  renderOption={(option) => (
+    <div className="flex items-center">
+      <User className="mr-2 h-4 w-4 text-purple-500" />
+      <span>{option.label}</span>
+    </div>
+  )}
+/>
+```
+
+### Custom Badge Rendering
+
+```jsx
+<FancyMultiSelect
+  options={categoryOptions}
+  value={selectedCategories}
+  onChange={setSelectedCategories}
+  placeholder="Select categories..."
+  renderBadge={(option, onRemove) => (
+    <Badge
+      key={option.value}
+      variant="outline"
+      className="bg-blue-50 text-blue-700 border-blue-200"
+    >
+      <Tag className="mr-1 h-3 w-3" />
+      {option.label}
+      <button className="ml-1 rounded-full outline-none" onClick={onRemove}>
+        <X className="h-3 w-3 text-blue-400 hover:text-blue-700" />
+      </button>
+    </Badge>
+  )}
+/>
+```
+
+### Form Integration
+
+```jsx
+function TransactionForm() {
+  const [categories, setCategories] = useState([]);
+  const [assignees, setAssignees] = useState([]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Process form data with categories and assignees
+    console.log({
+      categories: categories.map((c) => c.value),
+      assignees: assignees.map((a) => a.value),
+    });
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div>
+        <label>Categories</label>
+        <FancyMultiSelect
+          options={categoryOptions}
+          value={categories}
+          onChange={setCategories}
+          placeholder="Select categories..."
+        />
+      </div>
+
+      <div>
+        <label>Assign To</label>
+        <FancyMultiSelect
+          options={userOptions}
+          value={assignees}
+          onChange={setAssignees}
+          placeholder="Select team members..."
+        />
+      </div>
+
+      <button type="submit">Save</button>
+    </form>
+  );
+}
+```
+
+## Keyboard Navigation
+
+The component supports the following keyboard shortcuts:
+
+- `Tab`: Move focus to/from the component
+- `Down Arrow`: Open dropdown and navigate options
+- `Enter` or `Space`: Select the focused option
+- `Escape`: Close the dropdown
+- `Backspace` or `Delete`: Remove the last selected option (when input is empty)
+
+## Styling
+
+FancyMultiSelect uses Tailwind CSS for styling. You can customize the appearance by:
+
+1. Using the `className` props on your rendered badges
+2. Creating custom renderers for options and badges
+3. Extending or modifying the component styles in your Tailwind configuration
+
+## Accessibility
+
+The component is built with accessibility in mind:
+
+- Keyboard navigation support
+- Proper focus management
+- ARIA attributes for screen readers
+- Clear visual feedback for selection state
+
+## Dependencies
+
+This component depends on:
+
+- React
+- Tailwind CSS
+- `cmdk` package for command menu functionality
+- `lucide-react` for icons (optional)
+
+## License
+
+MIT © Cash Compass

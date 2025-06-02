@@ -1,53 +1,81 @@
 import { PageHeader } from '@cash-compass/blocks';
 import { DollarSign, ReceiptCent, RefreshCcw } from 'lucide-react';
-import React from 'react';
+import React, { useState } from 'react';
+import DialogWrapper from './dialog-wrapper';
 
 export function Header() {
   const [selectedPeriod, setSelectedPeriod] = React.useState('march');
+  const [isOpen, setIsOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState(0);
 
   const handlePeriodChange = (period: string) => {
     setSelectedPeriod(period);
     console.log(`Fetching data for ${period}`);
   };
 
-  const handleNewExpense = () => {
-    console.log('Creating new expense');
+  const handleRecordRevenue = () => {
+    setActiveTab(0); // Set to "Record Revenue" tab
+    setIsOpen(true); // Open the dialog
+  };
+
+  const handleCreateInvoice = () => {
+    setActiveTab(1); // Set to "Create Invoice" tab
+    setIsOpen(true);
+  };
+
+  const handleRecurringRevenue = () => {
+    setActiveTab(2); // Set to "Recurring Revenue" tab
+    setIsOpen(true);
   };
 
   return (
-    <PageHeader
-      timePeriods={[
-        { value: 'march', label: 'March 2025' },
-        { value: 'february', label: 'February 2025' },
-        { value: 'january', label: 'January 2025' },
-        { value: 'q1', label: 'Q1 2025' },
-        { value: 'ytd', label: 'Year-to-date' },
-      ]}
-      title="Revenue Management"
-      selectedPeriod={selectedPeriod}
-      onPeriodChange={handlePeriodChange}
-      actionButtonLabel="New Revenue"
-      actionButtonColor="bg-blue-600 hover:bg-blue-700"
-      dropdownItems={[
-        {
-          label: 'Record Revenue',
-          icon: <DollarSign className="h-4 w-4 mr-2" />,
-          iconColor: 'text-blue-500',
-          onClick: handleNewExpense,
-        },
-        {
-          label: 'Create Invoice',
-          icon: <ReceiptCent className="h-4 w-4 mr-2" />,
-          iconColor: 'text-green-500',
-          onClick: () => console.log('New revenue'),
-        },
-        {
-          label: 'Recurring revenue',
-          icon: <RefreshCcw className="h-4 w-4 mr-2" />,
-          iconColor: 'text-purple-500',
-          onClick: () => console.log('New invoice'),
-        },
-      ]}
-    />
+    <>
+      <PageHeader
+        timePeriods={[
+          { value: 'march', label: 'March 2025' },
+          { value: 'february', label: 'February 2025' },
+          { value: 'january', label: 'January 2025' },
+          { value: 'q1', label: 'Q1 2025' },
+          { value: 'ytd', label: 'Year-to-date' },
+        ]}
+        title="Revenue Management"
+        selectedPeriod={selectedPeriod}
+        onPeriodChange={handlePeriodChange}
+        actionButtonLabel="New Revenue"
+        actionButtonColor="bg-blue-600 hover:bg-blue-700"
+        dropdownItems={[
+          {
+            label: 'Record Revenue',
+            icon: <DollarSign className="h-4 w-4 mr-2" />,
+            iconColor: 'text-blue-500',
+            onClick: handleRecordRevenue,
+          },
+          {
+            label: 'Create Invoice',
+            icon: <ReceiptCent className="h-4 w-4 mr-2" />,
+            iconColor: 'text-green-500',
+            onClick: handleCreateInvoice,
+          },
+          {
+            label: 'Recurring Revenue',
+            icon: <RefreshCcw className="h-4 w-4 mr-2" />,
+            iconColor: 'text-purple-500',
+            onClick: handleRecurringRevenue,
+          },
+        ]}
+      />
+      <DialogWrapper
+        title="New Revenue"
+        trigger={null}
+        children={undefined}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        open={isOpen}
+        onOpen={() => setIsOpen(true)}
+        onClose={() => setIsOpen(false)}
+      />
+    </>
   );
 }
+
+export default Header;
