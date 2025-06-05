@@ -89,7 +89,7 @@ export function RevenueForm() {
             name="revenueDate"
             render={({ field }) => (
               <FormItem className="flex flex-col">
-                <FormLabel className="text-gray-600">Revenue Date</FormLabel>
+                <FormLabel className="text-gray-600">Revenue Date *</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
                     <FormControl>

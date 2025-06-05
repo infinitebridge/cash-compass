@@ -26,6 +26,8 @@ import {
   DetailsFormSchemaType,
   InvoiceFormSchemaType,
 } from './schemas';
+import { Alert, AlertTitle } from '@cash-compass/ui';
+import { InfoIcon, PopcornIcon } from 'lucide-react';
 const RevenueDialogContent = () => {
   const { closeDialog: closeRevenueDialog, isOpen: isOpenRevenueDialog } =
     useDialogStore();
@@ -82,8 +84,15 @@ const RevenueDialogContent = () => {
         </DialogHeader>
 
         {/* Footer Buttons */}
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-4">
-          <div className="flex-1"></div>
+        <Alert className="p-1 text-[0.8rem] text-muted-foreground gap-2 border-none flex items-center">
+          <span>
+            <InfoIcon className="w-4 h-4" />
+          </span>
+          <AlertTitle className="m-0">
+            Fields marked with * are required{' '}
+          </AlertTitle>
+        </Alert>
+        <div className="flex flex-col sm:flex-row justify-end items-center gap-4 mt-2">
           <div className="flex gap-4 w-full sm:w-auto">
             <Button
               type="button"
