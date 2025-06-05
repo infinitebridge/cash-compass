@@ -27,13 +27,13 @@ import {
   InvoiceFormSchemaType,
 } from './schemas';
 import { Alert, AlertTitle } from '@cash-compass/ui';
-import { InfoIcon, PopcornIcon } from 'lucide-react';
+import { InfoIcon } from 'lucide-react';
+
 const RevenueDialogContent = () => {
   const { closeDialog: closeRevenueDialog, isOpen: isOpenRevenueDialog } =
     useDialogStore();
-  const { valid, basicFormData, invoiceFormData } = useRevenueDialogContext();
+  const { valid, basicFormData } = useRevenueDialogContext();
 
-  console.log({ invoiceFormData, basicFormData });
   const handleSubmit = async () => {
     console.log({ basicFormData });
     console.log('Submit clicked, validating all forms...');

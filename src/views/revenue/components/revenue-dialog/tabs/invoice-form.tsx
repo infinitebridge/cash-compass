@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
 
@@ -86,12 +85,12 @@ export default function InvoiceForm() {
               </FormControl>
               <div className="flex-1 space-y-1">
                 <div className="flex justify-between items-center">
-                  <FormLabel className="text-sm font-medium">
+                  <FormLabel className="text-sm font-medium text-gray-600">
                     Create an invoice for this revenue
                   </FormLabel>
                   <Badge
                     variant="outline"
-                    className="text-xs bg-gray-100 text-primary border-primary/20"
+                    className="text-xs  text-primary border-primary/20"
                   >
                     Recommended
                   </Badge>
@@ -112,7 +111,9 @@ export default function InvoiceForm() {
               name="invoiceNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Invoice Number</FormLabel>
+                  <FormLabel className="text-gray-600">
+                    Invoice Number
+                  </FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -134,7 +135,7 @@ export default function InvoiceForm() {
               name="dueDate"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Due Date</FormLabel>
+                  <FormLabel className="text-gray-600">Due Date</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
@@ -175,7 +176,7 @@ export default function InvoiceForm() {
               name="paymentTerms"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Payment Terms</FormLabel>
+                  <FormLabel className="text-gray-600">Payment Terms</FormLabel>
                   <Select
                     onValueChange={(value) => {
                       field.onChange(value);
@@ -207,7 +208,9 @@ export default function InvoiceForm() {
               name="notes"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Notes to Customer</FormLabel>
+                  <FormLabel className="text-gray-600">
+                    Notes to Customer
+                  </FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="Notes visible to customer on invoice"
@@ -237,7 +240,9 @@ export default function InvoiceForm() {
                     />
                   </FormControl>
                   <div className="space-y-1 leading-none">
-                    <FormLabel>Send invoice immediately</FormLabel>
+                    <FormLabel className="text-gray-600">
+                      Send invoice immediately
+                    </FormLabel>
                   </div>
                   <FormMessage />
                 </FormItem>

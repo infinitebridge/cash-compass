@@ -33,7 +33,6 @@ import { useEffect } from 'react';
 import { basicInfoFormSchema, BasicInfoFormSchemaType } from '../schemas';
 import { formatCurrency } from '@cash-compass/utils';
 
-// Move these outside component to avoid recreation on each render
 const customers = [
   { id: '1', name: 'Acme Inc.' },
   { id: '2', name: 'Globex Corporation' },
