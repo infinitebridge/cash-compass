@@ -1,31 +1,23 @@
 import { PageHeader } from '@cash-compass/blocks';
 import { DollarSign, ReceiptCent, RefreshCcw } from 'lucide-react';
-import React, { useState } from 'react';
-import DialogWrapper from './dialog-wrapper';
+import React from 'react';
+import useDialogStore from './revenue-dialog/dialog-store';
 
 export function Header() {
   const [selectedPeriod, setSelectedPeriod] = React.useState('march');
-  const [isOpen, setIsOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState(0);
+  const { openDialog: openRevenueDialog } = useDialogStore();
 
   const handlePeriodChange = (period: string) => {
     setSelectedPeriod(period);
     console.log(`Fetching data for ${period}`);
   };
 
-  const handleRecordRevenue = () => {
-    setActiveTab(0); // Set to "Record Revenue" tab
-    setIsOpen(true); // Open the dialog
-  };
-
   const handleCreateInvoice = () => {
-    setActiveTab(1); // Set to "Create Invoice" tab
-    setIsOpen(true);
+    console.log('ok');
   };
 
   const handleRecurringRevenue = () => {
-    setActiveTab(2); // Set to "Recurring Revenue" tab
-    setIsOpen(true);
+    console.log('ok');
   };
 
   return (
@@ -48,7 +40,7 @@ export function Header() {
             label: 'Record Revenue',
             icon: <DollarSign className="h-4 w-4 mr-2" />,
             iconColor: 'text-blue-500',
-            onClick: handleRecordRevenue,
+            onClick: openRevenueDialog,
           },
           {
             label: 'Create Invoice',
@@ -63,16 +55,6 @@ export function Header() {
             onClick: handleRecurringRevenue,
           },
         ]}
-      />
-      <DialogWrapper
-        title="New Revenue"
-        trigger={null}
-        children={undefined}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        open={isOpen}
-        onOpen={() => setIsOpen(true)}
-        onClose={() => setIsOpen(false)}
       />
     </>
   );

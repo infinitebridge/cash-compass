@@ -20,10 +20,14 @@ const RevenueTabs: FunctionComponent<RevenueTabsProps> = ({
   defaultTab,
 }) => {
   return (
-    <Tabs defaultValue={defaultTab} className="">
+    <Tabs defaultValue={defaultTab}>
       <TabsList>
         {tabsConfig.map((tab) => {
-          return <TabsTrigger value={tab.key}>{tab.title}</TabsTrigger>;
+          return (
+            <TabsTrigger key={tab.key} value={tab.key}>
+              {tab.title}
+            </TabsTrigger>
+          );
         })}
       </TabsList>
 
