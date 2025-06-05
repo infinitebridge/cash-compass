@@ -1,6 +1,5 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
 
@@ -29,9 +28,10 @@ import {
 } from '@cash-compass/ui/select';
 import { Textarea } from '@cash-compass/ui/textarea';
 import { cn } from '@cash-compass/utils/lib/utils';
-import { useRevenueDialogContext } from './dialog-context';
-import { useEffect, useRef } from 'react';
-import { basicInfoFormSchema } from './schemas';
+import { useRevenueDialogContext } from '../dialog-context';
+import { useEffect } from 'react';
+import { basicInfoFormSchema, BasicInfoFormSchemaType } from '../schemas';
+import { formatCurrency } from '@cash-compass/utils';
 
 // Move these outside component to avoid recreation on each render
 const customers = [
@@ -47,17 +47,15 @@ const categories = [
   { id: '4', name: 'Other' },
 ];
 
-type FormSchema = z.infer<typeof basicInfoFormSchema>;
-
 export function RevenueForm() {
   const { updateBasicTabValidation, basicFormData, fillBasicFormState } =
     useRevenueDialogContext();
 
-  const form = useForm<FormSchema>({
+  const form = useForm<BasicInfoFormSchemaType>({
     resolver: zodResolver(basicInfoFormSchema),
     mode: 'onChange',
     defaultValues: basicFormData || {
-      revenueDate: undefined,
+      revenueDate: new Date(),
       amount: '',
       customer: '',
       category: '',
@@ -65,39 +63,22 @@ export function RevenueForm() {
     },
   });
 
-  const values = form.watch();
-
-  const formatCurrency = (value: string) => {
-    const numericValue = value.replace(/[^0-9.]/g, '');
-    if (numericValue) {
-      return new Intl.NumberFormat('en-US', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      }).format(Number.parseFloat(numericValue));
-    }
-    return '0.00';
-  };
+  const isValid = form.formState.isValid;
 
   useEffect(() => {
+    const values = form.watch();
     updateBasicTabValidation(form.formState.isValid);
-  }, [form.formState.isValid, updateBasicTabValidation]);
-
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
+    if (isValid) {
       fillBasicFormState({
         ...values,
         amount: formatCurrency(values.amount),
       });
-    }, 1500);
-
-    return () => clearTimeout(timeoutId);
-  }, [values, fillBasicFormState]);
-
-  useEffect(() => {
-    if (basicFormData) {
-      form.reset(basicFormData);
+      return;
     }
-  }, [basicFormData]);
+    fillBasicFormState(undefined);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form.formState.isValid]);
 
   return (
     <Form {...form}>
@@ -159,13 +140,6 @@ export function RevenueForm() {
                       placeholder="0.00"
                       className="pl-8 border-gray-300"
                       {...field}
-                      // value={field.value}
-                      // onChange={(e) => {
-                      //   const formatted = formatCurrency(e.target.value);
-                      //   form.setValue('amount', formatted, {
-                      //     shouldValidate: true,
-                      //   });
-                      // }}
                     />
                   </div>
                 </FormControl>

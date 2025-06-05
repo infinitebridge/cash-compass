@@ -1,5 +1,4 @@
 import { createContext, useContext } from 'react';
-import { basicInfoFormSchema } from './schemas';
 
 interface RevenueDialogContextValue {
   valid: boolean;

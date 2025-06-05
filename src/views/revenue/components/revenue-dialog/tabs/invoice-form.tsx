@@ -1,11 +1,10 @@
 'use client';
 
-import { useEffect, useCallback, useRef } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
-import debounce from 'lodash.debounce';
 
 import {
   Form,
@@ -36,30 +35,17 @@ import { Badge } from '@cash-compass/ui/badge';
 import { Button } from '@cash-compass/ui/button';
 import { cn } from '@cash-compass/utils/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRevenueDialogContext } from './dialog-context';
-
-const invoiceFormSchema = z.object({
-  createInvoice: z.boolean().default(true),
-  invoiceNumber: z.string().min(1, { message: 'Invoice number is required.' }),
-  dueDate: z.date({ required_error: 'Due date is required.' }),
-  paymentTerms: z.string().min(1, { message: 'Payment terms are required.' }),
-  notes: z
-    .string()
-    .max(1000, 'Notes must be 1000 characters or less')
-    .optional(),
-  sendImmediately: z.boolean().default(false),
-});
-
-export type FormSchema = z.infer<typeof invoiceFormSchema>;
+import { useRevenueDialogContext } from '../dialog-context';
+import { invoiceFormSchema, InvoiceFormSchemaType } from '../schemas';
 
 export default function InvoiceForm() {
   const { updateInvoiceTabValidation, invoiceFormData, fillInvoiceFormState } =
     useRevenueDialogContext();
 
-  const form = useForm<FormSchema>({
+  const form = useForm<InvoiceFormSchemaType>({
     resolver: zodResolver(invoiceFormSchema),
     mode: 'onChange',
-    defaultValues: {
+    defaultValues: invoiceFormData || {
       createInvoice: true,
       invoiceNumber: '',
       dueDate: undefined,
@@ -68,26 +54,18 @@ export default function InvoiceForm() {
       sendImmediately: false,
     },
   });
-
   const values = form.watch();
-
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      fillInvoiceFormState(values);
-    }, 1500);
-
-    return () => clearTimeout(timeoutId);
-  }, [values, fillInvoiceFormState]);
-
-  useEffect(() => {
-    if (invoiceFormData) {
-      form.reset(invoiceFormData);
-    }
-  }, [invoiceFormData]);
+  const isValid = form.formState.isValid;
 
   useEffect(() => {
     updateInvoiceTabValidation(form.formState.isValid);
-  }, [form.formState.isValid, updateInvoiceTabValidation]);
+    if (isValid) {
+      fillInvoiceFormState(values);
+      return;
+    }
+    fillInvoiceFormState(undefined);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isValid]);
 
   return (
     <Form {...form}>

@@ -27,25 +27,9 @@ import {
   FancyMultiSelect,
   MultiSelectOption,
 } from '@cash-compass/ui/multi-select';
-import useDialogStore from './dialog-store';
-import { useRevenueDialogContext } from './dialog-context';
-import { useEffect, useRef } from 'react';
-
-const revenueDetailsFormSchema = z.object({
-  paymentMethod: z.string().min(1, {
-    message: 'Please select a payment method.',
-  }),
-  status: z.string().min(1, {
-    message: 'Please select a status.',
-  }),
-  referenceNumber: z
-    .string()
-    .max(50, 'Reference number must be 50 characters or less')
-    .optional(),
-  tags: z.array(z.string()).max(5, 'Maximum 5 tags allowed').optional(),
-});
-
-type FormSchema = z.infer<typeof revenueDetailsFormSchema>;
+import { useRevenueDialogContext } from '../dialog-context';
+import { useEffect } from 'react';
+import { detailsFormSchema, DetailsFormSchemaType } from '../schemas';
 
 // Move tag options outside component to avoid recreation on each render
 const tagOptions: MultiSelectOption[] = [
@@ -60,10 +44,10 @@ export default function RevenueDetailsForm() {
   const { updateDetailsTabValidation, detailsFormData, fillDetailsFormState } =
     useRevenueDialogContext();
 
-  const form = useForm<FormSchema>({
-    resolver: zodResolver(revenueDetailsFormSchema),
+  const form = useForm<DetailsFormSchemaType>({
+    resolver: zodResolver(detailsFormSchema),
     mode: 'onChange',
-    defaultValues: {
+    defaultValues: detailsFormData || {
       paymentMethod: '',
       status: '',
       referenceNumber: '',
@@ -72,25 +56,16 @@ export default function RevenueDetailsForm() {
   });
 
   const values = form.watch();
-
+  const isValid = form.formState.isValid;
   useEffect(() => {
-    console.log(form.formState.isValid);
     updateDetailsTabValidation(form.formState.isValid);
-  }, [form.formState.isValid, updateDetailsTabValidation]);
-
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
+    if (isValid) {
       fillDetailsFormState(values);
-    }, 1500);
-
-    return () => clearTimeout(timeoutId);
-  }, [values, fillDetailsFormState]);
-
-  useEffect(() => {
-    if (detailsFormData) {
-      form.reset(detailsFormData);
+      return;
     }
-  }, [detailsFormData]);
+    fillDetailsFormState(undefined);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isValid]);
 
   return (
     <Form {...form}>
