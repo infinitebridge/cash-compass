@@ -129,7 +129,7 @@ export function RevenueForm() {
             name="amount"
             render={({ field }) => (
               <FormItem className="-mt-2.5">
-                <FormLabel className="text-gray-600">Amount</FormLabel>
+                <FormLabel className="text-gray-600">Amount *</FormLabel>
                 <FormControl>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -141,23 +141,18 @@ export function RevenueForm() {
                       value={field.value}
                       onChange={(e) => {
                         const value = e.target.value;
-                        // Remove all non-numeric characters except decimal point
                         const numericValue = value.replace(/[^0-9.]/g, '');
 
-                        // Prevent multiple decimal points
                         const parts = numericValue.split('.');
                         let cleanValue = parts[0];
                         if (parts.length > 1) {
-                          // Only allow 2 decimal places
                           cleanValue += '.' + parts[1].slice(0, 2);
                         }
 
-                        // Store the raw numeric value (no formatting during typing)
                         field.onChange(cleanValue);
                       }}
                       onBlur={(e) => {
                         const value = e.target.value;
-                        // Format as currency when leaving the field
                         if (value && value !== '.') {
                           const formattedValue = formatCurrency(value);
                           field.onChange(formattedValue);
@@ -216,7 +211,7 @@ export function RevenueForm() {
           name="customer"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-gray-600">Customer</FormLabel>
+              <FormLabel className="text-gray-600">Customer *</FormLabel>
               <div className="flex gap-2">
                 <Select
                   onValueChange={(value) => {
@@ -249,7 +244,7 @@ export function RevenueForm() {
           name="category"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-gray-600">Category/Source</FormLabel>
+              <FormLabel className="text-gray-600">Category/Source *</FormLabel>
               <Select
                 onValueChange={(value) => {
                   field.onChange(value);

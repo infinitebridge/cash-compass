@@ -75,7 +75,7 @@ export default function RevenueDetailsForm() {
           name="paymentMethod"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-gray-600">Payment Method</FormLabel>
+              <FormLabel className="text-gray-600">Payment Method *</FormLabel>
               <Select
                 onValueChange={(value) => {
                   field.onChange(value);
@@ -106,7 +106,7 @@ export default function RevenueDetailsForm() {
           name="status"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-gray-600">Status</FormLabel>
+              <FormLabel className="text-gray-600">Status *</FormLabel>
               <Select
                 onValueChange={(value) => {
                   field.onChange(value);

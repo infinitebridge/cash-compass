@@ -112,7 +112,7 @@ export default function InvoiceForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-gray-600">
-                    Invoice Number
+                    Invoice Number *
                   </FormLabel>
                   <FormControl>
                     <Input
@@ -135,7 +135,7 @@ export default function InvoiceForm() {
               name="dueDate"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel className="text-gray-600">Due Date</FormLabel>
+                  <FormLabel className="text-gray-600">Due Date *</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
@@ -176,7 +176,9 @@ export default function InvoiceForm() {
               name="paymentTerms"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-gray-600">Payment Terms</FormLabel>
+                  <FormLabel className="text-gray-600">
+                    Payment Terms *
+                  </FormLabel>
                   <Select
                     onValueChange={(value) => {
                       field.onChange(value);
