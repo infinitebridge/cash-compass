@@ -4,6 +4,8 @@ import RevenueOverview from './revenue-tabs/overview';
 import { StatisticsCards } from './components/statistic-cards';
 import { Header } from './components/header';
 import Customers from './revenue-tabs/customers';
+import { RevenueDialog } from './components/revenue-dialog';
+import useDialogStore from './components/revenue-dialog/dialog-store';
 const tabsConfig = [
   {
     title: 'Revenue Overview',
@@ -27,6 +29,7 @@ export function RevenueManagement() {
       <Header />
       <StatisticsCards />
       <RevenueTabs tabsConfig={tabsConfig} defaultTab="overview" />
+      <RevenueDialog />
     </div>
   );
 }
