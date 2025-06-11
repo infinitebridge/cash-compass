@@ -9,7 +9,13 @@ export const basicInfoFormSchema = z.object({
     .refine((date) => !isNaN(date.getTime()), {
       message: 'Invalid date selected',
     }),
-  amount: z.string().min(1, 'Amount is required'),
+  amount: z
+    .string()
+    .min(1, 'Amount is required')
+    .refine((val) => {
+      const numericValue = val.replace(/[^0-9.]/g, '');
+      return !isNaN(Number(numericValue)) && Number(numericValue) > 0;
+    }, 'Please enter a valid amount'),
   customer: z.string().min(1, 'Customer is required'),
 
   category: z.string().min(1, 'Category is required'),

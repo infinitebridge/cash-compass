@@ -138,7 +138,71 @@ export function RevenueForm() {
                     <Input
                       placeholder="0.00"
                       className="pl-8 border-gray-300"
-                      {...field}
+                      value={field.value}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        // Remove all non-numeric characters except decimal point
+                        const numericValue = value.replace(/[^0-9.]/g, '');
+
+                        // Prevent multiple decimal points
+                        const parts = numericValue.split('.');
+                        let cleanValue = parts[0];
+                        if (parts.length > 1) {
+                          // Only allow 2 decimal places
+                          cleanValue += '.' + parts[1].slice(0, 2);
+                        }
+
+                        // Store the raw numeric value (no formatting during typing)
+                        field.onChange(cleanValue);
+                      }}
+                      onBlur={(e) => {
+                        const value = e.target.value;
+                        // Format as currency when leaving the field
+                        if (value && value !== '.') {
+                          const formattedValue = formatCurrency(value);
+                          field.onChange(formattedValue);
+                        }
+                      }}
+                      onFocus={(e) => {
+                        const value = e.target.value;
+                        // Convert back to raw number when focusing
+                        if (value) {
+                          const numericValue = value.replace(/[^0-9.]/g, '');
+                          field.onChange(numericValue);
+                        }
+                      }}
+                      onKeyDown={(e) => {
+                        // Allow: backspace, delete, tab, escape, enter
+                        if (
+                          [8, 9, 27, 13, 46].indexOf(e.keyCode) !== -1 ||
+                          // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+                          (e.keyCode === 65 && e.ctrlKey === true) ||
+                          (e.keyCode === 67 && e.ctrlKey === true) ||
+                          (e.keyCode === 86 && e.ctrlKey === true) ||
+                          (e.keyCode === 88 && e.ctrlKey === true) ||
+                          // Allow: home, end, left, right
+                          (e.keyCode >= 35 && e.keyCode <= 39)
+                        ) {
+                          return;
+                        }
+                        // Ensure that it is a number or decimal point and stop the keypress
+                        if (
+                          (e.shiftKey || e.keyCode < 48 || e.keyCode > 57) &&
+                          (e.keyCode < 96 || e.keyCode > 105) &&
+                          e.keyCode !== 190 &&
+                          e.keyCode !== 110
+                        ) {
+                          e.preventDefault();
+                        }
+                        // Prevent multiple decimal points
+                        const target = e.target as HTMLInputElement;
+                        if (
+                          (e.keyCode === 190 || e.keyCode === 110) &&
+                          target.value.indexOf('.') !== -1
+                        ) {
+                          e.preventDefault();
+                        }
+                      }}
                     />
                   </div>
                 </FormControl>
