@@ -9,13 +9,16 @@ import {
   FormMessage,
   Switch,
   Checkbox,
-  Input,
-  Button,
   Textarea,
 } from '@cash-compass/ui';
 import { settingsFormSchema } from '../schemas';
+import { useRevenueDialogContext } from '../dialog-context';
+import { useEffect } from 'react';
 
 export const SettingsForm = () => {
+  const { updateInvoiceTabValidation, fillSettingsFormState } =
+    useRevenueDialogContext();
+
   const form = useForm({
     resolver: zodResolver(settingsFormSchema),
     defaultValues: {
@@ -26,13 +29,23 @@ export const SettingsForm = () => {
     },
   });
 
-  const onSubmit = (data: any) => {
-    console.log(data);
-  };
+  const isValid = form.formState.isValid;
+
+  useEffect(() => {
+    const values = form.watch();
+    updateInvoiceTabValidation(form.formState.isValid);
+    if (isValid) {
+      fillSettingsFormState(values);
+      return;
+    }
+    fillSettingsFormState(undefined);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form.formState.isValid]);
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form className="space-y-6">
         <div className="space-y-2">
           <h3 className="text-lg font-semibold">Notes to Customer</h3>
           <FormField

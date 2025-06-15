@@ -2,8 +2,8 @@ import { z } from 'zod';
 
 const BasicInfoFormSchema = z.object({
   invoiceNumber: z.string().min(1, 'Invoice number is required'),
-  invoiceDate: z.string().min(1, 'Invoice date is required'),
-  dueDate: z.string().min(1, 'Due date is required'),
+  invoiceDate: z.date(),
+  dueDate: z.date(),
   customer: z.string().min(1, 'Customer is required'),
   referenceNumber: z.string().optional(),
   paymentTerms: z.string().min(1, 'Payment terms are required'),

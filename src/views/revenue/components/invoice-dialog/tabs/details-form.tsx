@@ -17,11 +17,16 @@ import {
 } from '@cash-compass/ui';
 import { DetailsFormSchema } from '../schemas';
 import { TrashIcon } from 'lucide-react';
+import { useRevenueDialogContext } from '../dialog-context';
+import { useEffect } from 'react';
 
 export const DetailsForm = () => {
+  const { updateDetailsTabValidation, fillDetailsFormState, detailsFormData } =
+    useRevenueDialogContext();
+
   const form = useForm({
     resolver: zodResolver(DetailsFormSchema),
-    defaultValues: {
+    defaultValues: detailsFormData || {
       items: [{ description: '', quantity: 1, unitPrice: 0 }],
     },
   });
@@ -31,19 +36,45 @@ export const DetailsForm = () => {
     name: 'items',
   });
 
-  const onSubmit = (data: any) => {
-    const total = data.items.reduce(
-      (sum: number, item: { quantity: number; unitPrice: number }) =>
-        sum + item.quantity * item.unitPrice,
+  useEffect(() => {
+    if (detailsFormData) {
+      form.reset(detailsFormData);
+    }
+  }, []);
+
+  useEffect(() => {
+    const subscription = form.watch((values) => {
+      const items = values.items || [];
+      const total = items.reduce(
+        (sum: number, item: { quantity: any; unitPrice: any }) =>
+          sum + (item.quantity || 0) * (item.unitPrice || 0),
+        0
+      );
+
+      fillDetailsFormState({ ...values, total });
+
+      const isValid = form.formState.isValid;
+      updateDetailsTabValidation(isValid);
+    });
+
+    const initialValues = form.getValues();
+    const initialItems = initialValues.items || [];
+    const initialTotal = initialItems.reduce(
+      (sum: number, item: { quantity: any; unitPrice: any }) =>
+        sum + (item.quantity || 0) * (item.unitPrice || 0),
       0
     );
-    console.log({ ...data, total });
-  };
+    fillDetailsFormState({ ...initialValues, total: initialTotal });
+    updateDetailsTabValidation(form.formState.isValid);
+
+    return () => subscription.unsubscribe();
+  }, [form.formState.isValid]);
 
   const calculateTotal = () => {
     const values = form.getValues();
     return values.items.reduce(
-      (sum, item) => sum + (item.quantity || 0) * (item.unitPrice || 0),
+      (sum: number, item: { quantity: any; unitPrice: any }) =>
+        sum + (item.quantity || 0) * (item.unitPrice || 0),
       0
     );
   };
@@ -63,7 +94,7 @@ export const DetailsForm = () => {
       </div>
       <div className="border p-2 rounded-md">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form className="space-y-4">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
@@ -127,6 +158,7 @@ export const DetailsForm = () => {
                               <FormControl>
                                 <Input
                                   type="number"
+                                  step="0.01"
                                   {...field}
                                   value={field.value || ''}
                                   onChange={(e) =>
@@ -144,8 +176,10 @@ export const DetailsForm = () => {
                       <td className="p-2">
                         <p>
                           $
-                          {form.watch(`items.${index}.quantity`) *
-                            form.watch(`items.${index}.unitPrice`) || 0}
+                          {(
+                            (form.watch(`items.${index}.quantity`) || 0) *
+                            (form.watch(`items.${index}.unitPrice`) || 0)
+                          ).toFixed(2)}
                         </p>
                       </td>
                       <td className="p-2">
@@ -154,6 +188,7 @@ export const DetailsForm = () => {
                           size="icon"
                           type="button"
                           onClick={() => remove(index)}
+                          disabled={fields.length === 1}
                         >
                           <TrashIcon className="h-4 w-4 text-red-500" />
                         </Button>
@@ -171,7 +206,7 @@ export const DetailsForm = () => {
         <div className="space-y-2 flex-col w-[15rem] text-sm text-gray-600">
           <div className="flex justify-between">
             <p>Subtotal:</p>
-            <p>${calculateTotal()}</p>
+            <p>${calculateTotal().toFixed(2)}</p>
           </div>
           <div className="flex justify-between">
             <p>Tax (0%):</p>
@@ -180,7 +215,7 @@ export const DetailsForm = () => {
           <hr />
           <div className="flex justify-between font-bold">
             <p>Total:</p>
-            <p>${calculateTotal()}</p>
+            <p>${calculateTotal().toFixed(2)}</p>
           </div>
         </div>
       </div>
