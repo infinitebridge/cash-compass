@@ -8,6 +8,8 @@ export function SectionCards() {
         value="$45,065"
         trend={12}
         trendLabel="vs. February"
+        trendClassName="text-green-600 font-medium"
+        trendLabelClassName="text-muted-foreground"
       />
 
       <StatCard
@@ -15,7 +17,9 @@ export function SectionCards() {
         value="$87,450"
         trend={8.2}
         trendLabel="month-over-month"
-        valueColor="text-green-600"
+        valueClassName="text-green-600"
+        trendClassName="text-green-600 font-medium"
+        trendLabelClassName="text-muted-foreground"
       />
 
       <StatCard
@@ -23,7 +27,9 @@ export function SectionCards() {
         value="$42,385"
         trend={4.5}
         trendLabel="month-over-month"
-        valueColor="text-blue-600"
+        valueClassName="text-blue-600"
+        trendClassName="text-blue-600 font-medium"
+        trendLabelClassName="text-muted-foreground"
       />
 
       <StatCard
@@ -32,7 +38,8 @@ export function SectionCards() {
         amountChange="$15,230"
         amountChangeDirection="up"
         secondaryLabel="this month"
-        secondaryValueColor="text-green-500"
+        amountChangeClassName="text-green-600 font-medium"
+        secondaryLabelClassName="text-muted-foreground"
       />
     </div>
   );

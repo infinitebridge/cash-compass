@@ -8,7 +8,9 @@ export function StatisticsCards() {
         value="$87,450"
         trend={8.2}
         trendLabel="vs. February"
-        valueColor="text-green-600"
+        valueClassName="text-green-600"
+        trendClassName="text-green-600 font-medium"
+        trendLabelClassName="text-muted-foreground"
       />
 
       <StatCard
@@ -16,7 +18,9 @@ export function StatisticsCards() {
         value="Product Sales"
         secondaryLabel="(45% of total)"
         secondaryValue="$39,350"
-        secondaryValueColor="text-green-600"
+        secondaryValueClassName="text-green-600 font-medium"
+        secondaryLabelClassName="text-muted-foreground"
+        inlineSecondary={true}
       />
 
       <StatCard
@@ -24,7 +28,9 @@ export function StatisticsCards() {
         value="12"
         secondaryValue="$36,580"
         secondaryLabel="unpaid"
-        secondaryValueColor="text-amber-500"
+        secondaryValueClassName="text-amber-500 font-medium"
+        secondaryLabelClassName="text-muted-foreground"
+        inlineSecondary={true}
       />
 
       <StatCard
@@ -32,7 +38,10 @@ export function StatisticsCards() {
         value="$245,780"
         secondaryLabel=" of quarterly target"
         secondaryValue="73%"
-        valueColor="text-green-600"
+        valueClassName="text-green-600"
+        secondaryValueClassName="text-green-600 font-medium"
+        secondaryLabelClassName="text-muted-foreground"
+        inlineSecondary={true}
       />
     </div>
   );

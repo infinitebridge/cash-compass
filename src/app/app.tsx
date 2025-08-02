@@ -10,6 +10,8 @@ import Layout from './layout';
 import Dashboard from '../views/dashboard';
 import { RevenueManagement } from '../views/revenue';
 import { ExpensesManagement } from '../views/expenses';
+import { InvoicesDashboard } from '../views/invoices/dashboard';
+import { SingleInvoice } from '../views/invoices/single-invoice';
 
 const router = createBrowserRouter([
   {
@@ -31,6 +33,19 @@ const router = createBrowserRouter([
       {
         path: '/expenses',
         element: <ExpensesManagement />,
+      },
+      {
+        path: '/invoices',
+        children: [
+          {
+            index: true,
+            element: <InvoicesDashboard />,
+          },
+          {
+            path: ':id',
+            element: <SingleInvoice />,
+          },
+        ],
       },
     ],
   },

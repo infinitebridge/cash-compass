@@ -66,7 +66,7 @@ const navigationConfig = {
     },
     {
       title: 'Invoices',
-      url: '#',
+      url: '/invoices',
       icon: Receipt,
     },
     {
