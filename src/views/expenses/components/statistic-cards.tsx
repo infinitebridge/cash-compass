@@ -8,6 +8,8 @@ export function StatisticsCards() {
         value="$42,385"
         trend={4.5}
         trendLabel="vs. February"
+        trendClassName="text-green-600 font-medium"
+        trendLabelClassName="text-muted-foreground"
       />
 
       <StatCard
@@ -15,7 +17,8 @@ export function StatisticsCards() {
         value="Software"
         secondaryLabel="(32% of total)"
         amountChange="$13,560"
-        secondaryValueColor="text-blue-600"
+        amountChangeClassName="text-blue-600 font-medium"
+        secondaryLabelClassName="text-muted-foreground"
       />
 
       <StatCard
@@ -23,7 +26,8 @@ export function StatisticsCards() {
         value="7"
         amountChange="$4,580"
         secondaryLabel="awaiting review"
-        secondaryValueColor="text-amber-500"
+        amountChangeClassName="text-amber-500 font-medium"
+        secondaryLabelClassName="text-muted-foreground"
       />
 
       <StatCard
@@ -31,6 +35,8 @@ export function StatisticsCards() {
         value="$126,785"
         secondaryLabel=" of annual budget"
         amountChange="33%"
+        amountChangeClassName="text-green-600 font-medium"
+        secondaryLabelClassName="text-muted-foreground"
       />
     </div>
   );
