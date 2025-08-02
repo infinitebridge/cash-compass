@@ -11,7 +11,6 @@ import {
   Progress,
   Table,
   TableBody,
-  Badge,
   TableCell,
   TableFooter,
   TableHead,
@@ -20,6 +19,7 @@ import {
   Card,
   CardContent,
 } from '@cash-compass/ui';
+import { GenericBadge } from '@cash-compass/blocks';
 import clsx from 'clsx';
 
 // Using the same ExpenseData type from the chart component for API consistency
@@ -163,43 +163,56 @@ export function CategoryTable() {
                   </TableCell>
 
                   <TableCell className="text-center">
-                    <Badge
-                      variant={
+                    <GenericBadge
+                      colorScheme={
                         expense.trend > 0
-                          ? 'destructive'
+                          ? 'red'
                           : expense.trend < 0
-                          ? 'default'
-                          : 'secondary'
+                          ? 'green'
+                          : 'gray'
                       }
+                      icon={
+                        expense.trend > 0
+                          ? TrendingUp
+                          : expense.trend < 0
+                          ? TrendingDown
+                          : Minus
+                      }
+                      size="sm"
                       className="text-xs"
                     >
-                      {expense.trend > 0 ? (
-                        <TrendingUp className="h-3 w-3 mr-1" />
-                      ) : expense.trend < 0 ? (
-                        <TrendingDown className="h-3 w-3 mr-1" />
-                      ) : (
-                        <Minus className="h-3 w-3 mr-1" />
-                      )}
                       {Math.abs(expense.trend)}%
-                    </Badge>
+                    </GenericBadge>
                   </TableCell>
 
                   <TableCell className="text-center">
                     {isOverBudget ? (
-                      <Badge variant="destructive" className="text-xs">
-                        <AlertTriangle className="h-3 w-3 mr-1" />
+                      <GenericBadge
+                        colorScheme="red"
+                        icon={AlertTriangle}
+                        size="sm"
+                        className="text-xs"
+                      >
                         Over Budget
-                      </Badge>
+                      </GenericBadge>
                     ) : budgetUsage > 90 ? (
-                      <Badge variant="secondary" className="text-xs">
-                        <AlertTriangle className="h-3 w-3 mr-1" />
+                      <GenericBadge
+                        colorScheme="yellow"
+                        icon={AlertTriangle}
+                        size="sm"
+                        className="text-xs"
+                      >
                         Near Limit
-                      </Badge>
+                      </GenericBadge>
                     ) : (
-                      <Badge className="text-xs bg-green-100 text-green-800">
-                        <CheckCircle className="h-3 w-3 mr-1" />
+                      <GenericBadge
+                        colorScheme="green"
+                        icon={CheckCircle}
+                        size="sm"
+                        className="text-xs"
+                      >
                         On Track
-                      </Badge>
+                      </GenericBadge>
                     )}
                   </TableCell>
                 </TableRow>

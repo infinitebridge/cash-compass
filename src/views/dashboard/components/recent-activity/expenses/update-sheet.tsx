@@ -4,7 +4,7 @@ import { Loader } from 'lucide-react';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { Invoice } from './types';
+import { Expense } from './types';
 
 import {
   Button,
@@ -32,7 +32,7 @@ import {
 
 interface UpdateTaskSheetProps
   extends React.ComponentPropsWithRef<typeof Sheet> {
-  task: Invoice | null;
+  task: Expense | null;
 }
 
 export function UpdateTaskSheet({ task, ...props }: UpdateTaskSheetProps) {
@@ -100,12 +100,11 @@ export function UpdateTaskSheet({ task, ...props }: UpdateTaskSheetProps) {
                       <SelectGroup>
                         {(
                           [
-                            'Sent',
-                            'Paid',
-                            'Overdue',
-                            'Draft',
-                            'Cancelled',
-                          ] as Invoice['status'][]
+                            'approved',
+                            'pending',
+                            'rejected',
+                            'draft',
+                          ] as Expense['status'][]
                         ).map((item) => (
                           <SelectItem
                             key={item}
@@ -141,12 +140,11 @@ export function UpdateTaskSheet({ task, ...props }: UpdateTaskSheetProps) {
                       <SelectGroup>
                         {(
                           [
-                            'Sent',
-                            'Paid',
-                            'Overdue',
-                            'Draft',
-                            'Cancelled',
-                          ] as Invoice['status'][]
+                            'approved',
+                            'pending',
+                            'rejected',
+                            'draft',
+                          ] as Expense['status'][]
                         ).map((item) => (
                           <SelectItem
                             key={item}

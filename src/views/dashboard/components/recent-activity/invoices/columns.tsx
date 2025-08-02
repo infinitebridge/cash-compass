@@ -13,8 +13,8 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
   Button,
-  Badge,
 } from '@cash-compass/ui';
+import { StatusBadge } from '@cash-compass/blocks';
 
 import { formatDate, getStatusIcon } from './data-table/lib/utils';
 import clsx from 'clsx';
@@ -147,25 +147,13 @@ export function getColumns(): ColumnDef<Invoice>[] {
         if (!status) return null;
 
         const Icon = getStatusIcon(row.original.status);
-        // Define status colors for badges
-        const statusColors = {
-          Paid: 'bg-green-50 text-green-700 border-green-200',
-          Cancelled: 'bg-red-50 text-red-700 border-red-200',
-          Overdue: 'bg-red-50 text-red-700 border-red-200',
-          Draft: 'bg-gray-50 text-gray-700 border-gray-200',
-          Sent: 'bg-blue-50 text-blue-700 border-blue-200',
-        };
         return (
-          <Badge
-            variant="outline"
-            className={clsx(
-              'py-1 [&>svg]:size-3.5 flex items-center gap-1',
-              statusColors[status] || 'border-gray-200'
-            )}
-          >
-            <Icon />
-            <span className="capitalize">{status}</span>
-          </Badge>
+          <StatusBadge
+            status={status.toLowerCase() as any}
+            icon={Icon}
+            showIcon={true}
+            capitalize={true}
+          />
         );
       },
       meta: {
