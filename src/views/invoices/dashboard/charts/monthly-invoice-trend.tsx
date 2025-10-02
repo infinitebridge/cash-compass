@@ -35,9 +35,11 @@ const chartConfig = {
 
 export default function MonthlyInvoiceTrend() {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Monthly Invoice Trend</CardTitle>
+    <Card className="!p-4">
+      <CardHeader className="!p-0">
+        <CardTitle className="tracking-tight text-lg font-semibold text-gray-900">
+          Monthly Invoice Trend
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
