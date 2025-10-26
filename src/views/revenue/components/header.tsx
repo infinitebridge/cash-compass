@@ -2,10 +2,12 @@ import { PageHeader } from '@cash-compass/blocks';
 import { DollarSign, ReceiptCent, RefreshCcw } from 'lucide-react';
 import React from 'react';
 import useDialogStore from './revenue-dialog/dialog-store';
+import useInvoiceDialogStore from './invoice-dialog/invoice-dialog-store';
 
 export function Header() {
   const [selectedPeriod, setSelectedPeriod] = React.useState('march');
   const { openDialog: openRevenueDialog } = useDialogStore();
+  const { openInvoiceDialog } = useInvoiceDialogStore();
 
   const handlePeriodChange = (period: string) => {
     setSelectedPeriod(period);
@@ -46,7 +48,7 @@ export function Header() {
             label: 'Create Invoice',
             icon: <ReceiptCent className="h-4 w-4 mr-2" />,
             iconColor: 'text-green-500',
-            onClick: handleCreateInvoice,
+            onClick: openInvoiceDialog,
           },
           {
             label: 'Recurring Revenue',
