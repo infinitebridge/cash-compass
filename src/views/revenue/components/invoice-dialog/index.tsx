@@ -5,33 +5,32 @@ import {
   DialogTitle,
 } from '@cash-compass/ui/dialog';
 import { Button } from '@cash-compass/ui/button';
-import { RevenueForm } from './tabs/basic-info-form';
-import RevenueDetailsForm from './tabs/details-form';
-import InvoiceForm from './tabs/invoice-form';
-
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from '@cash-compass/ui/tabs';
-import useDialogStore from './dialog-store';
+import useDialogStore from './invoice-dialog-store';
 import { useState } from 'react';
 import {
   RevenueDialogContext,
   useRevenueDialogContext,
 } from './dialog-context';
+
+import { Alert, AlertTitle } from '@cash-compass/ui';
+import { InfoIcon } from 'lucide-react';
+import { BasicInfoForm } from './tabs/basic-info';
+import { DetailsForm } from './tabs/details-form';
 import {
   BasicInfoFormSchemaType,
   DetailsFormSchemaType,
-  InvoiceFormSchemaType,
+  SettingsFormSchemaType,
 } from './schemas';
-import { Alert, AlertTitle } from '@cash-compass/ui';
-import { InfoIcon } from 'lucide-react';
+import { SettingsForm } from './tabs/settings-form';
 
 const RevenueDialogContent = () => {
-  const { closeDialog: closeRevenueDialog, isOpen: isOpenRevenueDialog } =
-    useDialogStore();
+  const { closeInvoiceDialog, isInvoiceDialogOpen } = useDialogStore();
   const { valid, basicFormData } = useRevenueDialogContext();
 
   const handleSubmit = async () => {
@@ -43,23 +42,23 @@ const RevenueDialogContent = () => {
     {
       title: 'Basic Info',
       key: 'basic-info',
-      component: <RevenueForm />,
+      component: <BasicInfoForm />,
     },
     {
       title: 'Details',
       key: 'details',
-      component: <RevenueDetailsForm />,
+      component: <DetailsForm />,
     },
     {
-      title: 'Invoice options',
-      key: 'options',
-      component: <InvoiceForm />,
+      title: 'Settings',
+      key: 'settings',
+      component: <SettingsForm />,
     },
   ];
 
   return (
-    <Dialog open={isOpenRevenueDialog} onOpenChange={closeRevenueDialog}>
-      <DialogContent>
+    <Dialog open={isInvoiceDialogOpen} onOpenChange={closeInvoiceDialog}>
+      <DialogContent className="sm:max-w-xl">
         <DialogHeader>
           <DialogTitle>Record Revenue </DialogTitle>
           <div className="py-2">
@@ -98,7 +97,7 @@ const RevenueDialogContent = () => {
               type="button"
               variant="outline"
               className="flex-1 sm:flex-none border-gray-300"
-              onClick={closeRevenueDialog}
+              onClick={closeInvoiceDialog}
             >
               Cancel
             </Button>
@@ -108,7 +107,7 @@ const RevenueDialogContent = () => {
               disabled={!valid}
               onClick={handleSubmit}
             >
-              Save Revenue
+              Save Invoice
             </Button>
           </div>
         </div>
@@ -117,7 +116,7 @@ const RevenueDialogContent = () => {
   );
 };
 
-export const RevenueDialog = () => {
+export const InvoiceDialog = () => {
   const [isBasicTabValid, setIsBasicTabValid] = useState(false);
   const [isDetailsTabValid, setIsDetailsTabValid] = useState(false);
   const [isInvoiceTabValid, setIsInvoiceTabValid] = useState(false);
@@ -128,8 +127,8 @@ export const RevenueDialog = () => {
   const [detailsFormData, setDetailsFormData] = useState<
     DetailsFormSchemaType | undefined
   >();
-  const [invoiceFormData, setInvoiceFormData] = useState<
-    InvoiceFormSchemaType | undefined
+  const [settingsFormData, setSettingsFormData] = useState<
+    SettingsFormSchemaType | undefined
   >();
 
   const validation = isBasicTabValid && isDetailsTabValid && isInvoiceTabValid;
@@ -150,7 +149,7 @@ export const RevenueDialog = () => {
 
         basicFormData,
         detailsFormData,
-        invoiceFormData,
+        settingsFormData,
 
         fillBasicFormState: (values: BasicInfoFormSchemaType | undefined) => {
           setBasicFormData(values);
@@ -160,8 +159,8 @@ export const RevenueDialog = () => {
           setDetailsFormData(values);
         },
 
-        fillInvoiceFormState: (values: InvoiceFormSchemaType | undefined) => {
-          setInvoiceFormData(values);
+        fillSettingsFormState: (values: SettingsFormSchemaType | undefined) => {
+          setSettingsFormData(values);
         },
       }}
     >
